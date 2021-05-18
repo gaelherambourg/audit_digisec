@@ -44,3 +44,19 @@ footer{
 .maj{
     text-transform: uppercase;
 }
+.tab_audit_liste th{
+    background: rgb(146, 146, 146);
+    width: 14,2%;
+}
+
+.titre-audit{
+    margin:50px 0px 100px 0px;
+}
+
+.table tbody tr.is-selected{
+    background-color: hsl(204, 86%, 53%);
+}
+
+.table tbody tr{
+    cursor: pointer;
+}

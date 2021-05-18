@@ -1,0 +1,116 @@
+{% extends "base.html.twig" %}
+
+{% block title %}Accueil{% endblock %}
+
+{% block body %}
+
+<div class="titre-audit has-text-centered ">
+    <h1 class="title is-2">Liste des audits</h1>
+</div>
+
+<div class="container is-widescreen is-centered is-vcentered has-text-centered">
+
+    <div class="columns is-vcentered">
+        <div class="column">
+            <div class="control">
+            <input class="input is-large" type="text" placeholder="Nom de l'entreprise" name="rechercheEntreprise" id="rechercheEntreprise">
+        </div>
+        </div>
+        <div class="column is-one-fifth">
+            <div class="rows has-text-left">
+                <div class="row is-full">
+                    <label class="checkbox">
+                        <input type="checkbox">
+                        Audits en cours
+                    </label>
+                </div>
+                <div class="row is-full">
+                    <label class="checkbox">
+                        <input type="checkbox">
+                        Audits terminées
+                    </label>
+                </div>
+            </div>
+        </div>
+        <div class="column has-text-left">
+            <button class="button is-info is-large"> Rechercher</button>
+        </div>
+    
+    </div>
+
+    <table class="table is-striped is-narrow is-hoverable is-fullwidth tab_audit_liste">
+    <thead>
+        <tr>
+            <th><abbr title="Nom de l'entreprise">Nom de l'entreprise</abbr></th>
+            <th>Référentiel</th>
+            <th><abbr title="Auditeur">Auditeur</abbr></th>
+            <th><abbr title="Date de l'audit">Date de l'audit</abbr></th>
+            <th><abbr title="Dernière modif">Dernière Modif</abbr></th>
+            <th><abbr title="Statut">Statut</abbr></th>
+            <th><abbr title="Actions">Actions</abbr></th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td>Amazon</td>
+            <td>Référentiel ANSSI</td>
+            <td>Gaël R.</td>
+            <td>12 Mars 2021 15h10</td>
+            <td>13 Mars 2021 12h14</td>
+            <td>Remis</td>
+            <td><a href="">Consulter</a> - <a href="">Générer PDF</a></td>
+        </tr>
+        <tr>
+            <td>Facebook</td>
+            <td>Référentiel ANSSI</td>
+            <td>Gaël R.</td>
+            <td>24 Mars 2021 15h10</td>
+            <td></td>
+            <td>En cours</td>
+            <td><a href="">Reprendre</a></td>
+        </tr>
+        <tr>
+            <td>Google</td>
+            <td>Référentiel ANSSI</td>
+            <td>Gaël R.</td>
+            <td>02 Avril 2021 15h10</td>
+            <td>04 Avril 2021 12h14</td>
+            <td>Remis</td>
+            <td><a href="">Consulter</a> - <a href="">Générer PDF</a></td>
+        </tr>
+        <tr class="is-selected">
+            <td>Facebook</td>
+            <td>Référentiel ANSSI</td>
+            <td>Gaël R.</td>
+            <td>24 Mars 2021 15h10</td>
+            <td></td>
+            <td>En cours</td>
+            <td><a href="">Reprendre</a></td>
+        </tr>
+        <tr>
+            <td>Google</td>
+            <td>Référentiel ANSSI</td>
+            <td>Gaël R.</td>
+            <td>02 Avril 2021 15h10</td>
+            <td>04 Avril 2021 12h14</td>
+            <td>Remis</td>
+            <td><a href="">Consulter</a> - <a href="">Générer PDF</a></td>
+        </tr>
+
+    </tbody>
+    </table>
+
+
+    <div class="has-text-right">
+        <button class="button is-info">Créer un audit</button>
+    </div>
+
+</div>
+
+
+
+{% endblock %}
+
+{% block javascripts %}
+    <script type="text/javascript" src="{{asset('js/audit_liste.js')}}"></script>
+{% endblock %}

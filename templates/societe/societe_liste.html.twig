@@ -1,0 +1,100 @@
+{% extends "base.html.twig" %}
+
+{% block title %}Sociétés{% endblock %}
+
+{% block body %}
+
+<div class="titre-audit has-text-centered ">
+    <h1 class="title is-2">Liste des sociétés</h1>
+</div>
+
+<div class="container is-widescreen is-centered is-vcentered has-text-centered">
+
+    <!-- Section Filtre sur le nom de l'entreprise -->
+
+    <div class="field has-addons">
+        <div class="control">
+            <input class="input" type="text" placeholder="Nom de l'entreprise" name="rechercheEntreprise" id="rechercheEntrepriseId">
+        </div>
+        <div class="control">
+            <a class="button is-info">
+            Rechercher
+            </a>
+        </div>
+    </div>
+
+    <!-- Liste des entreprises  -->
+    <table class="table is-striped is-narrow is-hoverable is-fullwidth tab_audit_liste">
+        <thead class="table is-bordered">
+            <tr>
+                <th><abbr title="Nom de l'entreprise">Nom de l'entreprise</abbr></th>
+                <th><abbr title="Immatriculation RCS">Immatriculation RCS</abbr></th>
+                <th><abbr title="contact">Nom  contact</abbr></th>
+                <th><abbr title="téléphone">Téléphone</abbr></th>
+                <th><abbr title="Nombre d'audit">Nombre d'audit enregistré</abbr></th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr class="is-bordered">
+                <td>Amazon</td>
+                <td>1373209U320382</td>
+                <td>VIEL Jean-Christophe</td>
+                <td>06 35 35 76 76</td>
+                <td>4</td>
+            </tr>
+            <tr class="is-selected">
+                <td>Google</td>
+                <td>15490266476325</td>
+                <td>TOD Martin</td>
+                <td>06 46 46 43 43</td>
+                <td>2</td>
+            </tr>
+            <tr>
+                <td>Facebook</td>
+                <td>13722233420382</td>
+                <td>RAGGI Colin</td>
+                <td>06 31 37 76 90</td>
+                <td>0</td>
+            </tr>
+            <tr>
+                <td>Google</td>
+                <td>15490266476325</td>
+                <td>TOD Martin</td>
+                <td>06 46 46 43 43</td>
+                <td>2</td>
+            </tr>
+            <tr>
+                <td>Facebook</td>
+                <td>13722233420382</td>
+                <td>RAGGI Colin</td>
+                <td>06 31 37 76 90</td>
+                <td>0</td>
+            </tr>
+
+        </tbody>
+    </table>
+
+    <!-- Zone des boutons ajout - modif - créer audit -->
+
+    <div class="columns has-text-right">
+
+        <div class="column is-offset-two-fifths">
+            <a href="{{path('societe_ajouter')}}"><button class="button is-info is-fullwidth">Ajouter une entreprise</button></a>
+        </div>
+        <div class="column">
+            <button class="button is-info is-fullwidth">Modifier une entreprise</button>
+        </div>
+        <div class="column">
+            <button class="button is-info is-fullwidth">Créer un audit</button>
+        </div>
+    </div>
+
+    
+
+</div>
+
+{% endblock %}
+
+{% block javascripts %}
+    <script type="text/javascript" src="{{asset('js/audit_liste.js')}}"></script>
+{% endblock %}

@@ -64,4 +64,13 @@ class SocieteController extends AbstractController
             "societeForm" => $societeForm->createView(),
         ]);
     }
+   
+    /**
+     * @Route("/societe_liste", name="societe_liste")
+     */
+    public function listerSociete()
+    {
+        return $this->render('societe/societe_liste.html.twig', [
+        ]);
+    }     
 }
