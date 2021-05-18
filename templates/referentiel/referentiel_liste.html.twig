@@ -1,0 +1,79 @@
+{% extends "base.html.twig" %}
+
+{% block title %}Référentiels{% endblock %}
+
+{% block body %}
+
+<div class="titre-audit has-text-centered ">
+    <h1 class="title is-2">Liste des référentiels</h1>
+</div>
+
+<div class="container is-widescreen is-centered is-vcentered has-text-centered">
+
+    <!-- Section Filtre sur le nom du référentiel -->
+    
+    <div class="field has-addons">
+        <div class="control">
+            <input class="input" type="text" placeholder="Nom du référentiel" name="rechercheReferentiel" id="rechercheReferentielId">
+        </div>
+        <div class="control">
+            <a class="button is-info">
+            Rechercher
+            </a>
+        </div>
+    </div>
+
+    <!-- Liste des référentiels  -->
+    <table class="table is-bordered is-striped is-narrow is-hoverable is-fullwidth tab_audit_liste">
+        <thead>
+            <tr>
+                <th><abbr title="Nom du référentiel">Nom du référentiel</abbr></th>
+                <th><abbr title="Type de référentiel">Type de référentiel</abbr></th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>Référentiel 1</td>
+                <td>ANSII</td>
+            </tr>
+            <tr class="is-selected">
+                <td>Référentiel 2</td>
+                <td>ISO</td>
+            </tr>
+            <tr>
+                <td>Référentiel 3</td>
+                <td>Custom 1</td>
+            </tr>
+            <tr>
+                <td>Référentiel 4</td>
+                <td>Custom 2</td>
+            </tr>
+            <tr>
+                <td>Référentiel 5</td>
+                <td>Custom 3</td>
+            </tr>
+
+        </tbody>
+    </table>
+
+    <!-- Zone des boutons ajout - modif - créer audit -->
+
+    <div class="columns has-text-right">
+
+        <div class="column is-offset-two-fifths">
+            <a href="#"><button class="button is-info is-fullwidth">Ajouter un référentiel</button></a>
+        </div>
+        <div class="column">
+            <button class="button is-info is-fullwidth">Modifier un référentiel</button>
+        </div>
+    </div>
+
+    
+
+</div>
+
+{% endblock %}
+
+{% block javascripts %}
+    <script type="text/javascript" src="{{asset('js/audit_liste.js')}}"></script>
+{% endblock %}
