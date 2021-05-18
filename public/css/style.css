@@ -53,6 +53,10 @@ footer{
     margin-bottom: 100px;
 }
 
-.table tr.is-selected{
+.table tbody tr.is-selected{
     background-color: hsl(204, 86%, 53%);
+}
+
+.table tbody tr{
+    cursor: pointer;
 }

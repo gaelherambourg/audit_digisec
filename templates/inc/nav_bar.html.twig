@@ -2,7 +2,7 @@
 	<div class="navbar-brand">
 		<div class="navbar-item">
 			<div class="buttons">
-				<a class="button is-link is-light" href=#>
+				<a class="button is-link is-light" href="{{ path('audit_liste')}}">
 					<img src="{{ asset('img/LOGO-DIGISEC-FULL-DETOURE.png') }}" height="50" alt="logo">Digisec
 				</a>
 
@@ -20,10 +20,10 @@
 
 			<!-- Lien accessible uniquement à un utilisateur connecté -->
 			<!-- TODO Ajouter le paramètrage -->
-				<a class="navbar-item has-text-weight-bold" href=#>
+				<a class="navbar-item has-text-weight-bold" href="{{ path('audit_liste')}}">
 					Accueil
 				</a>
-				<a class="navbar-item has-text-weight-bold" href=#>
+				<a class="navbar-item has-text-weight-bold" href="{{ path('societe_liste')}}">
 					Entreprises
 				</a>
                 <a class="navbar-item has-text-weight-bold" href=#>

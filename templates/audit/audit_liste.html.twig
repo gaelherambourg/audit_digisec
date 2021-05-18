@@ -107,20 +107,10 @@
 
 </div>
 
-<script type='text/javascript'>
-window.onload=function(){
-var rows = document.getElementsByTagName("tr");
-console.log(rows.length);
-    for (var i = 1; i < rows.length; i++)
-    {
-        rows[i].onclick = function() {
-            this.className= "is-selected";
-            
-           console.log(rows[i]);
-        };
-        
-    }
-}
-</script>
 
+
+{% endblock %}
+
+{% block javascripts %}
+    <script type="text/javascript" src="{{asset('js/audit_liste.js')}}"></script>
 {% endblock %}
