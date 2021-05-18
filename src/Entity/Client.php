@@ -2,8 +2,11 @@
 
 namespace App\Entity;
 
-use App\Repository\ClientRepository;
 use Doctrine\ORM\Mapping as ORM;
+use App\Repository\ClientRepository;
+use Symfony\Component\Validator\Constraints\Regex;
+use Symfony\Component\Validator\Constraints\NotBlank;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ORM\Entity(repositoryClass=ClientRepository::class)
@@ -19,16 +22,22 @@ class Client
 
     /**
      * @ORM\Column(type="string", length=100)
+     * @Assert\NotBlank(message="Ce champ ne doit pas être vide.")
      */
     private $nom_contact;
 
     /**
+     * Regex pattern provenant de regex101 (gabriel hautclocq)
      * @ORM\Column(type="string", length=20)
+     * @Assert\NotBlank(message="Ce champ ne doit pas être vide.")
+     * @Assert\Regex(pattern="/^(\+[0-9]{2}[.\-\s]?|00[.\-\s]?[0-9]{2}|0)([0-9]{1,3}[.\-\s]?(?:[0-9]{2}[.\-\s]?){4})$/", message="Merci de renseigner un numéro de téléphone valide.") 
      */
     private $tel_contact;
 
     /**
      * @ORM\Column(type="string", length=50)
+     * @Assert\NotBlank(message="Ce champ ne doit pas être vide.")
+     * @Assert\Email(message="Merci de renseigner un mail valide.")
      */
     private $mail_contact;
 

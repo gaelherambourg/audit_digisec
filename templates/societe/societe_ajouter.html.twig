@@ -81,28 +81,28 @@
 				<legend class="label">Adresse</legend>
 				<div class="columns is-mobile">
 					<div class="column is-4">
-						{{ form_label(societeForm.rue, null, {'attr': {'class': 'has-text-link'} }) }}
+						{{ form_label(societeForm.adresse.rue, null, {'attr': {'class': 'has-text-link'} }) }}
 					</div>
 					<div class="column is-8">
-						{{ form_widget(societeForm.rue, {'attr': {'class': 'input is-link', 'placeholder': 'Rue'}}) }}
+						{{ form_widget(societeForm.adresse.rue, {'attr': {'class': 'input is-link', 'placeholder': 'Rue'}}) }}
 					</div>
 				</div>
 
 				<div class="columns is-mobile">
 					<div class="column is-4">
-						{{ form_label(societeForm.code_postal, null, {'attr': {'class': 'has-text-link'} }) }}
+						{{ form_label(societeForm.adresse.code_postal, null, {'attr': {'class': 'has-text-link'} }) }}
 					</div>
 					<div class="column is-8">
-						{{ form_widget(societeForm.code_postal, {'attr': {'class': 'input is-link', 'placeholder': 'Code postal'}}) }}
+						{{ form_widget(societeForm.adresse.code_postal, {'attr': {'class': 'input is-link', 'placeholder': 'Code postal'}}) }}
 					</div>
 				</div>
 
 				<div class="columns is-mobile">
 					<div class="column is-4">
-						{{ form_label(societeForm.ville, null, {'attr': {'class': 'has-text-link'} }) }}
+						{{ form_label(societeForm.adresse.ville, null, {'attr': {'class': 'has-text-link'} }) }}
 					</div>
 					<div class="column is-8">
-						{{ form_widget(societeForm.ville, {'attr': {'class': 'input is-link', 'placeholder': 'Ville'}}) }}
+						{{ form_widget(societeForm.adresse.ville, {'attr': {'class': 'input is-link', 'placeholder': 'Ville'}}) }}
 					</div>
 				</div>
 			</fieldset>
@@ -111,38 +111,37 @@
 				<legend class="label">Contact</legend>
 				<div class="columns is-mobile">
 					<div class="column is-4">
-						{{ form_label(societeForm.nom_contact, null, {'attr': {'class': 'has-text-link'} }) }}
+						{{ form_label(societeForm.contact.nom_contact, null, {'attr': {'class': 'has-text-link'} }) }}
 					</div>
 					<div class="column is-8">
-						{{ form_widget(societeForm.nom_contact, {'attr': {'class': 'input is-link', 'placeholder': 'Nom'}}) }}
+						{{ form_widget(societeForm.contact.nom_contact, {'attr': {'class': 'input is-link', 'placeholder': 'Nom'}}) }}
 					</div>
 				</div>
 
 				<div class="columns is-mobile">
 					<div class="column is-4">
-						{{ form_label(societeForm.tel_contact, null, {'attr': {'class': 'has-text-link'} }) }}
+						{{ form_label(societeForm.contact.tel_contact, null, {'attr': {'class': 'has-text-link'} }) }}
 					</div>
 					<div class="column is-8">
-						{{ form_widget(societeForm.tel_contact, {'attr': {'class': 'input is-link', 'placeholder': 'Téléphone'}}) }}
+						{{ form_widget(societeForm.contact.tel_contact, {'attr': {'class': 'input is-link', 'placeholder': 'Téléphone'}}) }}
 					</div>
 				</div>
 
 				<div class="columns is-mobile">
 					<div class="column is-4">
-						{{ form_label(societeForm.mail_contact, null, {'attr': {'class': 'has-text-link'} }) }}
+						{{ form_label(societeForm.contact.mail_contact, null, {'attr': {'class': 'has-text-link'} }) }}
 					</div>
 					<div class="column is-8">
-						{{ form_widget(societeForm.mail_contact, {'attr': {'class': 'input is-link', 'placeholder': 'Mail'}}) }}
+						{{ form_widget(societeForm.contact.mail_contact, {'attr': {'class': 'input is-link', 'placeholder': 'Mail'}}) }}
 					</div>
 				</div>
 			</fieldset>
 
-
 			<div class="section columns">
 				<div class="column"></div>
-				<button type="submit" class="button is-medium is-link is-light is-3">Enregistrer</button>
-				<div class="column"></div>
 				<a class="button is-medium is-link is-light is-3" href="#">Annuler</a>
+				<div class="column"></div>
+				<button type="submit" class="button is-medium is-link is-light is-3">Créer</button>
 				<div class="column"></div>
 			</div>
 		</div>

@@ -4,6 +4,8 @@ namespace App\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use App\Repository\SocieteRepository;
+use Symfony\Component\Validator\Constraints\Image;
+use Symfony\Component\Validator\Constraints\Valid;
 use Symfony\Component\Validator\Constraints\Length;
 use Symfony\Component\Validator\Constraints\NotBlank;
 use Symfony\Component\Validator\Constraints as Assert;
@@ -51,11 +53,13 @@ class Societe
     /**
      * @ORM\Column(type="integer")
      * @Assert\NotBlank(message="Ce champ ne doit pas être vide.")
+     * @Assert\Type(type="integer", message="Merci de renseigner une valeur numérique.")
      */
     private $capital_social;
 
     /**
      * @ORM\Column(type="string", length=255, nullable=true)
+     * @Assert\Image(mimeTypesMessage="Merci de choisir un fichier image valide.")
      */
     private $logo;
 
@@ -71,11 +75,13 @@ class Societe
 
     /**
      * @ORM\OneToOne(targetEntity=Adresse::class, inversedBy="societe", cascade={"persist", "remove"})
+     * @Assert\Valid()
      */
     private $adresse;
 
     /**
      * @ORM\OneToOne(targetEntity=Client::class, inversedBy="societe", cascade={"persist", "remove"})
+     * @Assert\Valid()
      */
     private $contact;
 
@@ -180,7 +186,7 @@ class Societe
         return $this->adresse;
     }
 
-    public function setAdresse(?Adresse $adresse): self
+    public function setAdresse( $adresse): self
     {
         $this->adresse = $adresse;
 
@@ -197,5 +203,10 @@ class Societe
         $this->contact = $contact;
 
         return $this;
+    }
+
+    public function __toString()
+    {
+        return $this->nom;
     }
 }
