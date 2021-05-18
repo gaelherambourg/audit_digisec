@@ -50,7 +50,7 @@ footer{
 }
 
 .titre-audit{
-    margin-bottom: 100px;
+    margin:50px 0px 100px 0px;
 }
 
 .table tbody tr.is-selected{

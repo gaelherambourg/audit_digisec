@@ -11,16 +11,16 @@
 <div class="container is-widescreen is-centered is-vcentered has-text-centered">
 
     <!-- Section Filtre sur le nom de l'entreprise -->
-    <div class="columns">
-        <div class="column">
-            <div class="control">
-            <input class="input" type="text" placeholder="Nom de l'entreprise" name="rechercheEntreprise" id="rechercheEntreprise">
+
+    <div class="field has-addons">
+        <div class="control">
+            <input class="input" type="text" placeholder="Nom de l'entreprise" name="rechercheEntreprise" id="rechercheEntrepriseId">
         </div>
-        </div>        
-        <div class="column has-text-left">
-            <button class="button is-info is-large"> Rechercher</button>
+        <div class="control">
+            <a class="button is-info">
+            Rechercher
+            </a>
         </div>
-    
     </div>
 
     <!-- Liste des entreprises  -->
@@ -93,4 +93,8 @@
 
 </div>
 
+{% endblock %}
+
+{% block javascripts %}
+    <script type="text/javascript" src="{{asset('js/audit_liste.js')}}"></script>
 {% endblock %}
