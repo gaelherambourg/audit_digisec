@@ -27,8 +27,10 @@ class Adresse
     private $rue;
 
     /**
-     * @ORM\Column(type="integer")
+     * Regex pattern provenant de rgxdb.com/r/354H8M0X
+     * @ORM\Column(type="string", length=10)
      * @Assert\NotBlank(message="Ce champ ne doit pas être vide.")
+     * @Assert\Regex(pattern="/^(?:[0-8]\d|9[0-8])\d{3}$/", message="Merci de renseigner un code postal valide.") 
      */
     private $code_postal;
 
@@ -60,7 +62,7 @@ class Adresse
         return $this;
     }
 
-    public function getCodePostal(): ?int
+    public function getCodePostal(): ?string
     {
         return $this->code_postal;
     }

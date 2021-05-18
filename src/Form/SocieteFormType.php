@@ -32,30 +32,10 @@ class SocieteFormType extends AbstractType
             ->add('logo', FileType::class, [
                 'label' => 'Logo : ',
             ])
-            ->add('rue', TextType::class, [
-                'label' => 'Rue : ',
-                'mapped' => false
-            ])
-            ->add('code_postal', TextType::class, [
-                'label' => 'Code postal : ',
-                'mapped' => false
-            ])
-            ->add('ville', TextType::class, [
-                'label' => 'Ville : ',
-                'mapped' => false
-            ])
-            ->add('nom_contact', TextType::class, [
-                'label' => 'Nom : ',
-                'mapped' => false
-            ])
-            ->add('tel_contact', TextType::class, [
-                'label' => 'Téléphone : ',
-                'mapped' => false
-            ])
-            ->add('mail_contact', TextType::class, [
-                'label' => 'Mail : ',
-                'mapped' => false
-            ])
+            // Insetion du formulaire AdressFormType
+            ->add('adresse', AdresseFormType::class)
+            // Insertion du formulaire ContactFormType
+            ->add('contact', ContactFormType::class)
         ;
     }
 
