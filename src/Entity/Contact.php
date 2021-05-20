@@ -2,16 +2,16 @@
 
 namespace App\Entity;
 
+use App\Repository\ContactRepository;
 use Doctrine\ORM\Mapping as ORM;
-use App\Repository\ClientRepository;
 use Symfony\Component\Validator\Constraints\Regex;
 use Symfony\Component\Validator\Constraints\NotBlank;
 use Symfony\Component\Validator\Constraints as Assert;
 
 /**
- * @ORM\Entity(repositoryClass=ClientRepository::class)
+ * @ORM\Entity(repositoryClass=ContactRepository::class)
  */
-class Client
+class Contact
 {
     /**
      * @ORM\Id
@@ -21,10 +21,18 @@ class Client
     private $id;
 
     /**
-     * @ORM\Column(type="string", length=100)
+     * @ORM\Column(type="string", length=30)
      * @Assert\NotBlank(message="Ce champ ne doit pas être vide.")
+     * @Assert\Length(max=30, maxMessage="Ce champ a un maximum de 30 caractères")
      */
     private $nom_contact;
+
+    /**
+     * @ORM\Column(type="string", length=30)
+     * @Assert\NotBlank(message="Ce champ ne doit pas être vide.")
+     * @Assert\Length(max=30, maxMessage="Ce champ a un maximum de 30 caractères")
+     */
+    private $prenom_contact;
 
     /**
      * Regex pattern provenant de regex101 (gabriel hautclocq)
@@ -39,10 +47,17 @@ class Client
      * @Assert\NotBlank(message="Ce champ ne doit pas être vide.")
      * @Assert\Email(message="Merci de renseigner un mail valide.")
      */
-    private $mail_contact;
+    private $email_contact;
 
     /**
-     * @ORM\OneToOne(targetEntity=Societe::class, mappedBy="contact", cascade={"persist", "remove"})
+     * @ORM\Column(type="string", length=100)
+     * @Assert\NotBlank(message="Ce champ ne doit pas être vide.")
+     * @Assert\Length(max=100, maxMessage="Ce champ a un maximum de 100 caractères")
+     */
+    private $poste_contact;
+
+    /**
+     * @ORM\ManyToOne(targetEntity=Societe::class, inversedBy="contact")
      */
     private $societe;
 
@@ -56,9 +71,21 @@ class Client
         return $this->nom_contact;
     }
 
-    public function setNomContact(string $nom_contact): self
+    public function setNomContact($nom_contact): self
     {
         $this->nom_contact = $nom_contact;
+
+        return $this;
+    }
+
+    public function getPrenomContact(): ?string
+    {
+        return $this->prenom_contact;
+    }
+
+    public function setPrenomContact($prenom_contact): self
+    {
+        $this->prenom_contact = $prenom_contact;
 
         return $this;
     }
@@ -68,21 +95,33 @@ class Client
         return $this->tel_contact;
     }
 
-    public function setTelContact(string $tel_contact): self
+    public function setTelContact($tel_contact): self
     {
         $this->tel_contact = $tel_contact;
 
         return $this;
     }
 
-    public function getMailContact(): ?string
+    public function getEmailContact(): ?string
     {
-        return $this->mail_contact;
+        return $this->email_contact;
     }
 
-    public function setMailContact(string $mail_contact): self
+    public function setEmailContact($email_contact): self
     {
-        $this->mail_contact = $mail_contact;
+        $this->email_contact = $email_contact;
+
+        return $this;
+    }
+
+    public function getPosteContact(): ?string
+    {
+        return $this->poste_contact;
+    }
+
+    public function setPosteContact($poste_contact): self
+    {
+        $this->poste_contact = $poste_contact;
 
         return $this;
     }
@@ -94,16 +133,6 @@ class Client
 
     public function setSociete(?Societe $societe): self
     {
-        // unset the owning side of the relation if necessary
-        if ($societe === null && $this->societe !== null) {
-            $this->societe->setContact(null);
-        }
-
-        // set the owning side of the relation if necessary
-        if ($societe !== null && $societe->getContact() !== $this) {
-            $societe->setContact($this);
-        }
-
         $this->societe = $societe;
 
         return $this;

@@ -4,9 +4,10 @@ namespace App\Form;
 
 use App\Entity\Societe;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\Validator\Constraints\Image;
 use Symfony\Component\Form\Extension\Core\Type\FileType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
-use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Form\Extension\Core\Type\IntegerType;
 
@@ -21,6 +22,9 @@ class SocieteFormType extends AbstractType
             ->add('raison_social', TextType::class, [
                 'label' => 'Raison sociale : '
             ])
+            ->add('siret', TextType::class, [
+                'label' => 'Siret : '
+            ])
             ->add('type_entreprise', TextType::class, [
                 'label' => 'Type entreprise : '
             ])
@@ -32,11 +36,18 @@ class SocieteFormType extends AbstractType
             ])
             ->add('logo', FileType::class, [
                 'label' => 'Logo : ',
+                'mapped' => false,
+                'constraints' => [
+                    new Image([
+                        'maxSize' => '5M',
+                        'maxSizeMessage' => 'La taille max est de 5 mo'
+                    ])
+                ]
             ])
             // Insetion du formulaire AdressFormType
-            ->add('adresse', AdresseFormType::class)
+            //->add('adresse', AdresseFormType::class)
             // Insertion du formulaire ContactFormType
-            ->add('contact', ContactFormType::class)
+            //->add('contact', ContactFormType::class)          
         ;
     }
 

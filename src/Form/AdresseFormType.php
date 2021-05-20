@@ -13,16 +13,18 @@ class AdresseFormType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
+            ->add('libelle', TextType::class, [
+                'label' => 'Libellé : '
+            ])
             ->add('rue', TextType::class, [
                 'label' => 'Rue : '
             ])
             ->add('code_postal', TextType::class, [
                 'label' => 'Code postal : '
-            ] )
+            ])
             ->add('ville', TextType::class, [
                 'label' => 'Ville : '
-            ])
-        ;
+            ]);
     }
 
     public function configureOptions(OptionsResolver $resolver)

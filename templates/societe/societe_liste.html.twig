@@ -37,7 +37,7 @@
         <tbody>
             {% for societe in toutes_les_societes %}
             <tr class="is-bordered">
-                <td id="{{ societe.contact.id }}">{{societe.nom}}</td>
+                <td id="{{ societe.id }}">{{societe.nom}}</td>
                 <td>{{societe.immatRcs}}</td>
                 <td>{{societe.contact.nomContact}}</td>
                 <td>{{societe.contact.telContact}}</td>
@@ -55,7 +55,7 @@
             <button class="button is-info is-fullwidth">Modifier une entreprise</button>
         </div>
         <div class="column">
-            <a href="{{path('societe_ajouter')}}"><button class="button is-info is-fullwidth">Ajouter une entreprise</button></a>
+            <a href="{{path('societe_modifier', {'id':1})}}"><button class="button is-info is-fullwidth">Modifier une entreprise</button></a>
         </div>
         <div class="column">
             <button class="button is-info is-fullwidth">Créer un audit</button>
