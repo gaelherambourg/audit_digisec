@@ -2,8 +2,10 @@
 
 namespace App\Entity;
 
-use Doctrine\ORM\Mapping as ORM;
 use App\Repository\SocieteRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
+use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints\Image;
 use Symfony\Component\Validator\Constraints\Valid;
 use Symfony\Component\Validator\Constraints\Length;
@@ -41,6 +43,13 @@ class Societe
      * @Assert\NotBlank(message="Ce champ ne doit pas être vide.")
      * @Assert\Length(max=100, maxMessage="Ce champ a un maximum de 100 caractères")
      */
+    private $siret;
+
+    /**
+     * @ORM\Column(type="string", length=100)
+     * @Assert\NotBlank(message="Ce champ ne doit pas être vide.")
+     * @Assert\Length(max=100, maxMessage="Ce champ a un maximum de 100 caractères")
+     */
     private $immat_rcs;
 
     /**
@@ -59,7 +68,6 @@ class Societe
 
     /**
      * @ORM\Column(type="string", length=255, nullable=true)
-     * @Assert\Image(mimeTypesMessage="Merci de choisir un fichier image valide.")
      */
     private $logo;
 
@@ -74,23 +82,41 @@ class Societe
     private $date_modification;
 
     /**
-     * @ORM\OneToOne(targetEntity=Adresse::class, inversedBy="societe", cascade={"persist", "remove"})
+     * @ORM\Column(type="boolean")
+     */
+    private $est_digisec;
+
+    /**
+     * @ORM\OneToMany(targetEntity=Adresse::class, mappedBy="societe", cascade={"persist", "remove"})
      * @Assert\Valid()
      */
     private $adresse;
 
     /**
-     * @ORM\OneToOne(targetEntity=Client::class, inversedBy="societe", cascade={"persist", "remove"})
+     * @ORM\OneToMany(targetEntity=Contact::class, mappedBy="societe", cascade={"persist", "remove"})
      * @Assert\Valid()
      */
     private $contact;
+
+    public function __construct()
+    {
+        $this->adresses = new ArrayCollection();
+        $this->contacts = new ArrayCollection();
+        $this->adresse = new ArrayCollection();
+        $this->contact = new ArrayCollection();
+    }
+
+    public function getId(): ?int
+    {
+        return $this->id;
+    }
 
     public function getNom(): ?string
     {
         return $this->nom;
     }
 
-    public function setNom(string $nom): self
+    public function setNom($nom): self
     {
         $this->nom = $nom;
 
@@ -102,9 +128,21 @@ class Societe
         return $this->raison_social;
     }
 
-    public function setRaisonSocial(string $raison_social): self
+    public function setRaisonSocial($raison_social): self
     {
         $this->raison_social = $raison_social;
+
+        return $this;
+    }
+
+    public function getSiret(): ?string
+    {
+        return $this->siret;
+    }
+
+    public function setSiret($siret): self
+    {
+        $this->siret = $siret;
 
         return $this;
     }
@@ -114,7 +152,7 @@ class Societe
         return $this->immat_rcs;
     }
 
-    public function setImmatRcs(string $immat_rcs): self
+    public function setImmatRcs($immat_rcs): self
     {
         $this->immat_rcs = $immat_rcs;
 
@@ -126,7 +164,7 @@ class Societe
         return $this->type_entreprise;
     }
 
-    public function setTypeEntreprise(string $type_entreprise): self
+    public function setTypeEntreprise($type_entreprise): self
     {
         $this->type_entreprise = $type_entreprise;
 
@@ -181,32 +219,75 @@ class Societe
         return $this;
     }
 
-    public function getAdresse(): ?Adresse
+    public function getEstDigisec(): ?bool
+    {
+        return $this->est_digisec;
+    }
+
+    public function setEstDigisec(bool $est_digisec): self
+    {
+        $this->est_digisec = $est_digisec;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Adresse[]
+     */
+    public function getAdresse(): Collection
     {
         return $this->adresse;
     }
 
-    public function setAdresse( $adresse): self
+    public function addAdresse(Adresse $adresse): self
     {
-        $this->adresse = $adresse;
+        if (!$this->adresse->contains($adresse)) {
+            $this->adresse[] = $adresse;
+            $adresse->setSociete($this);
+        }
 
         return $this;
     }
 
-    public function getContact(): ?Client
+    public function removeAdresse(Adresse $adresse): self
+    {
+        if ($this->adresse->removeElement($adresse)) {
+            // set the owning side to null (unless already changed)
+            if ($adresse->getSociete() === $this) {
+                $adresse->setSociete(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Contact[]
+     */
+    public function getContact(): Collection
     {
         return $this->contact;
     }
 
-    public function setContact(?Client $contact): self
+    public function addContact(Contact $contact): self
     {
-        $this->contact = $contact;
+        if (!$this->contact->contains($contact)) {
+            $this->contact[] = $contact;
+            $contact->setSociete($this);
+        }
 
         return $this;
     }
 
-    public function __toString()
+    public function removeContact(Contact $contact): self
     {
-        return $this->nom;
+        if ($this->contact->removeElement($contact)) {
+            // set the owning side to null (unless already changed)
+            if ($contact->getSociete() === $this) {
+                $contact->setSociete(null);
+            }
+        }
+
+        return $this;
     }
 }

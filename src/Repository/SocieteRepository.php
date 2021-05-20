@@ -19,6 +19,16 @@ class SocieteRepository extends ServiceEntityRepository
         parent::__construct($registry, Societe::class);
     }
 
+    public function findAllInformationsBySociety($id){
+        $queryBuilder = $this->createQueryBuilder('s')
+            ->leftJoin('s.adresse','a')->addSelect('a')
+            ->join('s.contact','c')->addSelect('c');
+        $queryBuilder
+            ->andWhere('s.id = :id')->setParameter('id',$id);
+        $query = $queryBuilder->getQuery();
+        return $query->getSingleResult();
+    }
+
     // /**
     //  * @return Societe[] Returns an array of Societe objects
     //  */

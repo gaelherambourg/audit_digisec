@@ -36,7 +36,7 @@
         </thead>
         <tbody>
             <tr class="is-bordered">
-                <td>Amazon</td>
+                <td value=1>Amazon</td>
                 <td>1373209U320382</td>
                 <td>VIEL Jean-Christophe</td>
                 <td>06 35 35 76 76</td>
@@ -82,7 +82,7 @@
             <a href="{{path('societe_ajouter')}}"><button class="button is-info is-fullwidth">Ajouter une entreprise</button></a>
         </div>
         <div class="column">
-            <button class="button is-info is-fullwidth">Modifier une entreprise</button>
+            <a href="{{path('societe_modifier', {'id':1})}}"><button class="button is-info is-fullwidth">Modifier une entreprise</button></a>
         </div>
         <div class="column">
             <button class="button is-info is-fullwidth">Créer un audit</button>

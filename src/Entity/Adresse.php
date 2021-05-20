@@ -2,10 +2,9 @@
 
 namespace App\Entity;
 
-use App\Entity\Societe;
-use Symfony\Component\Validator\Constraints as Assert;
-use Doctrine\ORM\Mapping as ORM;
 use App\Repository\AdresseRepository;
+use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Component\Validator\Constraints\NotBlank;
 
 /**
@@ -19,6 +18,11 @@ class Adresse
      * @ORM\Column(type="integer")
      */
     private $id;
+
+    /**
+     * @ORM\Column(type="string", length=50)
+     */
+    private $libelle;
 
     /**
      * @ORM\Column(type="string", length=255)
@@ -41,13 +45,20 @@ class Adresse
     private $ville;
 
     /**
-     * @ORM\OneToOne(targetEntity=Societe::class, mappedBy="adresse", cascade={"persist", "remove"})
+     * @ORM\ManyToOne(targetEntity=Societe::class, inversedBy="adresse")
      */
     private $societe;
 
-    public function getId(): ?int
+    public function getLibelle(): ?string
     {
-        return $this->id;
+        return $this->libelle;
+    }
+
+    public function setLibelle($libelle): self
+    {
+        $this->libelle = $libelle;
+
+        return $this;
     }
 
     public function getRue(): ?string
@@ -79,7 +90,7 @@ class Adresse
         return $this->ville;
     }
 
-    public function setVille( $ville): self
+    public function setVille($ville): self
     {
         $this->ville = $ville;
 
@@ -93,16 +104,6 @@ class Adresse
 
     public function setSociete(?Societe $societe): self
     {
-        // unset the owning side of the relation if necessary
-        if ($societe === null && $this->societe !== null) {
-            $this->societe->setAdresse(null);
-        }
-
-        // set the owning side of the relation if necessary
-        if ($societe !== null && $societe->getAdresse() !== $this) {
-            $societe->setAdresse($this);
-        }
-
         $this->societe = $societe;
 
         return $this;
