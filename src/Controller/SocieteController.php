@@ -6,6 +6,7 @@ use App\Entity\Client;
 use App\Entity\Adresse;
 use App\Entity\Societe;
 use App\Form\SocieteFormType;
+use App\Repository\SocieteRepository;
 use App\Services\LogoServices;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
@@ -58,6 +59,7 @@ class SocieteController extends AbstractController
 
             // On ajoute un message flash
             $this->addFlash("link", "L'entreprise a été ajoutée");
+            return $this->redirectToRoute('societe_liste');
         }
 
         return $this->render('societe/societe_ajouter.html.twig', [
@@ -66,11 +68,17 @@ class SocieteController extends AbstractController
     }
    
     /**
-     * @Route("/societe_liste", name="societe_liste")
+     * @Route("/societe/liste", name="societe_liste")
      */
-    public function listerSociete()
+    public function listerSociete(Request $request,
+                                  EntityManagerInterface $entityManager,
+                                  SocieteRepository $societeRepository)
     {
+
+        $toutes_les_societes = $societeRepository->findAll();
+        dump($toutes_les_societes);
         return $this->render('societe/societe_liste.html.twig', [
+            'toutes_les_societes' => $toutes_les_societes
         ]);
     }     
 }

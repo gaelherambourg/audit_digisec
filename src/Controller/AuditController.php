@@ -9,7 +9,7 @@ use Symfony\Component\Routing\Annotation\Route;
 class AuditController extends AbstractController
 {
     /**
-     * @Route("/audit_liste", name="audit_liste")
+     * @Route("/audit/liste", name="audit_liste")
      */
     public function listerAudit()
     {

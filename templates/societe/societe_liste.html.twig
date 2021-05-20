@@ -35,42 +35,15 @@
             </tr>
         </thead>
         <tbody>
+            {% for societe in toutes_les_societes %}
             <tr class="is-bordered">
-                <td>Amazon</td>
-                <td>1373209U320382</td>
-                <td>VIEL Jean-Christophe</td>
-                <td>06 35 35 76 76</td>
+                <td id="{{ societe.contact.id }}">{{societe.nom}}</td>
+                <td>{{societe.immatRcs}}</td>
+                <td>{{societe.contact.nomContact}}</td>
+                <td>{{societe.contact.telContact}}</td>
                 <td>4</td>
             </tr>
-            <tr class="is-selected">
-                <td>Google</td>
-                <td>15490266476325</td>
-                <td>TOD Martin</td>
-                <td>06 46 46 43 43</td>
-                <td>2</td>
-            </tr>
-            <tr>
-                <td>Facebook</td>
-                <td>13722233420382</td>
-                <td>RAGGI Colin</td>
-                <td>06 31 37 76 90</td>
-                <td>0</td>
-            </tr>
-            <tr>
-                <td>Google</td>
-                <td>15490266476325</td>
-                <td>TOD Martin</td>
-                <td>06 46 46 43 43</td>
-                <td>2</td>
-            </tr>
-            <tr>
-                <td>Facebook</td>
-                <td>13722233420382</td>
-                <td>RAGGI Colin</td>
-                <td>06 31 37 76 90</td>
-                <td>0</td>
-            </tr>
-
+            {% endfor %}
         </tbody>
     </table>
 
@@ -92,7 +65,6 @@
     
 
 </div>
-
 {% endblock %}
 
 {% block javascripts %}

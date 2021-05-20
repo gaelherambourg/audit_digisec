@@ -8,6 +8,7 @@ use Symfony\Component\Form\Extension\Core\Type\FileType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\Form\Extension\Core\Type\IntegerType;
 
 class SocieteFormType extends AbstractType
 {
@@ -23,7 +24,7 @@ class SocieteFormType extends AbstractType
             ->add('type_entreprise', TextType::class, [
                 'label' => 'Type entreprise : '
             ])
-            ->add('capital_social', TextType::class, [
+            ->add('capital_social', IntegerType::class, [
                 'label' => 'Capital social : '
             ])
             ->add('immat_rcs', TextType::class, [

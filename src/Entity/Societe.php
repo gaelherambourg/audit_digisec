@@ -2,6 +2,8 @@
 
 namespace App\Entity;
 
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use App\Repository\SocieteRepository;
 use Symfony\Component\Validator\Constraints\Image;
@@ -84,6 +86,16 @@ class Societe
      * @Assert\Valid()
      */
     private $contact;
+
+    /**
+     * @ORM\OneToMany(targetEntity=Audit::class, mappedBy="societe")
+     */
+    private $audits;
+
+    public function __construct()
+    {
+        $this->audits = new ArrayCollection();
+    }
 
     public function getNom(): ?string
     {
@@ -208,5 +220,35 @@ class Societe
     public function __toString()
     {
         return $this->nom;
+    }
+
+    /**
+     * @return Collection|Audit[]
+     */
+    public function getAudits(): Collection
+    {
+        return $this->audits;
+    }
+
+    public function addAudit(Audit $audit): self
+    {
+        if (!$this->audits->contains($audit)) {
+            $this->audits[] = $audit;
+            $audit->setSociete($this);
+        }
+
+        return $this;
+    }
+
+    public function removeAudit(Audit $audit): self
+    {
+        if ($this->audits->removeElement($audit)) {
+            // set the owning side to null (unless already changed)
+            if ($audit->getSociete() === $this) {
+                $audit->setSociete(null);
+            }
+        }
+
+        return $this;
     }
 }
