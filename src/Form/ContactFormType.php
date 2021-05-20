@@ -2,7 +2,7 @@
 
 namespace App\Form;
 
-use App\Entity\Client;
+use App\Entity\Contact;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\EmailType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
@@ -17,11 +17,17 @@ class ContactFormType extends AbstractType
             ->add('nom_contact', TextType::class, [
                 'label' => 'Nom : ',
             ])
+            ->add('prenom_contact', TextType::class, [
+                'label' => 'Prénom : ',
+            ])
             ->add('tel_contact', TextType::class, [
                 'label' => 'Téléphone : '
             ])
-            ->add('mail_contact', EmailType::class, [
+            ->add('email_contact', EmailType::class, [
                 'label' => 'Mail : '
+            ])
+            ->add('poste_contact', TextType::class, [
+                'label' => 'Poste : '
             ])
         ;
     }
@@ -29,7 +35,9 @@ class ContactFormType extends AbstractType
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults([
-            'data_class' => Client::class,
-        ]);
+            'data_class' => Contact::class,
+            'attr' => [
+                'novalidate' => 'novalidate', // Désactive la validation HTML5
+        ]]);
     }
 }
