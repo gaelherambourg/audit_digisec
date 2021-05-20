@@ -28,27 +28,7 @@ class PointControle
      * @ORM\Column(type="string", length=30)
      */
     private $type_critere;
-
-    /**
-     * @ORM\Column(type="string", length=30, nullable=true)
-     */
-    private $type_preuve_1;
-
-    /**
-     * @ORM\Column(type="string", length=30, nullable=true)
-     */
-    private $type_preuve_2;
-
-    /**
-     * @ORM\Column(type="string", length=30, nullable=true)
-     */
-    private $type_preuve_3;
-
-    /**
-     * @ORM\Column(type="string", length=30, nullable=true)
-     */
-    private $type_preuve_4;
-
+    
     /**
      * @ORM\ManyToOne(targetEntity=Recommandation::class, inversedBy="points_controle")
      * @ORM\JoinColumn(nullable=false)
@@ -64,6 +44,12 @@ class PointControle
      * @ORM\OneToMany(targetEntity=Remediation::class, mappedBy="pointControle")
      */
     private $remediations;
+
+    /**
+     * @ORM\ManyToOne(targetEntity=TypePreuve::class, inversedBy="points_controle")
+     * @ORM\JoinColumn(nullable=false)
+     */
+    private $typePreuve;
 
     public function __construct()
     {
@@ -216,6 +202,18 @@ class PointControle
                 $remediation->setPointControle(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getTypePreuve(): ?TypePreuve
+    {
+        return $this->typePreuve;
+    }
+
+    public function setTypePreuve(?TypePreuve $typePreuve): self
+    {
+        $this->typePreuve = $typePreuve;
 
         return $this;
     }
