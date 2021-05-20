@@ -60,3 +60,6 @@ footer{
 .table tbody tr{
     cursor: pointer;
 }
+table{
+    margin-bottom: 20px;
+}

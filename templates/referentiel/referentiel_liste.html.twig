@@ -32,40 +32,25 @@
             </tr>
         </thead>
         <tbody>
+            {% for referentiel in tous_les_referentiels %}
             <tr>
-                <td>Référentiel 1</td>
-                <td>ANSII</td>
+                <td id="{{referentiel.id}}">{{ referentiel.libelle }}</td>
+                <td>{{ referentiel.typeReferentiel }}</td>
             </tr>
-            <tr class="is-selected">
-                <td>Référentiel 2</td>
-                <td>ISO</td>
-            </tr>
-            <tr>
-                <td>Référentiel 3</td>
-                <td>Custom 1</td>
-            </tr>
-            <tr>
-                <td>Référentiel 4</td>
-                <td>Custom 2</td>
-            </tr>
-            <tr>
-                <td>Référentiel 5</td>
-                <td>Custom 3</td>
-            </tr>
-
+            {% endfor %}
         </tbody>
     </table>
-
     <!-- Zone des boutons ajout - modif - créer audit -->
 
     <div class="columns has-text-right">
-
-        <div class="column is-offset-two-fifths">
-            <a href="#"><button class="button is-info is-fullwidth">Ajouter un référentiel</button></a>
+        
+        <div class="column is-offset-two-fifths" id="divModifier">
+            
         </div>
         <div class="column">
-            <button class="button is-info is-fullwidth">Modifier un référentiel</button>
+            <a href="#"><button id="btnAjouter" name="btnAjouter" class="button is-info is-fullwidth">Ajouter un référentiel</button></a>
         </div>
+        
     </div>
 
     
