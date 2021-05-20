@@ -8,6 +8,7 @@ use App\Entity\Societe;
 use App\Form\AdresseFormType;
 use App\Form\ContactFormType;
 use App\Form\SocieteFormType;
+use App\Repository\SocieteRepository;
 use App\Services\LogoServices;
 use App\Form\AjoutSocieteFormType;
 use App\Form\ModifierSocieteFormType;
@@ -72,10 +73,17 @@ class SocieteController extends AbstractController
     }
 
     /**
-     * @Route("/societe_liste", name="societe_liste")
+     * @Route("/societe/liste", name="societe_liste")
      */
-    public function listerSociete()
+    public function listerSociete(Request $request,
+                                  EntityManagerInterface $entityManager,
+                                  SocieteRepository $societeRepository)
     {
+
+        $toutes_les_societes = $societeRepository->findAll();
+        dump($toutes_les_societes);
+        return $this->render('societe/societe_liste.html.twig', [
+            'toutes_les_societes' => $toutes_les_societes
         return $this->render('societe/societe_liste.html.twig', []);
     }
 

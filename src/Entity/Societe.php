@@ -104,6 +104,7 @@ class Societe
         $this->contacts = new ArrayCollection();
         $this->adresse = new ArrayCollection();
         $this->contact = new ArrayCollection();
+        $this->audits = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -111,6 +112,12 @@ class Societe
         return $this->id;
     }
 
+        
+    /**
+     * @ORM\OneToMany(targetEntity=Audit::class, mappedBy="societe")
+     */
+    private $audits;
+    
     public function getNom(): ?string
     {
         return $this->nom;
@@ -285,6 +292,36 @@ class Societe
             // set the owning side to null (unless already changed)
             if ($contact->getSociete() === $this) {
                 $contact->setSociete(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Audit[]
+     */
+    public function getAudits(): Collection
+    {
+        return $this->audits;
+    }
+
+    public function addAudit(Audit $audit): self
+    {
+        if (!$this->audits->contains($audit)) {
+            $this->audits[] = $audit;
+            $audit->setSociete($this);
+        }
+
+        return $this;
+    }
+
+    public function removeAudit(Audit $audit): self
+    {
+        if ($this->audits->removeElement($audit)) {
+            // set the owning side to null (unless already changed)
+            if ($audit->getSociete() === $this) {
+                $audit->setSociete(null);
             }
         }
 

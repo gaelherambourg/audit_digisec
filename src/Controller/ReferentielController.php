@@ -9,9 +9,9 @@ use Symfony\Component\Routing\Annotation\Route;
 class ReferentielController extends AbstractController
 {
     /**
-     * @Route("/referentiel_liste", name="referentiel_liste")
+     * @Route("/referentiel/liste", name="referentiel_liste")
      */
-    public function index(): Response
+    public function listerReferentiel()
     {
         return $this->render('referentiel/referentiel_liste.html.twig', [
         ]);
