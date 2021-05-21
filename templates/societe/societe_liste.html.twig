@@ -11,17 +11,19 @@
 <div class="container is-widescreen is-centered is-vcentered has-text-centered">
 
     <!-- Section Filtre sur le nom de l'entreprise -->
-
-    <div class="field has-addons">
+    
     {{ form_start(form_recherche_societe) }}
-                
-                    {{form_widget(form_recherche_societe.recherche)}}
-                
-                    {{form_widget(form_recherche_societe.rechercher)}}
-                
-    {{ form_end(form_recherche_societe) }}
+    <div class="columns">
+    
+        <div class="column">
+        {{form_widget(form_recherche_societe.recherche)}}
+        </div>
+        <div class="column has-text-left">
+        {{form_widget(form_recherche_societe.rechercher)}}
+        </div>
+    
     </div>
-
+    {{ form_end(form_recherche_societe) }}
     <!-- Liste des entreprises  -->
     <table class="table is-striped is-narrow is-hoverable is-fullwidth tab_audit_liste">
         <thead class="table is-bordered">
@@ -33,8 +35,8 @@
             </tr>
         </thead>
         <tbody>
-        {% if societes_recherchees is not empty %}
-            {% for societe in societes_recherchees %}
+        {% if societes_recherchees is not empty %} <!-- Si la recherche de l'utilisateur a donné des résultats -->
+            {% for societe in societes_recherchees %} <!-- on affiche les résultats -->
             <tr class="is-bordered" id="{{ societe.id }}">
                 <td>{{societe.nom}}</td>
                 <td>{{societe.immatRcs}}</td>
@@ -44,15 +46,20 @@
             </tr>
             {% endfor %}
         {% else %}
-            {% for societe in toutes_les_societes %}
-            <tr class="is-bordered" id="{{ societe.id }}">
-                <td>{{societe.nom}}</td>
-                <td>{{societe.immatRcs}}</td>
-                
-                <td>{{societe.contact[0].nomContact}}</td>
-                <td>{{societe.contact[0].telContact}}</td>
-            </tr>
-            {% endfor %}
+            {% if recherche_utilisateur is not empty %} <!-- Si la recherche de l'utilisateur n'a pas donné de résultat -->
+            <div>{{baseVide}}</div><!-- On indique à l'utilisateur qu'aucune société ne correspond à la recherche -->
+            {% else %}
+                <!-- On affiche toutes les sociétés dans la liste si aucune recherche n'a été effectué -->
+                {% for societe in toutes_les_societes %}
+                <tr class="is-bordered" id="{{ societe.id }}">
+                    <td>{{societe.nom}}</td>
+                    <td>{{societe.immatRcs}}</td>
+                    
+                    <td>{{societe.contact[0].nomContact}}</td>
+                    <td>{{societe.contact[0].telContact}}</td>
+                </tr>
+                {% endfor %}
+            {% endif %}
         {% endif %}
         </tbody>
     </table>
@@ -62,7 +69,7 @@
     <div class="columns has-text-right">
 
         <div class="column is-offset-two-fifths" id="divModifier">
-            <a id="lienModifier"><button class="button is-info is-fullwidth" id="btnModifier" disabled="true">Modifier une entreprise</button></a>
+            <a id="lienModifier"><button title="Sélectionnez une société pour la modifier" class="button is-info is-fullwidth" id="btnModifier" disabled="true">Modifier une entreprise</button></a>
         </div>
         <div class="column">
             <a href="{{path('societe_ajouter')}}"><button class="button is-info is-fullwidth">Ajouter une entreprise</button></a>

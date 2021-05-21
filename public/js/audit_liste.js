@@ -3,6 +3,7 @@ window.onload = function () {
     cliquePage();
     cliqueTd();
     stopPropagationCliqueBtnModifier();
+    focusInputRecherche();
 
 }
 //Lors d'un clique sur la page (hors bouton Modifier et la liste des entreprises)
@@ -72,6 +73,10 @@ function stopPropagationCliqueBtnModifier() {
     function stopPropgationCliqueModifier(e) {
         e.stopPropagation();
     }
+}
+function focusInputRecherche() {
+    let inputRecherche = document.getElementById('search_societe_recherche');
+    inputRecherche.focus();
 }
 
 
