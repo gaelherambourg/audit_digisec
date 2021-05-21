@@ -12,16 +12,18 @@
 
     <!-- Section Filtre sur le nom du référentiel -->
     
-    <div class="field has-addons">
-        <div class="control">
-            <input class="input" type="text" placeholder="Nom du référentiel" name="rechercheReferentiel" id="rechercheReferentielId">
+    {{ form_start(form_recherche_referentiel) }}
+    <div class="columns">
+    
+        <div class="column">
+        {{form_widget(form_recherche_referentiel.recherche)}}
         </div>
-        <div class="control">
-            <a class="button is-info">
-            Rechercher
-            </a>
+        <div class="column has-text-left">
+        {{form_widget(form_recherche_referentiel.rechercher)}}
         </div>
+    
     </div>
+    {{ form_end(form_recherche_referentiel) }}
 
     <!-- Liste des référentiels  -->
     <table class="table is-bordered is-striped is-narrow is-hoverable is-fullwidth tab_audit_liste">
@@ -32,12 +34,26 @@
             </tr>
         </thead>
         <tbody>
-            {% for referentiel in tous_les_referentiels %}
+        {% if referentiel_recherches is not empty %} <!-- Si la recherche de l'utilisateur a donné des résultats -->
+            {% for referentiel in referentiel_recherches %} <!-- on affiche les résultats -->
             <tr>
                 <td id="{{referentiel.id}}">{{ referentiel.libelle }}</td>
                 <td>{{ referentiel.typeReferentiel }}</td>
             </tr>
             {% endfor %}
+        {% else %}
+            {% if recherche_utilisateur is not empty %} <!-- Si la recherche de l'utilisateur n'a pas donné de résultat -->
+                <div>{{baseVide}}</div><!-- On indique à l'utilisateur qu'aucun référentiel ne correspond à la recherche -->
+            {% else %}
+                <!-- On affiche tous les référentielss dans la liste si aucune recherche n'a été effectué -->
+                {% for referentiel in tous_les_referentiels %} 
+                <tr>
+                    <td id="{{referentiel.id}}">{{ referentiel.libelle }}</td>
+                    <td>{{ referentiel.typeReferentiel }}</td>
+                </tr>
+                {% endfor %}
+            {% endif %}
+        {% endif %}
         </tbody>
     </table>
     <!-- Zone des boutons ajout - modif - créer audit -->

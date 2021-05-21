@@ -19,6 +19,14 @@ class ReferentielRepository extends ServiceEntityRepository
         parent::__construct($registry, Referentiel::class);
     }
 
+    public function recherche($recherche_utilisateur)
+    {
+        //Recherche de la saisie formulaire societe en BDD
+        $queryBuilder = $this->createQueryBuilder('r')
+                        ->andWhere('r.libelle LIKE :ru')
+                        ->setParameter(':ru', '%'.$recherche_utilisateur.'%');
+        return $queryBuilder->getQuery()->getResult();
+    }
     // /**
     //  * @return Referentiel[] Returns an array of Referentiel objects
     //  */

@@ -11,7 +11,7 @@ use App\Form\SocieteFormType;
 use App\Services\LogoServices;
 use App\Form\AjoutSocieteFormType;
 use App\Form\ModifierSocieteFormType;
-use App\Form\SearchSocieteType;
+use App\Form\RechercheSimpleType;
 use App\Repository\SocieteRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
@@ -81,30 +81,36 @@ class SocieteController extends AbstractController
     {
 
         //Création du formulaire de recherche
-        $form = $this->createForm(SearchSocieteType::class);
+        $form = $this->createForm(RechercheSimpleType::class);
         $form->handleRequest($request);
 
         $societes_recherchees = "";
+        $recherche_utilisateur = "";
 
+        //On récupère toutes les sociétés en bdd
+        $toutes_les_societes = $societeRepository->findAll();
+        
         if($form->isSubmitted() && $form->isValid())
         {
             $recherche_utilisateur = $form->get('recherche')->getData();
 
             $societes_recherchees =$societeRepository->recherche($recherche_utilisateur);
-            dump($recherche_utilisateur);
             return $this->render('societe/societe_liste.html.twig',[
+                'toutes_les_societes' => $toutes_les_societes,
+                'baseVide'=> 'Aucune société ne correspond à votre recherche.',
                 'societes_recherchees'=> $societes_recherchees,
+                'recherche_utilisateur' => $recherche_utilisateur,
                 'form_recherche_societe' => $form->createView()
             ]);
         }
 
 
-        //On récupère toutes les sociétés en bdd
-        $toutes_les_societes = $societeRepository->findAll();
+        
             
         return $this->render('societe/societe_liste.html.twig', [
             'toutes_les_societes' => $toutes_les_societes,
             'societes_recherchees'=> $societes_recherchees,
+            'recherche_utilisateur' => $recherche_utilisateur,
             'form_recherche_societe' => $form->createView()
         ]);
     }

@@ -9,7 +9,7 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Form\Extension\Core\Type\SearchType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 
-class SearchSocieteType extends AbstractType
+class RechercheSimpleType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
