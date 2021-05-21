@@ -74,10 +74,11 @@ class SocieteController extends AbstractController
     /**
      * @Route("/societe/liste", name="societe_liste")
      */
-    public function listerSociete(Request $request,
-                                  EntityManagerInterface $entityManager,
-                                  SocieteRepository $societeRepository)
-    {
+    public function listerSociete(
+        Request $request,
+        EntityManagerInterface $entityManager,
+        SocieteRepository $societeRepository
+    ) {
 
         $toutes_les_societes = $societeRepository->findAll();
         dump($toutes_les_societes);
@@ -108,16 +109,15 @@ class SocieteController extends AbstractController
             $contact->setSociete($societe);
             $entityManager->persist($contact);
             $entityManager->flush();
-                        // On ajoute un message flash
-                        $this->addFlash("link", "Le contact a été ajouté");
+            // On ajoute un message flash
+            $this->addFlash("link", "Le contact a été ajouté");
 
-                        return $this->redirect($request->getUri());
-
+            return $this->redirect($request->getUri());
         }
 
         // Si le formulaire est soumis
         if ($societeForm->isSubmitted() && $societeForm->isValid()) {
-                
+
             // On récupère le logo et on utilise LogoServices pour l'enregistrement
             $uploadedFile = $societeForm->get('societe')->get('logo')->getData();
             if ($uploadedFile) {
