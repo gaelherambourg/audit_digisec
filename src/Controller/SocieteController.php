@@ -74,14 +74,13 @@ class SocieteController extends AbstractController
     /**
      * @Route("/societe/liste", name="societe_liste")
      */
-    public function listerSociete(
-        Request $request,
-        EntityManagerInterface $entityManager,
-        SocieteRepository $societeRepository
-    ) {
-
+    public function listerSociete(Request $request,
+                                  EntityManagerInterface $entityManager,
+                                  SocieteRepository $societeRepository)
+    {
+        //On récupère toutes les sociétés en bdd
         $toutes_les_societes = $societeRepository->findAll();
-        dump($toutes_les_societes);
+            
         return $this->render('societe/societe_liste.html.twig', [
             'toutes_les_societes' => $toutes_les_societes
         ]);

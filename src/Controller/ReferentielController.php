@@ -18,9 +18,8 @@ class ReferentielController extends AbstractController
                                       EntityManagerInterface $entitymanager,
                                       ReferentielRepository $referentielRepository)
     {
+        //On récupère tous les référentiels en bdd
         $tous_les_referentiels = $referentielRepository->findAll();
-
-        dump($tous_les_referentiels);
 
         return $this->render('referentiel/referentiel_liste.html.twig', [
             'tous_les_referentiels' => $tous_les_referentiels
