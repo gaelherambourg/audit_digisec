@@ -38,7 +38,8 @@ class Contact
      * Regex pattern provenant de regex101 (gabriel hautclocq)
      * @ORM\Column(type="string", length=20)
      * @Assert\NotBlank(message="Ce champ ne doit pas être vide.")
-     * @Assert\Regex(pattern="/^(\+[0-9]{2}[.\-\s]?|00[.\-\s]?[0-9]{2}|0)([0-9]{1,3}[.\-\s]?(?:[0-9]{2}[.\-\s]?){4})$/", message="Merci de renseigner un numéro de téléphone valide.") 
+     * @Assert\Regex(pattern="/^(\+[0-9]{2}[.\-\s]?|00[.\-\s]?[0-9]{2}|0)([0-9]{1,3}[.\-\s]?(?:[0-9]{2}[.\-\s]?){4})$/", message="Merci de renseigner un numéro de téléphone valide.")
+     * @Assert\Length(max=20, maxMessage="Ce champ a un maximum de 20 caractères") 
      */
     private $tel_contact;
 
@@ -46,6 +47,7 @@ class Contact
      * @ORM\Column(type="string", length=50)
      * @Assert\NotBlank(message="Ce champ ne doit pas être vide.")
      * @Assert\Email(message="Merci de renseigner un mail valide.")
+     * @Assert\Length(max=50, maxMessage="Ce champ a un maximum de 50 caractères")
      */
     private $email_contact;
 

@@ -2,10 +2,11 @@
 
 namespace App\Entity;
 
-use App\Repository\AdresseRepository;
 use Doctrine\ORM\Mapping as ORM;
-use Symfony\Component\Validator\Constraints as Assert;
+use App\Repository\AdresseRepository;
+use Symfony\Component\Validator\Constraints\Length;
 use Symfony\Component\Validator\Constraints\NotBlank;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ORM\Entity(repositoryClass=AdresseRepository::class)
@@ -27,6 +28,7 @@ class Adresse
     /**
      * @ORM\Column(type="string", length=255)
      * @Assert\NotBlank(message="Ce champ ne doit pas être vide.")
+     * @Assert\Length(max=255, maxMessage="Ce champ a un maximum de 255 caractères")
      */
     private $rue;
 
@@ -34,13 +36,15 @@ class Adresse
      * Regex pattern provenant de rgxdb.com/r/354H8M0X
      * @ORM\Column(type="string", length=10)
      * @Assert\NotBlank(message="Ce champ ne doit pas être vide.")
-     * @Assert\Regex(pattern="/^(?:[0-8]\d|9[0-8])\d{3}$/", message="Merci de renseigner un code postal valide.") 
+     * @Assert\Regex(pattern="/^(?:[0-8]\d|9[0-8])\d{3}$/", message="Merci de renseigner un code postal valide.")
+     * @Assert\Length(max=10, maxMessage="Ce champ a un maximum de 10 caractères") 
      */
     private $code_postal;
 
     /**
      * @ORM\Column(type="string", length=100)
      * @Assert\NotBlank(message="Ce champ ne doit pas être vide.")
+     * @Assert\Length(max=100, maxMessage="Ce champ a un maximum de 100 caractères")
      */
     private $ville;
 
