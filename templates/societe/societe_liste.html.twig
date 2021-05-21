@@ -31,17 +31,16 @@
                 <th><abbr title="Immatriculation RCS">Immatriculation RCS</abbr></th>
                 <th><abbr title="contact">Nom  contact</abbr></th>
                 <th><abbr title="téléphone">Téléphone</abbr></th>
-                <th><abbr title="Nombre d'audit">Nombre d'audit enregistré</abbr></th>
             </tr>
         </thead>
         <tbody>
             {% for societe in toutes_les_societes %}
-            <tr class="is-bordered">
-                <td id="{{ societe.id }}">{{societe.nom}}</td>
+            <tr class="is-bordered" id="{{ societe.id }}">
+                <td>{{societe.nom}}</td>
                 <td>{{societe.immatRcs}}</td>
-                <td>{{societe.contact.nomContact}}</td>
-                <td>{{societe.contact.telContact}}</td>
-                <td>4</td>
+                
+                <td>{{societe.contact[0].nomContact}}</td>
+                <td>{{societe.contact[0].telContact}}</td>
             </tr>
             {% endfor %}
         </tbody>
@@ -51,11 +50,12 @@
 
     <div class="columns has-text-right">
 
-        <div class="column is-offset-two-fifths">
-            <button class="button is-info is-fullwidth">Modifier une entreprise</button>
+        <div class="column is-offset-two-fifths" id="divModifier">
+            <a id="lienModifier"><button class="button is-info is-fullwidth" id="btnModifier" disabled="true">Modifier une entreprise</button></a>
         </div>
         <div class="column">
-            <a href="{{path('societe_modifier', {'id':1})}}"><button class="button is-info is-fullwidth">Modifier une entreprise</button></a>
+            <a href="{{path('societe_ajouter')}}"><button class="button is-info is-fullwidth">Ajouter une entreprise</button></a>
+            
         </div>
         <div class="column">
             <button class="button is-info is-fullwidth">Créer un audit</button>
