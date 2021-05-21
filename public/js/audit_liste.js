@@ -1,16 +1,12 @@
 window.onload = function () {
 
-    //btnModifier.style.visibility = 'hidden';
     cliquePage();
     cliqueTd();
+    stopPropagationCliqueBtnModifier();
 
-    let divModifier = document.getElementById("divModifier");
-    divModifier.addEventListener("click", stopPropgationCliqueModifier);
-    function stopPropgationCliqueModifier(e) {
-        e.stopPropagation();
-    }
 }
-
+//Lors d'un clique sur la page (hors bouton Modifier et la liste des entreprises)
+//On déselectionne la ligne selectionnée (si elle existe) et on bloque le bouton Modifier
 function cliquePage() {
     document.addEventListener("click", function (e) {
         var rows = document.getElementsByTagName("tr");
@@ -20,15 +16,18 @@ function cliquePage() {
             rows[i].className = "";
         }
 
-        var btnModifier = document.getElementById("btnModifier");
-        if (btnModifier != null) {
-            var btnAjouter = document.getElementById("btnAjouter");
-            btnModifier.parentNode.removeChild(btnModifier);
-        }
+        disable();
+        //var btnModifier = document.getElementById("btnModifier");
+        //if (btnModifier != null) {
+        //    var btnAjouter = document.getElementById("btnAjouter");
+        //    btnModifier.parentNode.removeChild(btnModifier);
+        //}
 
     });
 }
-
+//Lors d'un clique sur une ligne du tableau, on sélectionne celle-ci en lui affectant 
+//la classe css is-selected, on débloque le bouton modifier et on ajoute au href du lien la route
+//pour modifier l'élément séléctionné
 function cliqueTd() {
     var btnModifier = document.getElementById('modifier');
     /* On récupère toutes les lignes du tableau */
@@ -46,16 +45,34 @@ function cliqueTd() {
             }
             /* On met la classe css is-selected à la ligne sur laquelle on vient de cliquer */
             this.className = "is-selected";
-            var divModifier = document.getElementById("divModifier");
-            var btnModifier = document.createElement("button");
-            btnModifier.className = "button is-info is-fullwidth";
-            btnModifier.textContent = "Modifier le référentiel";
-            btnModifier.setAttribute('id', 'btnModifier');
-            divModifier.append(btnModifier);
+            enable();
+            let a = document.getElementById("lienModifier");
+            a.setAttribute("href", 'modifier/' + this.id);
+            //var divModifier = document.getElementById("divModifier");
+            //var btnModifier = document.createElement("button");
+            //btnModifier.className = "button is-info is-fullwidth";
+            //btnModifier.textContent = "Modifier le référentiel";
+            //btnModifier.setAttribute('id', 'btnModifier');
+            //divModifier.append(btnModifier);
         };
     }
 }
-
+//fonction pour rendre enable le bouton modifier
+function enable() {
+    document.getElementById('btnModifier').disabled = false;
+}
+//fonction pour rendre disable le bouton modifier
+function disable() {
+    document.getElementById('btnModifier').disabled = true;
+}
+//fonction pour arrêter la propagation de l'évènement "clique sur la page" sur le bouton modifier
+function stopPropagationCliqueBtnModifier() {
+    let divModifier = document.getElementById("divModifier");
+    divModifier.addEventListener("click", stopPropgationCliqueModifier);
+    function stopPropgationCliqueModifier(e) {
+        e.stopPropagation();
+    }
+}
 
 
 
