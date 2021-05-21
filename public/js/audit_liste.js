@@ -74,6 +74,7 @@ function stopPropagationCliqueBtnModifier() {
         e.stopPropagation();
     }
 }
+//fonction pour donner le focus au chargement au champs de recherche
 function focusInputRecherche() {
     let inputRecherche = document.getElementById('recherche_simple_recherche');
     inputRecherche.focus();
