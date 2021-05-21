@@ -11,7 +11,7 @@ use App\Form\SocieteFormType;
 use App\Services\LogoServices;
 use App\Form\AjoutSocieteFormType;
 use App\Form\ModifierSocieteFormType;
-use App\Form\SearchSocieteType;
+use App\Form\RechercheSimpleType;
 use App\Repository\SocieteRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
@@ -81,7 +81,7 @@ class SocieteController extends AbstractController
     {
 
         //Création du formulaire de recherche
-        $form = $this->createForm(SearchSocieteType::class);
+        $form = $this->createForm(RechercheSimpleType::class);
         $form->handleRequest($request);
 
         $societes_recherchees = "";

@@ -75,8 +75,9 @@ function stopPropagationCliqueBtnModifier() {
     }
 }
 function focusInputRecherche() {
-    let inputRecherche = document.getElementById('search_societe_recherche');
+    let inputRecherche = document.getElementById('recherche_simple_recherche');
     inputRecherche.focus();
+    inputRecherche.setSelectionRange(inputRecherche.value.length, inputRecherche.value.length);
 }
 
 
