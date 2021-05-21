@@ -28,16 +28,13 @@ class ContactFormType extends AbstractType
             ])
             ->add('poste_contact', TextType::class, [
                 'label' => 'Poste : '
-            ])
-        ;
+            ]);
     }
 
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults([
             'data_class' => Contact::class,
-            'attr' => [
-                'novalidate' => 'novalidate', // Désactive la validation HTML5
-        ]]);
+        ]);
     }
 }

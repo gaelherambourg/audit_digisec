@@ -1,42 +1,34 @@
 window.onload = function () {
-    const ajouterContact = document.querySelector('#ajouterContact');
+    // Pour ajouter une adresse
     const ajouterAdresse = document.querySelector('#ajouterAdresse');
-    const contact = document.querySelector('#modalContact');
     const adresse = document.querySelector('#modalAdresse');
-    const modalBg = document.querySelector('.modal-background');
-    const modal = document.querySelector('.modal');
-    const close = document.querySelector('.delete');
-    //const annuler = document.querySelector('#annuler');
+    const modalBgA = document.querySelector('#modalAdresseBg');
+    const fermerAdresse = document.querySelector('#fermerAdresse');
 
-    console.log(ajouterContact);
+    ajouterAdresse.addEventListener('click', function () {
+        adresse.className = "modal is-active";
+    });
+    modalBgA.addEventListener('click', function () {
+        adresse.className = "modal";
+    });
+    fermerAdresse.addEventListener('click', function () {
+        adresse.className = "modal";
+    });
 
-    /*ajouterContact.addEventListener('click', function () {
-        console.log(modal.id);
-        if(modal.id == 'ajoutContact') {
-            modal.classList.add('is-active');
-        };
-    });*/
+    // Pour ajouter un contact
+    const ajouterContact = document.querySelector('#ajouterContact');
+    const contact = document.querySelector('#modalContact');
+    const modalBgC = document.querySelector('#modalContactBg');
+    const fermerContact = document.querySelector('#fermerContact');
 
     ajouterContact.addEventListener('click', function () {
         contact.className = "modal is-active";
     });
 
-
-    modalBg.addEventListener('click', function () {
+    modalBgC.addEventListener('click', function () {
         contact.className = "modal";
-        adresse.className = "modal";
     });
-
-    close.addEventListener('click', function () {
+    fermerContact.addEventListener('click', function () {
         contact.className = "modal";
-        adresse.className = "modal";
-    });
-    /*
-    annuler.addEventListener('click', function () {
-        modal.classList.remove('is-active');
-    });
-    */
-    ajouterAdresse.addEventListener('click', function () {
-            adresse.className = "modal is-active";
     });
 }

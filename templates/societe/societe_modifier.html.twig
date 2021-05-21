@@ -216,92 +216,127 @@
 	</div>
 
 	<!-- Fenêtre modal Ajouter un contact -->
-		<div id="ajoutContact" class="modal">
-			<div class="modal-background"></div>
-			<div class="modal-card">
-				<header class="modal-card-head">
-					<p class="modal-card-title">Ajouter un contact</p>
-					<a class="delete" aria-label="close">Annuler</a>
-				</header>
-				<section
-					class="modal-card-body">
-					<!-- Content ... -->
-					{{ form_start(contactForm) }}
-					<div class="columns is-mobile">
-						<div class="column is-4">
-							{{ form_label(contactForm.nom_contact, null, {'attr': {'class': 'has-text-link'} }) }}
-						</div>
-						<div class="column is-8">
-							{{ form_widget(contactForm.nom_contact, {'attr': {'class': 'input is-link', 'placeholder': 'Nom'}}) }}
-						</div>
-					</div>
-
-					<div class="columns is-mobile">
-						<div class="column is-4">
-							{{ form_label(contactForm.prenom_contact, null, {'attr': {'class': 'has-text-link'} }) }}
-						</div>
-						<div class="column is-8">
-							{{ form_widget(contactForm.prenom_contact, {'attr': {'class': 'input is-link', 'placeholder': 'Prénom'}}) }}
-						</div>
-					</div>
-
-					<div class="columns is-mobile">
-						<div class="column is-4">
-							{{ form_label(contactForm.tel_contact, null, {'attr': {'class': 'has-text-link'} }) }}
-						</div>
-						<div class="column is-8">
-							{{ form_widget(contactForm.tel_contact, {'attr': {'class': 'input is-link', 'placeholder': 'Téléphone'}}) }}
-						</div>
-					</div>
-
-					<div class="columns is-mobile">
-						<div class="column is-4">
-							{{ form_label(contactForm.email_contact, null, {'attr': {'class': 'has-text-link'} }) }}
-						</div>
-						<div class="column is-8">
-							{{ form_widget(contactForm.email_contact, {'attr': {'class': 'input is-link', 'placeholder': 'Mail'}}) }}
-						</div>
-					</div>
-
-					<div class="columns is-mobile">
-						<div class="column is-4">
-							{{ form_label(contactForm.poste_contact, null, {'attr': {'class': 'has-text-link'} }) }}
-						</div>
-						<div class="column is-8">
-							{{ form_widget(contactForm.poste_contact, {'attr': {'class': 'input is-link', 'placeholder': 'Poste'}}) }}
-						</div>
-					</div>
-				</section>
-				<footer class="modal-card-foot">
-					<button type="submit" class="button is-medium is-link is-light is-3">Créer</button>
-				</footer>
-			</div>
-		</div>
-		{{ form_end(contactForm) }}
-	<!-- Fin de la fenêtre modal -->
-
-	<!-- Fenêtre modal Ajouter une adresse -->
-	<div id="ajoutAdresse" class="modal">
-		<div class="modal-background"></div>
+	<div id="modalContact" class="modal">
+		<div id="modalContactBg" class="modal-background"></div>
 		<div class="modal-card">
 			<header class="modal-card-head">
-				<p class="modal-card-title">Modal title</p>
-				<button class="delete" aria-label="close"></button>
+				<p class="modal-card-title">Ajouter un contact</p>
+				<a id="fermerContact" class="delete" aria-label="close">Annuler</a>
 			</header>
 			<section
-				class="modal-card-body"><!-- Content ... -->
+				class="modal-card-body">
+				<!-- Content ... -->
+				{{ form_start(contactForm) }}
+				<div class="columns is-mobile">
+					<div class="column is-4">
+						{{ form_label(contactForm.nom_contact, null, {'attr': {'class': 'has-text-link'} }) }}
+					</div>
+					<div class="column is-8">
+						{{ form_widget(contactForm.nom_contact, {'attr': {'class': 'input is-link', 'placeholder': 'Nom'}}) }}
+					</div>
+				</div>
+
+				<div class="columns is-mobile">
+					<div class="column is-4">
+						{{ form_label(contactForm.prenom_contact, null, {'attr': {'class': 'has-text-link'} }) }}
+					</div>
+					<div class="column is-8">
+						{{ form_widget(contactForm.prenom_contact, {'attr': {'class': 'input is-link', 'placeholder': 'Prénom'}}) }}
+					</div>
+				</div>
+
+				<div class="columns is-mobile">
+					<div class="column is-4">
+						{{ form_label(contactForm.tel_contact, null, {'attr': {'class': 'has-text-link'} }) }}
+					</div>
+					<div class="column is-8">
+						{{ form_widget(contactForm.tel_contact, {'attr': {'class': 'input is-link', 'placeholder': 'Téléphone'}}) }}
+					</div>
+				</div>
+
+				<div class="columns is-mobile">
+					<div class="column is-4">
+						{{ form_label(contactForm.email_contact, null, {'attr': {'class': 'has-text-link'} }) }}
+					</div>
+					<div class="column is-8">
+						{{ form_widget(contactForm.email_contact, {'attr': {'class': 'input is-link', 'placeholder': 'Mail'}}) }}
+					</div>
+				</div>
+
+				<div class="columns is-mobile">
+					<div class="column is-4">
+						{{ form_label(contactForm.poste_contact, null, {'attr': {'class': 'has-text-link'} }) }}
+					</div>
+					<div class="column is-8">
+						{{ form_widget(contactForm.poste_contact, {'attr': {'class': 'input is-link', 'placeholder': 'Poste'}}) }}
+					</div>
+				</div>
 			</section>
 			<footer class="modal-card-foot">
-				<button class="button is-success">Save changes</button>
-				<button class="button">Cancel</button>
+				<button type="submit" class="button is-medium is-link is-light is-3">Créer</button>
 			</footer>
 		</div>
 	</div>
+	{{ form_end(contactForm) }}
 	<!-- Fin de la fenêtre modal -->
 
-	<div id="modal">
+	<!-- Fenêtre modal Ajouter une adresse -->
+		<div id="modalAdresse" class="modal"> <div id="modalAdresseBg" class="modal-background"></div>
+		<div class="modal-card">
+			<header class="modal-card-head">
+				<p class="modal-card-title">Ajouter une adresse</p>
+				<button id="fermerAdresse" class="delete" aria-label="close"></button>
+			</header>
+			<section
+				class="modal-card-body">
+				<!-- Content ... -->
+				{{ form_start(adresseForm) }}
+				<div class="columns is-mobile">
+					<div class="column is-4">
+						{{ form_label(adresseForm.libelle, null, {'attr': {'class': 'has-text-link'} }) }}
+					</div>
+					<div class="column is-8">
+						{{ form_widget(adresseForm.libelle, {'attr': {'class': 'input is-link', 'placeholder': 'Libellé'}}) }}
+					</div>
+				</div>
 
+				<div class="columns is-mobile">
+					<div class="column is-4">
+						{{ form_label(adresseForm.rue, null, {'attr': {'class': 'has-text-link'} }) }}
+					</div>
+					<div class="column is-8">
+						{{ form_widget(adresseForm.rue, {'attr': {'class': 'input is-link', 'placeholder': 'Rue'}}) }}
+					</div>
+				</div>
+
+				<div class="columns is-mobile">
+					<div class="column is-4">
+						{{ form_label(adresseForm.code_postal, null, {'attr': {'class': 'has-text-link'} }) }}
+					</div>
+					<div class="column is-8">
+						{{ form_widget(adresseForm.code_postal, {'attr': {'class': 'input is-link', 'placeholder': 'Code postal'}}) }}
+					</div>
+				</div>
+
+				<div class="columns is-mobile">
+					<div class="column is-4">
+						{{ form_label(adresseForm.ville, null, {'attr': {'class': 'has-text-link'} }) }}
+					</div>
+					<div class="column is-8">
+						{{ form_widget(adresseForm.ville, {'attr': {'class': 'input is-link', 'placeholder': 'Ville'}}) }}
+					</div>
+				</div>
+
+			</section>
+			<footer class="modal-card-foot">
+				<button type="submit" class="button is-medium is-link is-light is-3">Créer</button>
+			</footer>
+		</div>
 	</div>
+	{{ form_end(adresseForm) }}
+	<!-- Fin de la fenêtre modal -->
+
+	<div id="modal"></div>
 
 {% endblock %}
 

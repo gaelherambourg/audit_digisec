@@ -118,14 +118,17 @@ class SocieteController extends AbstractController
         $societe = $societeRepository->findAllInformationsBySociety($id);
         $logo = $societe->getLogo();
         $contact = new Contact();
+        $adresse = new Adresse();
 
         // Crée une instance de la classe de formulaire que l'on associe à notre formulaire
         $societeForm = $this->createForm(ModifierSocieteFormType::class, ['societe' => $societe, 'adresse' => $societe->getAdresse(), 'contact' => $societe->getContact()]);
         $contactForm = $this->createForm(ContactFormType::class, $contact);
+        $adresseForm = $this->createForm(AdresseFormType::class, $adresse);
 
         // On prend les données du formulaire soumis, et les injecte dans $societe
         $societeForm->handleRequest($request);
         $contactForm->handleRequest($request);
+        $adresseForm->handleRequest($request);
 
         if ($contactForm->isSubmitted() && $contactForm->isValid()) {
             $contact->setSociete($societe);
@@ -133,6 +136,16 @@ class SocieteController extends AbstractController
             $entityManager->flush();
             // On ajoute un message flash
             $this->addFlash("link", "Le contact a été ajouté");
+
+            return $this->redirect($request->getUri());
+        }
+
+        if ($adresseForm->isSubmitted() && $adresseForm->isValid()) {
+            $adresse->setSociete($societe);
+            $entityManager->persist($adresse);
+            $entityManager->flush();
+            // On ajoute un message flash
+            $this->addFlash("link", "L'adresse a été ajouté");
 
             return $this->redirect($request->getUri());
         }
@@ -164,6 +177,7 @@ class SocieteController extends AbstractController
         return $this->render('societe/societe_modifier.html.twig', [
             "societeForm" => $societeForm->createView(),
             "contactForm" => $contactForm->createView(),
+            "adresseForm" => $adresseForm->createView(),
             "logo" => $logo
         ]);
     }
