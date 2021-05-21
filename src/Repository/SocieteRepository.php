@@ -29,6 +29,15 @@ class SocieteRepository extends ServiceEntityRepository
         return $query->getSingleResult();
     }
 
+    public function recherche($recherche_utilisateur)
+    {
+        //Recherche de la saisie formulaire societe en BDD
+        $queryBuilder = $this->createQueryBuilder('s')
+                        ->andWhere('s.nom LIKE :ru')
+                        ->setParameter(':ru', '%'.$recherche_utilisateur.'%');
+        return $queryBuilder->getQuery()->getResult();
+    }
+
     // /**
     //  * @return Societe[] Returns an array of Societe objects
     //  */
