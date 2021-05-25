@@ -6,6 +6,11 @@ use App\Repository\AuditRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints\Image;
+use Symfony\Component\Validator\Constraints\Valid;
+use Symfony\Component\Validator\Constraints\Length;
+use Symfony\Component\Validator\Constraints\NotBlank;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ORM\Entity(repositoryClass=AuditRepository::class)
@@ -21,33 +26,34 @@ class Audit
 
     /**
      * @ORM\Column(type="string", length=100)
+     * @Assert\NotBlank(message="Ce champ ne doit pas être vide.")
+     * @Assert\Length(max=100, maxMessage="Ce champ a un maximum de 100 caractères")
      */
     private $nom;
 
     /**
      * @ORM\Column(type="text")
+     * @Assert\NotBlank(message="Ce champ ne doit pas être vide.")
      */
     private $description;
 
     /**
      * @ORM\Column(type="text")
+     * @Assert\NotBlank(message="Ce champ ne doit pas être vide.")
      */
     private $objectif_perimetre;
 
     /**
      * @ORM\Column(type="text")
+     * @Assert\NotBlank(message="Ce champ ne doit pas être vide.")
      */
     private $role_responsabilite;
 
     /**
      * @ORM\Column(type="text")
+     * @Assert\NotBlank(message="Ce champ ne doit pas être vide.")
      */
     private $contraintes;
-
-    /**
-     * @ORM\Column(type="string", length=30)
-     */
-    private $statut;
 
     /**
      * @ORM\Column(type="datetime")
@@ -80,6 +86,12 @@ class Audit
      * @ORM\JoinColumn(nullable=false)
      */
     private $societe;
+
+    /**
+     * @ORM\ManyToOne(targetEntity=Statut::class, inversedBy="audits")
+     * @ORM\JoinColumn(nullable=false)
+     */
+    private $statut;
 
     public function __construct()
     {
@@ -152,18 +164,6 @@ class Audit
         return $this;
     }
 
-    public function getStatut(): ?string
-    {
-        return $this->statut;
-    }
-
-    public function setStatut(string $statut): self
-    {
-        $this->statut = $statut;
-
-        return $this;
-    }
-
     public function getDateCreation(): ?\DateTimeInterface
     {
         return $this->date_creation;
@@ -226,6 +226,19 @@ class Audit
     public function setEchelleNotation(?EchelleNotation $echelle_notation): self
     {
         $this->echelle_notation = $echelle_notation;
+
+        return $this;
+    }
+
+    
+    public function getStatut(): ?Statut
+    {
+        return $this->statut;
+    }
+
+    public function setStatut(?Statut $statut): self
+    {
+        $this->statut = $statut;
 
         return $this;
     }

@@ -2,8 +2,12 @@
 
 namespace App\Controller;
 
+use App\Entity\Audit;
+use App\Entity\Societe;
+use App\Entity\Statut;
 use App\Form\AuditType;
 use App\Repository\AuditRepository;
+use App\Repository\SocieteRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -25,16 +29,44 @@ class AuditController extends AbstractController
      * @Route("/audit/creation", name="audit_creation")
      */
     public function creationAudit(Request $request,
-                                  EntityManagerInterface $entitymanager,
+                                  EntityManagerInterface $entityManager,
                                   AuditRepository $auditRepository)
     {
 
+        //On récupère la société sur laquelle porte l'audit
+        $societe_audit = $entityManager->find(Societe::class, 1);
+
+        //On créé une instance d'Audit
+        $audit = new Audit();
+
+        //On associe la société à l'audit
+        $audit->setSociete($societe_audit);
+
         //Création du formulaire de recherche
-        $form = $this->createForm(AuditType::class);
-        $form->handleRequest($request);
+        $audit_form = $this->createForm(AuditType::class, $audit);
+        $audit_form->handleRequest($request);
+
+        // Si le formulaire est soumis
+        if ($audit_form->isSubmitted() && $audit_form->isValid()) {
+
+            // On modifie les données vide de l'audit
+            $audit->setDateCreation(new \DateTime());
+            $audit->setStatut($entityManager->find(Statut::class, 1));
+                        
+            // Sauvegarde en Bdd
+            $entityManager->persist($audit);
+            $entityManager->flush();
+
+            // On ajoute un message flash
+            $this->addFlash("link", "L'audit a été créé");
+
+            // On redirige vers societe_liste
+            return $this->redirectToRoute('audit_liste');
+        }
 
         return $this->render('audit/audit_creation.html.twig', [
-            'form_creation_audit' => $form->createView()
+            'form_creation_audit' => $audit_form->createView(),
+            'societe_audit' => $societe_audit
         ]);
     }
 }

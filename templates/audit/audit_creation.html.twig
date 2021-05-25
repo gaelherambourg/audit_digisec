@@ -4,7 +4,76 @@
 
 {% block body %}
 
+<h1 class="title has-text-centered">Créer un Audit</h1>
+
 {{ form_start(form_creation_audit) }}
+
+    <div class="columns is-mobile">
+        <div class="column is-4">
+            <label class="has-text-link label">Entreprise</label>
+        </div>
+        <div class="column is-8">
+            {{societe_audit.nom}}
+        </div>
+    </div>
+    <div class="columns is-mobile">
+        <div class="column is-4">
+            {{ form_label(form_creation_audit.nom, null, {'attr': {'class': 'has-text-link'} }) }}
+        </div>
+        <div class="column is-8">
+            {{ form_widget(form_creation_audit.nom, {'attr': {'class': 'input is-link', 'placeholder': 'Nom'}}) }}
+        </div>
+    </div>
+    <div class="columns is-mobile">
+        <div class="column is-4">
+            {{ form_label(form_creation_audit.description, null, {'attr': {'class': 'has-text-link'} }) }}
+        </div>
+        <div class="column is-8">
+            {{ form_widget(form_creation_audit.description, {'attr': {'class': 'input is-link', 'placeholder': 'Description'}}) }}
+        </div>
+    </div>
+    <div class="columns is-mobile">
+        <div class="column is-4">
+            {{ form_label(form_creation_audit.objectif_perimetre, null, {'attr': {'class': 'has-text-link'} }) }}
+        </div>
+        <div class="column is-8">
+            {{ form_widget(form_creation_audit.objectif_perimetre, {'attr': {'class': 'input is-link', 'placeholder': 'Objectif et périmètre'}}) }}
+        </div>
+    </div>
+    <div class="columns is-mobile">
+        <div class="column is-4">
+            {{ form_label(form_creation_audit.role_responsabilite, null, {'attr': {'class': 'has-text-link'} }) }}
+        </div>
+        <div class="column is-8">
+            {{ form_widget(form_creation_audit.role_responsabilite, {'attr': {'class': 'input is-link', 'placeholder': 'Rôles et responsabilités'}}) }}
+        </div>
+    </div>
+    <div class="columns is-mobile">
+        <div class="column is-4">
+            {{ form_label(form_creation_audit.contraintes, null, {'attr': {'class': 'has-text-link'} }) }}
+        </div>
+        <div class="column is-8">
+            {{ form_widget(form_creation_audit.contraintes, {'attr': {'class': 'input is-link', 'placeholder': 'Contraintes'}}) }}
+        </div>
+    </div>
+    <div class="columns is-mobile">
+        <div class="column is-4">
+            {{ form_label(form_creation_audit.echelle_notation, null, {'attr': {'class': 'has-text-link'} }) }}
+        </div>
+        <div class="column is-8">
+            {{ form_widget(form_creation_audit.echelle_notation, {'attr': {'class': 'input is-link'}}) }}
+        </div>
+    </div>
+    <div class="columns is-mobile">
+        <div class="column is-6">
+            <a class="button is-medium is-link is-info is-fullwidth" href="{{path('societe_liste')}}">Annuler</a>
+        </div>
+        <div class="column is-6">
+            {{ form_widget(form_creation_audit.lancer_audit, {'attr': {'class': 'input is-info is-medium is-fullwidth'}}) }}
+        </div>
+    </div>
+
+
 {{ form_end(form_creation_audit) }}
 
 {% endblock %}
