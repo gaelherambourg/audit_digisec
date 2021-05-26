@@ -18,14 +18,6 @@
     </div>
     <div class="columns is-mobile">
         <div class="column is-4">
-            {{ form_label(form_creation_audit.nom, null, {'attr': {'class': 'has-text-link'} }) }}
-        </div>
-        <div class="column is-8">
-            {{ form_widget(form_creation_audit.nom, {'attr': {'class': 'input is-link', 'placeholder': 'Nom'}}) }}
-        </div>
-    </div>
-    <div class="columns is-mobile">
-        <div class="column is-4">
             {{ form_label(form_creation_audit.description, null, {'attr': {'class': 'has-text-link'} }) }}
         </div>
         <div class="column is-8">
@@ -65,11 +57,19 @@
         </div>
     </div>
     <div class="columns is-mobile">
-        <div class="column is-6">
-            <a class="button is-medium is-link is-info is-fullwidth" href="{{path('societe_liste')}}">Annuler</a>
+        <div class="column is-4">
+            {{ form_label(form_creation_audit.referentiel, null, {'attr': {'class': 'has-text-link'} }) }}
         </div>
-        <div class="column is-6">
-            {{ form_widget(form_creation_audit.lancer_audit, {'attr': {'class': 'input is-info is-medium is-fullwidth'}}) }}
+        <div class="column is-8">
+            {{ form_widget(form_creation_audit.referentiel, {'attr': {'class': 'input is-link'}}) }}
+        </div>
+    </div>
+    <div class="columns is-mobile">
+        <div class="column has-text-right">
+            <a class="button is-medium is-info is-fullwidth" href="{{path('societe_liste')}}">Annuler</a>
+        </div>
+        <div class="column has-text-left">
+            {{ form_widget(form_creation_audit.lancer_audit, {'attr': {'class': 'is-info is-medium is-fullwidth'}}) }}
         </div>
     </div>
 

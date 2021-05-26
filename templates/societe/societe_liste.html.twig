@@ -31,7 +31,8 @@
                 <th><abbr title="Nom de l'entreprise">Nom de l'entreprise</abbr></th>
                 <th><abbr title="Immatriculation RCS">Immatriculation RCS</abbr></th>
                 <th><abbr title="contact">Nom  contact</abbr></th>
-                <th><abbr title="téléphone">Téléphone</abbr></th>
+                <th><abbr title="téléphone">Téléphone Contact</abbr></th>
+                <th><abbr title="Email">Email Contact</abbr></th>
             </tr>
         </thead>
         <tbody>
@@ -41,8 +42,9 @@
                 <td>{{societe.nom}}</td>
                 <td>{{societe.immatRcs}}</td>
                 
-                <td>{{societe.contact[0].nomContact}}</td>
+                <td>{{societe.contact[0].nomContact}} {{societe.contact[0].prenomContact }}</td> <!-- On prend le premier contact dans la liste des contacts de la société-->
                 <td>{{societe.contact[0].telContact}}</td>
+                <td>{{societe.contact[0].emailContact}}</td>
             </tr>
             {% endfor %}
         {% else %}
@@ -55,8 +57,9 @@
                     <td>{{societe.nom}}</td>
                     <td>{{societe.immatRcs}}</td>
                     
-                    <td>{{societe.contact[0].nomContact}}</td>
+                    <td>{{societe.contact[0].nomContact}} {{societe.contact[0].prenomContact }}</td> <!-- On prend le premier contact dans la liste des contacts de la société-->
                     <td>{{societe.contact[0].telContact}}</td>
+                    <td>{{societe.contact[0].emailContact}}</td>
                 </tr>
                 {% endfor %}
             {% endif %}
@@ -73,10 +76,9 @@
         </div>
         <div class="column">
             <a href="{{path('societe_ajouter')}}"><button class="button is-info is-fullwidth">Ajouter une entreprise</button></a>
-            
         </div>
         <div class="column">
-            <button class="button is-info is-fullwidth">Créer un audit</button>
+            <a id="lienCreerAudit"><button title="Sélectionnez une société pour créer un audit" class="button is-info is-fullwidth" id="btnCreer" disabled>Créer un audit</button></a>
         </div>
     </div>
 

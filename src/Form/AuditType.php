@@ -4,6 +4,7 @@ namespace App\Form;
 
 use App\Entity\Audit;
 use App\Entity\EchelleNotation;
+use App\Entity\Referentiel;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
@@ -15,7 +16,6 @@ class AuditType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('nom')
             ->add('description')
             ->add('objectif_perimetre')
             ->add('role_responsabilite')
@@ -24,6 +24,11 @@ class AuditType extends AbstractType
                 "label"=> "Echelle de notation :",
                 "class"=>EchelleNotation::class,
                 "choice_label"=>"echelle"
+            ])
+            ->add('referentiel', EntityType::class, [
+                "label"=> "Referentiel :",
+                "class"=>Referentiel::class,
+                "choice_label"=>"libelle"
             ])
             ->add('lancer_audit', SubmitType::class, [
                 "attr"=>["value"=>"Lancer Audit",

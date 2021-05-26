@@ -49,6 +49,8 @@ function cliqueTd() {
             enable();
             let a = document.getElementById("lienModifier");
             a.setAttribute("href", 'modifier/' + this.id);
+            let aCreer = document.getElementById("lienCreerAudit");
+            aCreer.setAttribute("href", '../audit/creation/' + this.id);
             //var divModifier = document.getElementById("divModifier");
             //var btnModifier = document.createElement("button");
             //btnModifier.className = "button is-info is-fullwidth";
@@ -61,10 +63,12 @@ function cliqueTd() {
 //fonction pour rendre enable le bouton modifier
 function enable() {
     document.getElementById('btnModifier').disabled = false;
+    document.getElementById('btnCreer').disabled = false;
 }
 //fonction pour rendre disable le bouton modifier
 function disable() {
     document.getElementById('btnModifier').disabled = true;
+    document.getElementById('btnCreer').disabled = true;
 }
 //fonction pour arrêter la propagation de l'évènement "clique sur la page" sur le bouton modifier
 function stopPropagationCliqueBtnModifier() {
