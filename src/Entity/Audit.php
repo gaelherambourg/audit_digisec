@@ -26,7 +26,6 @@ class Audit
 
     /**
      * @ORM\Column(type="string", length=100)
-     * @Assert\NotBlank(message="Ce champ ne doit pas être vide.")
      * @Assert\Length(max=100, maxMessage="Ce champ a un maximum de 100 caractères")
      */
     private $nom;
@@ -92,6 +91,12 @@ class Audit
      * @ORM\JoinColumn(nullable=false)
      */
     private $statut;
+
+    /**
+     * @ORM\ManyToOne(targetEntity=Referentiel::class, inversedBy="audits")
+     * @ORM\JoinColumn(nullable=false)
+     */
+    private $referentiel;
 
     public function __construct()
     {
@@ -281,6 +286,18 @@ class Audit
     public function setSociete(?Societe $societe): self
     {
         $this->societe = $societe;
+
+        return $this;
+    }
+
+    public function getReferentiel(): ?Referentiel
+    {
+        return $this->referentiel;
+    }
+
+    public function setReferentiel(?Referentiel $referentiel): self
+    {
+        $this->referentiel = $referentiel;
 
         return $this;
     }

@@ -34,9 +34,15 @@ class Referentiel
      */
     private $type_referentiel;
 
+    /**
+     * @ORM\OneToMany(targetEntity=Audit::class, mappedBy="referentiel")
+     */
+    private $audits;
+
     public function __construct()
     {
         $this->chapitres = new ArrayCollection();
+        $this->audits = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -94,6 +100,36 @@ class Referentiel
     public function setTypeReferentiel(string $type_referentiel): self
     {
         $this->type_referentiel = $type_referentiel;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Audit[]
+     */
+    public function getAudits(): Collection
+    {
+        return $this->audits;
+    }
+
+    public function addAudit(Audit $audit): self
+    {
+        if (!$this->audits->contains($audit)) {
+            $this->audits[] = $audit;
+            $audit->setReferentiel($this);
+        }
+
+        return $this;
+    }
+
+    public function removeAudit(Audit $audit): self
+    {
+        if ($this->audits->removeElement($audit)) {
+            // set the owning side to null (unless already changed)
+            if ($audit->getReferentiel() === $this) {
+                $audit->setReferentiel(null);
+            }
+        }
 
         return $this;
     }

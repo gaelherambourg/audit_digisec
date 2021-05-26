@@ -42,6 +42,7 @@
     <thead>
         <tr>
             <th><abbr title="Nom de l'entreprise">Nom de l'entreprise</abbr></th>
+            <th><abbr title="Nom de l'audit">Nom de l'audit</abbr></th>
             <th>Référentiel</th>
             <th><abbr title="Auditeur">Auditeur</abbr></th>
             <th><abbr title="Date de l'audit">Date de l'audit</abbr></th>
@@ -51,60 +52,40 @@
         </tr>
     </thead>
     <tbody>
-        <tr>
-            <td>Amazon</td>
-            <td>Référentiel ANSSI</td>
+        {% for audit in tous_les_audits %}
+            <tr>
+            <td>{{audit.societe.nom}}</td>
+            <td>{{audit.nom}}</td>
+            <td>{{audit.referentiel.libelle}}</td>
             <td>Gaël R.</td>
-            <td>12 Mars 2021 15h10</td>
-            <td>13 Mars 2021 12h14</td>
-            <td>Remis</td>
-            <td><a href="">Consulter</a> - <a href="">Générer PDF</a></td>
+            <td>{{audit.dateCreation|date("d/m/Y H:i:s", false)}}</td>
+            {% if audit.dateModification is not null %}
+                <td>{{audit.dateModification|date("d/m/Y H:i:s", false)}}</td>
+            {% else %}
+                <td> - </td>
+            {% endif %}
+            <td>{{audit.statut.libelle}}</td>
+            {% if audit.statut.libelle == "En cours" %}
+                <td><a href="">Reprendre</a>
+            {% endif %}
+            {% if audit.statut.libelle == "Termine" %}
+                <td><a href="">Modifier</a>
+            {% endif %}
+            {% if audit.statut.libelle == "Remis" %}
+                <td><a href="">Consulter</a> - <a href="">Générer PDF</a></td>
+            {% endif %}
+            
         </tr>
-        <tr>
-            <td>Facebook</td>
-            <td>Référentiel ANSSI</td>
-            <td>Gaël R.</td>
-            <td>24 Mars 2021 15h10</td>
-            <td></td>
-            <td>En cours</td>
-            <td><a href="">Reprendre</a></td>
-        </tr>
-        <tr>
-            <td>Google</td>
-            <td>Référentiel ANSSI</td>
-            <td>Gaël R.</td>
-            <td>02 Avril 2021 15h10</td>
-            <td>04 Avril 2021 12h14</td>
-            <td>Remis</td>
-            <td><a href="">Consulter</a> - <a href="">Générer PDF</a></td>
-        </tr>
-        <tr class="is-selected">
-            <td>Facebook</td>
-            <td>Référentiel ANSSI</td>
-            <td>Gaël R.</td>
-            <td>24 Mars 2021 15h10</td>
-            <td></td>
-            <td>En cours</td>
-            <td><a href="">Reprendre</a></td>
-        </tr>
-        <tr>
-            <td>Google</td>
-            <td>Référentiel ANSSI</td>
-            <td>Gaël R.</td>
-            <td>02 Avril 2021 15h10</td>
-            <td>04 Avril 2021 12h14</td>
-            <td>Remis</td>
-            <td><a href="">Consulter</a> - <a href="">Générer PDF</a></td>
-        </tr>
-
+        {% endfor %}
+        
     </tbody>
     </table>
 
-
+    <!-- Bouton pour créer un audit depuis la page liste_audit (pertinent ?)
     <div class="has-text-right">
-        <button class="button is-info">Créer un audit</button>
+        <a href=""><button class="button is-info">Créer un audit</button></a>
     </div>
-
+    -->
 </div>
 
 

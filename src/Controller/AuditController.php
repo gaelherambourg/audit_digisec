@@ -13,28 +13,38 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Validator\Constraints\DateTime;
 
 class AuditController extends AbstractController
 {
     /**
      * @Route("/audit/liste", name="audit_liste")
      */
-    public function listerAudit()
+    public function listerAudit(Request $request,
+                                EntityManagerInterface $entitymanager,
+                                AuditRepository $auditRepository)
     {
+
+        //On récupère la liste de tous les audits en bdd
+        $tous_les_audits = $auditRepository->findAll();
+
         return $this->render('audit/audit_liste.html.twig', [
+            'tous_les_audits' => $tous_les_audits
         ]);
     }
 
     /**
-     * @Route("/audit/creation", name="audit_creation")
+     * @Route("/audit/creation/{id}", name="audit_creation")
      */
     public function creationAudit(Request $request,
                                   EntityManagerInterface $entityManager,
                                   AuditRepository $auditRepository)
     {
+        //On récupère l'id de la société sur laquelle on veut créer l'audit
+        $id_societe = $request->get('id');
 
         //On récupère la société sur laquelle porte l'audit
-        $societe_audit = $entityManager->find(Societe::class, 1);
+        $societe_audit = $entityManager->find(Societe::class, $id_societe);
 
         //On créé une instance d'Audit
         $audit = new Audit();
@@ -51,6 +61,7 @@ class AuditController extends AbstractController
 
             // On modifie les données vide de l'audit
             $audit->setDateCreation(new \DateTime());
+            $audit->setNom($societe_audit->getNom()." - ".$audit->getReferentiel()->getLibelle()." - ".$audit->getDateCreation()->format('d/m/Y'));
             $audit->setStatut($entityManager->find(Statut::class, 1));
                         
             // Sauvegarde en Bdd
