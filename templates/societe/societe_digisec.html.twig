@@ -1,0 +1,187 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}
+	{{ parent() }}
+	| Ajouter une entreprise
+{% endblock %}
+
+{% block body %}
+	<div class="columns">
+		<div class="column is-4 mt-6">
+			<div class="card m-6">
+				<div class="card-image">
+					<figure class="image is-6by3">
+
+						<img src="https://bulma.io/images/placeholders/1280x960.png" alt="Placeholder image">
+
+					</figure>
+				</div>
+			</div>
+		</div>
+		<div class="column is-7 ml-2">
+			<h1 class="has-text-centered title is-2 mt-5 ">Ajouter une entreprise</h1>
+
+			{{ form_start(societeForm) }}
+			{{ form_row(societeForm._token) }}
+			<fieldset class="box">
+				<legend class="label">Entreprise</legend>
+
+				<div class="columns is-mobile">
+					<div class="column is-4">
+						{{ form_label(societeForm.societe.nom, null, {'attr': {'class': 'has-text-link'} }) }}
+					</div>
+					<div class="column is-8">
+						{{ form_widget(societeForm.societe.nom, {'attr': {'class': 'input is-link', 'placeholder': 'Nom'}}) }}
+					</div>
+				</div>
+
+				<div class="columns is-mobile">
+					<div class="column is-4">
+						{{ form_label(societeForm.societe.raison_social, null, {'attr': {'class': 'has-text-link'} }) }}
+					</div>
+					<div class="column is-8">
+						{{ form_widget(societeForm.societe.raison_social, {'attr': {'class': 'input is-link', 'placeholder': 'Raison sociale'}}) }}
+					</div>
+				</div>
+
+				<div class="columns is-mobile">
+					<div class="column is-4">
+						{{ form_label(societeForm.societe.siret, null, {'attr': {'class': 'has-text-link'} }) }}
+					</div>
+					<div class="column is-8">
+						{{ form_widget(societeForm.societe.siret, {'attr': {'class': 'input is-link', 'placeholder': 'Siret'}}) }}
+					</div>
+				</div>
+
+				<div class="columns is-mobile">
+					<div class="column is-4">
+						{{ form_label(societeForm.societe.type_entreprise, null, {'attr': {'class': 'has-text-link'} }) }}
+					</div>
+					<div class="column is-8">
+						{{ form_widget(societeForm.societe.type_entreprise, {'attr': {'class': 'input is-link', 'placeholder': 'Type entreprise'}}) }}
+					</div>
+				</div>
+
+				<div class="columns is-mobile">
+					<div class="column is-4">
+						{{ form_label(societeForm.societe.capital_social, null, {'attr': {'class': 'has-text-link'} }) }}
+					</div>
+					<div class="column is-8">
+						{{ form_widget(societeForm.societe.capital_social, {'attr': {'class': 'input is-link', 'placeholder': 'Capital social'}}) }}
+					</div>
+				</div>
+
+				<div class="columns is-mobile">
+					<div class="column is-4">
+						{{ form_label(societeForm.societe.immat_rcs, null, {'attr': {'class': 'has-text-link'} }) }}
+					</div>
+					<div class="column is-8">
+						{{ form_widget(societeForm.societe.immat_rcs, {'attr': {'class': 'input is-link', 'placeholder': 'Immatriculation RCS'}}) }}
+					</div>
+				</div>
+
+				<div class="columns is-mobile">
+					<div class="column is-4">
+						{{ form_label(societeForm.societe.logo, null, {'attr': {'class': 'has-text-link'} }) }}
+					</div>
+					<div class="column is-8">
+						{{ form_widget(societeForm.societe.logo) }}
+					</div>
+				</div>
+			</fieldset>
+
+			<fieldset class="box">
+				<legend class="label">Adresse</legend>
+
+				<div class="columns is-mobile">
+					<div class="column is-4">
+						{{ form_label(societeForm.adresse.rue, null, {'attr': {'class': 'has-text-link'} }) }}
+					</div>
+					<div class="column is-8">
+						{{ form_widget(societeForm.adresse.rue, {'attr': {'class': 'input is-link', 'placeholder': 'Rue'}}) }}
+					</div>
+				</div>
+
+				<div class="columns is-mobile">
+					<div class="column is-4">
+						{{ form_label(societeForm.adresse.code_postal, null, {'attr': {'class': 'has-text-link'} }) }}
+					</div>
+					<div class="column is-8">
+						{{ form_widget(societeForm.adresse.code_postal, {'attr': {'class': 'input is-link', 'placeholder': 'Code postal'}}) }}
+					</div>
+				</div>
+
+				<div class="columns is-mobile">
+					<div class="column is-4">
+						{{ form_label(societeForm.adresse.ville, null, {'attr': {'class': 'has-text-link'} }) }}
+					</div>
+					<div class="column is-8">
+						{{ form_widget(societeForm.adresse.ville, {'attr': {'class': 'input is-link', 'placeholder': 'Ville'}}) }}
+					</div>
+				</div>
+			</fieldset>
+
+			<fieldset class="box">
+				<legend class="label">Contact</legend>
+				<div class="columns is-mobile">
+					<div class="column is-4">
+						{{ form_label(societeForm.contact.nom_contact, null, {'attr': {'class': 'has-text-link'} }) }}
+					</div>
+					<div class="column is-8">
+						{{ form_widget(societeForm.contact.nom_contact, {'attr': {'class': 'input is-link', 'placeholder': 'Nom'}}) }}
+					</div>
+				</div>
+
+				<div class="columns is-mobile">
+					<div class="column is-4">
+						{{ form_label(societeForm.contact.prenom_contact, null, {'attr': {'class': 'has-text-link'} }) }}
+					</div>
+					<div class="column is-8">
+						{{ form_widget(societeForm.contact.prenom_contact, {'attr': {'class': 'input is-link', 'placeholder': 'Prénom'}}) }}
+					</div>
+				</div>
+
+				<div class="columns is-mobile">
+					<div class="column is-4">
+						{{ form_label(societeForm.contact.tel_contact, null, {'attr': {'class': 'has-text-link'} }) }}
+					</div>
+					<div class="column is-8">
+						{{ form_widget(societeForm.contact.tel_contact, {'attr': {'class': 'input is-link', 'placeholder': 'Téléphone'}}) }}
+					</div>
+				</div>
+
+				<div class="columns is-mobile">
+					<div class="column is-4">
+						{{ form_label(societeForm.contact.email_contact, null, {'attr': {'class': 'has-text-link'} }) }}
+					</div>
+					<div class="column is-8">
+						{{ form_widget(societeForm.contact.email_contact, {'attr': {'class': 'input is-link', 'placeholder': 'Mail'}}) }}
+					</div>
+				</div>
+
+				<div class="columns is-mobile">
+					<div class="column is-4">
+						{{ form_label(societeForm.contact.poste_contact, null, {'attr': {'class': 'has-text-link'} }) }}
+					</div>
+					<div class="column is-8">
+						{{ form_widget(societeForm.contact.poste_contact, {'attr': {'class': 'input is-link', 'placeholder': 'Poste'}}) }}
+					</div>
+				</div>
+			</fieldset>
+
+			<div class="section columns">
+				<div class="column"></div>
+				<a class="button is-medium is-link is-light is-3" href="{{path('societe_liste')}}">Annuler</a>
+				<div class="column"></div>
+				{% if logo is not defined %}
+					<button type="submit" class="button is-medium is-link is-light is-3">Créer</button>
+				{% else %}
+					<button type="submit" class="button is-medium is-link is-light is-3">Modifier</button>
+				{% endif %}
+				<div class="column"></div>
+			</div>
+		</div>
+		{{ form_end(societeForm, {render_rest: false}) }}
+	</div>
+	{{ form_end(societeForm, {render_rest: false}) }}
+{% endblock %}

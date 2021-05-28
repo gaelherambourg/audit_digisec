@@ -1,0 +1,69 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Connexion{% endblock %}
+
+{% block body %}
+<form method="post">
+    {% if error %}
+        <div class="alert alert-danger">{{ error.messageKey|trans(error.messageData, 'security') }}</div>
+    {% endif %}
+
+    {% if app.user %}
+        <div class="mb-3">
+            You are logged in as {{ app.user.username }}, <a href="{{ path('app_logout') }}">Logout</a>
+        </div>
+    {% endif %}
+    
+<div class="field">
+	<div class="columns">
+
+        <div class="column">
+        </div>
+
+        <div class="column">
+            <p class="control has-icons-left has-icons-right">
+                <input type="text" value="{{ last_username }}" name="username" id="inputUsername" class="input" autocomplete="username" placeholder="Nom d'utilisateur" required autofocus>
+                <span class="icon is-small is-left">
+                    <i class="fas fa-user"></i>
+                </span>
+                <span class="icon is-small is-right">
+                </span>
+            </p>
+
+            <div class="field">
+                <p class="control has-icons-left">
+                    <input type="password" name="password" id="inputPassword" class="input" autocomplete="current-password" placeholder="Mot de passe" required>
+                    <span class="icon is-small is-left">
+                    <i class="fas fa-lock"></i>
+                    </span>
+                </p>
+            </div>
+
+            <div class="checkbox mb-3">
+                <input type="checkbox" id="remember_me" name="_remember_me"/>
+                <label for="remember_me">Se souvenir de moi</label>
+            </div>
+
+            <div class="field">
+                <p class="control">
+                    <button class="button is-success" type="submit" value="login">
+                    Se connecter
+                    </button>
+                    <button class="button is-info" type="submit" value="oubliPass">
+                    Mot de passe oublié
+                    </button>
+                </p>
+            </div>
+        </div>
+
+        <div class="column">
+        </div>
+
+  </div>
+
+    <input type="hidden" name="_csrf_token"
+           value="{{ csrf_token('authenticate') }}">
+
+
+</form>
+{% endblock %}
