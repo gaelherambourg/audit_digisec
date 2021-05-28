@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Entity\Audit;
+use App\Entity\AuditControle;
 use App\Entity\Societe;
 use App\Entity\Statut;
 use App\Form\AuditType;
@@ -64,6 +65,19 @@ class AuditController extends AbstractController
             $audit->setNom($societe_audit->getNom()." - ".$audit->getReferentiel()->getLibelle()." - ".$audit->getDateCreation()->format('d/m/Y'));
             $audit->setStatut($entityManager->find(Statut::class, 1));
                         
+            foreach($audit->getReferentiel()->getChapitres() as $chapitre){
+
+                foreach($chapitre->getRecommandations() as $recommandation){
+                    foreach($recommandation->getPointsControle() as $pointControle){
+                        $audit_controle = new AuditControle();
+                        $audit_controle->setPointControle($pointControle);
+                        $entityManager->persist($audit_controle);
+                        $audit->addAuditsControle($audit_controle);
+                    }
+                }
+            }
+            
+            dump($audit->getAuditsControle());
             // Sauvegarde en Bdd
             $entityManager->persist($audit);
             $entityManager->flush();
@@ -72,7 +86,11 @@ class AuditController extends AbstractController
             $this->addFlash("link", "L'audit a été créé");
 
             // On redirige vers societe_liste
-            return $this->redirectToRoute('audit_liste');
+            return $this->redirectToRoute('audit_controle', [
+                'id' => $audit->getId(),
+                'id_recommandation' => $audit->getReferentiel()->getChapitres()->first()->getRecommandations()->first()->getId()
+
+            ]);
         }
 
         return $this->render('audit/audit_creation.html.twig', [

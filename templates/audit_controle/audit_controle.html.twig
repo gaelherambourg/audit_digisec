@@ -1,0 +1,64 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Audit {{audit.nom}}{% endblock %}
+
+{% block body %}
+<div class="columns">
+    <div class="column is-one-fifth">
+        {% include 'audit_controle/menu_lateral.html.twig' %} <!-- On importe le menu latéral avec le nom des chapitres et recommandations -->
+    </div>
+    <div class="column has-text-centered">
+
+        <h1 class="title">{{audit.nom}}</h1>
+        <fieldset class="box">
+			<legend class="label">Informations</legend>
+            <div><!-- Id du chapitre et son libellé -->
+            {{recommandation.chapitre.id}} - {{recommandation.chapitre.libelle}}
+            </div>
+            <div class="mt-5"> <!-- Index référentiel de la recommandation et libellé de la recommandation -->
+            {{recommandation.indexReferentiel}} - {{recommandation.libelle}}
+            </div>
+            <div class="mt-5"><!-- Description de la recommandation -->
+            {{recommandation.description}}
+            </div>
+        </fieldset>
+        <fieldset class="box">
+			<legend class="label">Contrôles</legend>
+            {{form_start(form_audit_controle)}}
+                {% for audit_controle in form_audit_controle.audit_controle %}
+                    <div class="columns is-mobile">
+                        <div class="column is-4">
+                            {{ form_label(audit_controle.pointControle, null, {'attr': {'class': 'has-text-link'} }) }}
+                        </div>
+                        <div class="column is-6">
+                            {{ form_widget(audit_controle.pointControle, {'attr': {'class': 'input is-link'} }) }}
+                        </div>
+                    </div>
+                    <div class="columns is-mobile">
+                        <div class="column is-4">
+                            {{ form_label(audit_controle.note, null, {'attr': {'class': 'has-text-link'} }) }}
+                        </div>
+                        <div class="column is-6">
+                            {{ form_widget(audit_controle.note, {'attr': {'class': 'input is-link', 'placeholder': 'Note'}}) }}
+                        </div>
+                    </div>
+                    <div class="columns is-mobile">
+                        <div class="column is-4">
+                            {{ form_label(audit_controle.remarque, null, {'attr': {'class': 'has-text-link'} }) }}
+                        </div>
+                        <div class="column is-6">
+                            {{ form_widget(audit_controle.remarque, {'attr': {'class': 'input is-link', 'placeholder': 'Remarque'}}) }}
+                        </div>
+                    </div>
+                {% endfor %}
+                    <div class="column is-10 has-text-right">
+                        {{ form_widget(form_audit_controle.enregistrer) }}
+                    </div>
+                {{form_end(form_audit_controle)}}
+        </fieldset>
+    </div>
+</div>
+
+
+
+{% endblock %}
