@@ -6,6 +6,8 @@ use App\Repository\AuditControleRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
+use Symfony\Component\Validator\Context\ExecutionContextInterface;
 
 /**
  * @ORM\Entity(repositoryClass=AuditControleRepository::class)
@@ -26,11 +28,13 @@ class AuditControle
 
     /**
      * @ORM\Column(type="text", nullable=true)
+     * @Assert\NotBlank(message="Ce champ ne doit pas être vide.")
      */
     private $remarque;
 
     /**
      * @ORM\Column(type="integer", nullable=true)
+     * @Assert\NotBlank(message="Ce champ ne doit pas être !!!!!!!!!!!!!!!!!!!!!!.")
      */
     private $note;
 
@@ -246,4 +250,30 @@ class AuditControle
 
         return $this;
     }
+
+    /**
+     * @Assert\Callback
+     **/
+    public function isNoteValid(ExecutionContextInterface $context, $note)
+    {
+        $note = $this->getNote();
+        dump($note);
+        $echelleNotation = $this->getAudit()->getEchelleNotation()->getId();
+        dump($echelleNotation);
+        if($echelleNotation == 1){
+            if($note < 0 || $note > 5){
+                $context->buildViolation('La note doit être comprise entre 0 et 5')
+                    ->atPath('note')
+                    ->addViolation();
+            }
+        }
+        if($echelleNotation == 2){
+            if($note < 0 || $note > 3){
+                $context->buildViolation('La note doit être comprise entre 0 et 3')
+                    ->atPath('note')
+                    ->addViolation();
+            }
+        }
+    }
+
 }
