@@ -49,22 +49,19 @@ class AdresseFormType extends AbstractType
             ])
             ->add('ville', TextType::class, [
                 'label' => 'Ville : ',
-                'constraints' => [
-                    new NotBlank([
-                        'message' => 'Ce champs ne doit pas être vide.'
-                    ]),
-                    new Length([
-                        'max' => 100,
-                        'maxMessage' => 'Ce champs a un maximum de 100 caractères.'
-                    ])
-                ]
+                
             ]);
     }
+
+
 
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults([
             'data_class' => Adresse::class,
-        ]);
+            'csrf_protection' => false,
+            'attr' => [
+                'novalidate' => 'novalidate', // Désactive la validation HTML5
+        ]]);
     }
 }

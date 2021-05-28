@@ -288,7 +288,7 @@
 			<section
 				class="modal-card-body">
 				<!-- Content ... -->
-				{{ form_start(adresseForm) }}
+				{{ form_start(adresseForm, {'attr': {'id': 'nouvelle_adresse'}}) }}
 				<div class="columns is-mobile">
 					<div class="column is-4">
 						{{ form_label(adresseForm.libelle, null, {'attr': {'class': 'has-text-link'} }) }}
@@ -327,7 +327,7 @@
 
 			</section>
 			<footer class="modal-card-foot">
-				<button type="submit" class="button is-medium is-link is-light is-3">Créer</button>
+				<button id="boutonAdresse" type="submit" class="button is-medium is-link is-light is-3">Créer</button>
 			</footer>
 		</div>
 	</div>
