@@ -22,19 +22,28 @@ class AuditControleRepository extends ServiceEntityRepository
     // /**
     //  * @return AuditControle[] Returns an array of AuditControle objects
     //  */
-    /*
-    public function findByExampleField($value)
+    
+    public function findById($value)
     {
         return $this->createQueryBuilder('a')
-            ->andWhere('a.exampleField = :val')
+            ->andWhere('a.audit = :val')
             ->setParameter('val', $value)
             ->orderBy('a.id', 'ASC')
-            ->setMaxResults(10)
             ->getQuery()
             ->getResult()
         ;
     }
-    */
+    
+    public function findAllPointControleByAuditAndRecommandation($id, $id_recommandation){
+        $queryBuilder = $this->createQueryBuilder('c')
+            ->join('c.pointControle','p')->addSelect('p')
+            ->join('p.recommandation','r')->addSelect('r');
+        $queryBuilder
+            ->andWhere('c.audit = :id')->setParameter('id',$id)
+            ->andWhere('r.id = :id_recommandation')->setParameter('id_recommandation', $id_recommandation);
+        $query = $queryBuilder->getQuery();
+        return $query->getResult();
+    }
 
     /*
     public function findOneBySomeField($value): ?AuditControle
