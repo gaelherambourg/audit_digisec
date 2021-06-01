@@ -19,6 +19,17 @@ class RemarqueRepository extends ServiceEntityRepository
         parent::__construct($registry, Remarque::class);
     }
 
+    public function findByAuditAndRecommandation($id_audit, $id_recommandation)
+    {
+        return $this->createQueryBuilder('r')
+            ->andWhere('r.recommandation = :val')
+            ->setParameter('val', $id_recommandation)
+            ->andWhere('r.audit = :v')
+            ->setParameter('v', $id_audit)
+            ->getQuery()
+            ->getSingleResult()
+        ;
+    }
     // /**
     //  * @return Remarque[] Returns an array of Remarque objects
     //  */

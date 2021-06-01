@@ -66,10 +66,10 @@
             {% endif %}
             <td>{{audit.statut.libelle}}</td>
             {% if audit.statut.libelle == "En cours" %}
-                <td><a href="">Reprendre</a>
+                <td><a href="{{ path('audit_controle', {id:audit.id, id_recommandation:1})}}">Reprendre</a>
             {% endif %}
             {% if audit.statut.libelle == "Termine" %}
-                <td><a href="">Modifier</a>
+                <td><a href="{{ path('audit_controle', {id:audit.id, id_recommandation:1})}}">Modifier</a>
             {% endif %}
             {% if audit.statut.libelle == "Remis" %}
                 <td><a href="">Consulter</a> - <a href="">Générer PDF</a></td>

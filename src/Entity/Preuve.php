@@ -4,6 +4,7 @@ namespace App\Entity;
 
 use App\Repository\PreuveRepository;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ORM\Entity(repositoryClass=PreuveRepository::class)
@@ -24,6 +25,9 @@ class Preuve
 
     /**
      * @ORM\Column(type="string", length=255, nullable=true)
+     * @Assert\Image(
+     *          mimeTypes="image/jpeg"
+     * )
      */
     private $image;
 

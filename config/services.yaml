@@ -34,3 +34,9 @@ services:
     App\Services\LogoServices:
         arguments:
             $targetDirectory: '%kernel.project_dir%/public/img/logos/'
+    App\Services\ImagePreuveServices:
+        arguments:
+            $targetDirectory: '%kernel.project_dir%/public/preuves/images/'
+    App\Services\FichierPreuveServices:
+        arguments:
+            $targetDirectory: '%kernel.project_dir%/public/preuves/fichiers/'

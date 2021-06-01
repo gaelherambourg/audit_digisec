@@ -66,3 +66,6 @@ table{
 aside{
     background-color: rgb(207, 207, 230);
 }
+.noPreuve{
+    color: tomato;
+}

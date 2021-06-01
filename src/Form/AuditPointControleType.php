@@ -14,6 +14,7 @@ class AuditPointControleType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
+            ->add('remarque', RemarqueRecommandationFormType::class)
             ->add('audit_controle', CollectionType::class, [
                 'entry_type' => AuditControlFormType::class,
                 "label" => false

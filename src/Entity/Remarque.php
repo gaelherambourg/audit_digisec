@@ -4,6 +4,7 @@ namespace App\Entity;
 
 use App\Repository\RemarqueRepository;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ORM\Entity(repositoryClass=RemarqueRepository::class)
@@ -19,6 +20,7 @@ class Remarque
 
     /**
      * @ORM\Column(type="text")
+     * @Assert\NotBlank(message="Ce champ ne doit pas être vide.")
      */
     private $remarque;
 
