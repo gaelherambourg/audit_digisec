@@ -12,6 +12,14 @@ main {
     flex: 1;
 }
 
+form .box {
+    background-color: rgb(236, 236, 236);
+}
+
+fieldset .box {
+    background-color: rgb(242, 250, 255);
+}
+
 .color-bg{
     background-color: #191970;
     color: #FFFFFF;

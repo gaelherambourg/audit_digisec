@@ -88,13 +88,11 @@ class Societe
 
     /**
      * @ORM\OneToMany(targetEntity=Adresse::class, mappedBy="societe", cascade={"persist", "remove"})
-     * @Assert\Valid()
      */
     private $adresse;
 
     /**
      * @ORM\OneToMany(targetEntity=Contact::class, mappedBy="societe", cascade={"persist", "remove"})
-     * @Assert\Valid()
      */
     private $contact;
 
