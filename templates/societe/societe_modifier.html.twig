@@ -29,7 +29,7 @@
 
 			<fieldset class="box">
 				<legend class="label">Entreprise</legend>
-
+				
 				<div class="columns is-mobile">
 					<div class="column is-4">
 						{{ form_label(societeForm.societe.nom, null, {'attr': {'class': 'has-text-link'} }) }}
@@ -97,42 +97,62 @@
 			<fieldset class="box">
 				<legend class="label">Adresse</legend>
 				{% for adresse in societeForm.adresse %}
-
+				<fieldset class="box">
+				{% if loop.index > 1 %}
+					<legend>Adresse secondaire</legend>
+						{% endif %}
 					<div class="columns is-mobile">
 						<div class="column is-4">
 							{{ form_label(adresse.libelle, null, {'attr': {'class': 'has-text-link'} }) }}
 						</div>
-						<div class="column is-8">
+						<div class="column is-7">
 							{{ form_widget(adresse.libelle, {'attr': {'class': 'input is-link', 'placeholder': 'Libellé'}}) }}
 						</div>
+						{% if loop.index > 1 %}
+						<div class="column is-1">
+							<span class="icon has-text-info">
+								<button id="button_details{{loop.index}}"><i class="fas fa-info-circle"></i></button>
+							</span>
+						</div>
+						{% endif %}
 					</div>
+					
+					<span id='adresse{{loop.index}}'>
+					
+						<div class="columns is-mobile">
+							<div class="column is-4">
+								{{ form_label(adresse.rue, null, {'attr': {'class': 'has-text-link'} }) }}
+							</div>
+							<div class="column is-7">
+								{{ form_widget(adresse.rue, {'attr': {'class': 'input is-link', 'placeholder': 'Rue'}}) }}
+							</div>
+						</div>
 
-					<div class="columns is-mobile">
-						<div class="column is-4">
-							{{ form_label(adresse.rue, null, {'attr': {'class': 'has-text-link'} }) }}
+						<div class="columns is-mobile">
+							<div class="column is-4">
+								{{ form_label(adresse.code_postal, null, {'attr': {'class': 'has-text-link'} }) }}
+							</div>
+							<div class="column is-7">
+								{{ form_widget(adresse.code_postal, {'attr': {'class': 'input is-link', 'placeholder': 'Code postal'}}) }}
+							</div>
 						</div>
-						<div class="column is-8">
-							{{ form_widget(adresse.rue, {'attr': {'class': 'input is-link', 'placeholder': 'Rue'}}) }}
-						</div>
-					</div>
 
-					<div class="columns is-mobile">
-						<div class="column is-4">
-							{{ form_label(adresse.code_postal, null, {'attr': {'class': 'has-text-link'} }) }}
+						<div class="columns is-mobile">
+							<div class="column is-4">
+								{{ form_label(adresse.ville, null, {'attr': {'class': 'has-text-link'} }) }}
+							</div>
+							<div class="column is-7">
+								{{ form_widget(adresse.ville, {'attr': {'class': 'input is-link', 'placeholder': 'Ville'}}) }}
+							</div>
 						</div>
-						<div class="column is-8">
-							{{ form_widget(adresse.code_postal, {'attr': {'class': 'input is-link', 'placeholder': 'Code postal'}}) }}
-						</div>
-					</div>
 
-					<div class="columns is-mobile">
-						<div class="column is-4">
-							{{ form_label(adresse.ville, null, {'attr': {'class': 'has-text-link'} }) }}
-						</div>
-						<div class="column is-8">
-							{{ form_widget(adresse.ville, {'attr': {'class': 'input is-link', 'placeholder': 'Ville'}}) }}
-						</div>
-					</div>
+						{% if loop.index > 1 %}
+							<div class="column is-4">
+								<a class="button is-small is-danger is-light is-3" id="supprimerAdresse" href="{{ path('adresse_supprimer',{idAdresse: idAdresse[(loop.index)-1].id} ) }}">Supprimer l'adresse</a>
+							</div>
+						{% endif %}
+					</span>
+					</fieldset>
 				{% endfor %}
 				<div class="columns is-mobile">
 					<div class="column is-9"></div>
@@ -202,15 +222,12 @@
 				<div class="column"></div>
 				<a class="button is-medium is-link is-light is-3" href="{{path('societe_liste')}}">Annuler</a>
 				<div class="column"></div>
-				{% if logo is not defined %}
-					<button type="submit" class="button is-medium is-link is-light is-3">Créer</button>
-				{% else %}
-					<button type="submit" class="button is-medium is-link is-light is-3">Modifier</button>
-				{% endif %}
+				<a class="button is-medium is-danger is-light is-3" href="{{path('societe_supprimer', {id: id})}}">Supprimer</a>
 				<div class="column"></div>
+				<button type="submit" class="button is-medium is-link is-light is-3">Modifier</button>
 			</div>
 		</div>
-		{{ form_end(societeForm) }}
+		{{ form_end(societeForm, {render_rest: false}) }}
 	</div>
 
 	<!-- Fenêtre modal Ajouter un contact -->
@@ -224,7 +241,7 @@
 			<section
 				class="modal-card-body">
 				<!-- Content ... -->
-				{{ form_start(contactForm) }}
+				{{ form_start(contactForm, {'attr': {'id': 'nouveau_contact'}}) }}
 				<div class="columns is-mobile">
 					<div class="column is-4">
 						{{ form_label(contactForm.nom_contact, null, {'attr': {'class': 'has-text-link'} }) }}

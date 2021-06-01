@@ -22,6 +22,8 @@ class Adresse
 
     /**
      * @ORM\Column(type="string", length=50)
+     * @Assert\NotBlank(message="Ce champ ne doit pas être vide.")
+     * @Assert\Length(max=50, maxMessage="Ce champ a un maximum de 50 caractères")
      */
     private $libelle;
 
@@ -109,6 +111,26 @@ class Adresse
     public function setSociete(?Societe $societe): self
     {
         $this->societe = $societe;
+
+        return $this;
+    }
+
+    /**
+     * Get the value of id
+     */ 
+    public function getId()
+    {
+        return $this->id;
+    }
+
+    /**
+     * Set the value of id
+     *
+     * @return  self
+     */ 
+    public function setId($id)
+    {
+        $this->id = $id;
 
         return $this;
     }

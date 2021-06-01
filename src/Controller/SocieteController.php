@@ -9,19 +9,23 @@ use App\Form\AdresseFormType;
 use App\Form\ContactFormType;
 use App\Form\SocieteFormType;
 use App\Services\LogoServices;
+use Doctrine\ORM\EntityManager;
+use Symfony\Component\Form\Form;
 use App\Form\RechercheSimpleType;
 use App\Form\AjoutSocieteFormType;
 use App\Form\ModifierSocieteFormType;
+use App\Repository\AdresseRepository;
 use App\Repository\SocieteRepository;
-use Doctrine\ORM\EntityManager;
+use App\Services\ErreursServices;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\JsonResponse;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\Validator\Constraints\IsFalseValidator;
 use Symfony\Component\Validator\Constraints\IsTrue;
+use Symfony\Component\Validator\ConstraintViolationList;
+use Symfony\Component\Validator\Constraints\IsFalseValidator;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
 class SocieteController extends AbstractController
 {
@@ -43,9 +47,6 @@ class SocieteController extends AbstractController
 
         // Si le formulaire est soumis
         if ($societeForm->isSubmitted() && $societeForm->isValid()) {
-
-            // On récupère les données de l'adresse
-            $adresse->setLibelle('Adresse principale');
 
             // On modifie les données vide de la société
             $societe->setDateCreation(new \DateTime());
@@ -120,16 +121,17 @@ class SocieteController extends AbstractController
     }
 
     /**
-     * @Route("/societe/modifier/adresse/{id}", name="societe_modifier_adresse")
      * @Route("/societe/modifier/{id}", name="societe_modifier", requirements={"id"="\d+"})
      */
-    public function societeModifier($id, Request $request, EntityManagerInterface $entityManager, LogoServices $logoServices, SocieteRepository $societeRepository): Response
+    public function societeModifier($id, ErreursServices $erreursServices, Request $request, EntityManagerInterface $entityManager, LogoServices $logoServices, SocieteRepository $societeRepository): Response
     {
         // On créé une instance de société, Adresse, et Contact
         $societe = $societeRepository->findAllInformationsBySociety($id);
         $logo = $societe->getLogo();
         $contact = new Contact();
         $adresse = new Adresse();
+        //dd($societe->getAdresse()[0]->getId());
+        $idAdresse = $societe->getAdresse();
 
         // Crée une instance de la classe de formulaire que l'on associe à notre formulaire
         $societeForm = $this->createForm(ModifierSocieteFormType::class, ['societe' => $societe, 'adresse' => $societe->getAdresse(), 'contact' => $societe->getContact()]);
@@ -138,80 +140,49 @@ class SocieteController extends AbstractController
 
         // On prend les données du formulaire soumis, et les injecte dans $societe
         $societeForm->handleRequest($request);
-        $adresseForm->handleRequest($request);
-        //$contactForm->handleRequest($request);
-
-
-        /*if ($contactForm->isSubmitted() && $contactForm->isValid()) {
-            $contact->setSociete($societe);
-            $entityManager->persist($contact);
-            $entityManager->flush();
-            // On ajoute un message flash
-            $this->addFlash("link", "Le contact a été ajouté");
-
-            return $this->redirect($request->getUri());
-        }*/
-        /* if ($request->getMethod() == 'POST') {
-            //$adresseForm->handleRequest($request);
-            $donnee = $adresseForm->get('ville')->getData();
-            $adresseForm->submit($request->request->all());
-            $verif = $adresseForm->isSubmitted();
-            $test = $adresseForm->isValid();
-            
-            if ($adresseForm->isSubmitted() && $adresseForm->isValid()) {
-                $verif = 'OK';
-                $adresse->setSociete($societe);
-                $entityManager->persist($adresse);
-                $entityManager->flush();
-                // On ajoute un message flash
-                $this->addFlash("link", "L'adresse a été ajouté");
-
-                //return $this->redirect($request->getUri());
-                return new JsonResponse(['id' => $id, 'verif' => $verif, 'test' => $test, 'donnee' => $donnee]);
-            }
-            return new JsonResponse(['id' => $id, 'verif' => $verif, 'test' => $test, 'donnee' => $donnee]);
-        }*/
 
         // Si le formulaire est soumis
-        if ($societeForm->isSubmitted() && $societeForm->isValid()) {
+        if ($societeForm->isSubmitted()) {
+            if ($societeForm->isValid()) {
 
-            // On récupère le logo et on utilise LogoServices pour l'enregistrement
-            $uploadedFile = $societeForm->get('societe')->get('logo')->getData();
-            if ($uploadedFile) {
-                $pictureFileName = $logoServices->upload($uploadedFile);
-                $societe->setLogo($pictureFileName);
+                // On récupère le logo et on utilise LogoServices pour l'enregistrement
+                $uploadedFile = $societeForm->get('societe')->get('logo')->getData();
+                if ($uploadedFile) {
+                    $pictureFileName = $logoServices->upload($uploadedFile);
+                    $societe->setLogo($pictureFileName);
+                }
+
+                // On ajoute la date de modification 
+                $societe->setDateModification(new \DateTime());
+            
+                // Sauvegarde en Bdd
+                $entityManager->persist($societe);
+                $entityManager->flush();
+
+                // On ajoute un message flash
+                $this->addFlash("link", "L'entreprise a été modifée");
+
+                // On redirige vers societe_liste
+                return $this->redirectToRoute('societe_liste');
             }
-
-            // On ajoute la date de modification
-            $societe->setDateModification(new \DateTime());
-
-            // Sauvegarde en Bdd
-            $entityManager->persist($societe);
-            $entityManager->flush();
-
-            // On ajoute un message flash
-            $this->addFlash("link", "L'entreprise a été modifée");
-
-            // On redirige vers societe_liste
-            return $this->redirectToRoute('societe_liste');
         }
 
         return $this->render('societe/societe_modifier.html.twig', [
             "societeForm" => $societeForm->createView(),
             "contactForm" => $contactForm->createView(),
             "adresseForm" => $adresseForm->createView(),
-            "logo" => $logo
+            "logo" => $logo,
+            "id" => $id,
+            "idAdresse" => $idAdresse
         ]);
     }
 
     /**
      * @Route("/societe/modifier/adresse/{json}", name="societe_modifier_adresse")
      */
-    public function ajoutAdresse($json, Request $request, EntityManagerInterface $entityManager, SocieteRepository $societeRepository): Response
+    public function ajoutAdresse($json, ErreursServices $erreursServices, Request $request, EntityManagerInterface $entityManager, SocieteRepository $societeRepository): Response
     {
-        $societe = $societeRepository->find(1);
-        $id = $societe->getId();
-        $verif = 'KO';
+        $resultat = "";
 
         // On récupère le JSON et on le décode
         $nouvelleAdresse = json_decode($json);
@@ -219,6 +190,10 @@ class SocieteController extends AbstractController
         $rue = $nouvelleAdresse->rue;
         $codePostal = $nouvelleAdresse->codePostal;
         $ville = $nouvelleAdresse->ville;
+        $societeId = $nouvelleAdresse->societeId;
+
+        // On récupère la societe pour l'associer à l'adresse
+        $societe = $societeRepository->find($societeId);
 
         // On créer une instance de Adresse
         $adresse = new Adresse();
@@ -236,29 +211,117 @@ class SocieteController extends AbstractController
         if ($request->getMethod() == 'POST') {
 
             // On prend les données du formulaire soumis, et les injecte dans $societe
-            //$adresseForm->handleRequest($request);
-            $avant = $adresse->getville();
+            $adresseForm->handleRequest($request);
             $adresseForm->submit(array_merge(['libelle' => $libelle, 'rue' => $rue, 'ville' => $ville, 'code_postal' => $codePostal], $request->request->all()), false);
-            $apres = $adresse->getville();
 
-            //dump($adresseForm);
             if ($adresseForm->isSubmitted()) {
-                $test = $adresseForm->isValid();
-
                 if ($adresseForm->isValid()) {
-
-                    $verif = 'OK';
+                    $resultat = 'success';
                     $entityManager->persist($adresse);
                     $entityManager->flush();
 
                     // On ajoute un message flash
                     $this->addFlash("link", "L'adresse a été ajouté");
-                    return new JsonResponse(['verif' => $verif, 'id' => $id, 'test' => $test]);
+                    return new JsonResponse(['resultat' => $resultat]);
                 } else {
-                    $liste_erreurs = $adresseForm->getErrors();
+                    $erreurs = $erreursServices->getErrorMessages($adresseForm);
                 }
             }
         }
-        return new JsonResponse(['verif' => $verif, 'id' => $id, 'test' => $test, 'avant' => $avant, 'apres' => $apres, 'erreur' => $liste_erreurs]);
+        return new JsonResponse(['resultat' => $resultat, 'erreur' => $erreurs]);
+    }
+
+    /**
+     * @Route("/societe/modifier/contact/{json}", name="societe_modifier_contact")
+     */
+    public function ajoutContact($json, ErreursServices $erreursServices, Request $request, EntityManagerInterface $entityManager, SocieteRepository $societeRepository): Response
+    {
+        $resultat = "";
+
+        // On récupère le JSON et on le décode
+        $nouveauContact = json_decode($json);
+        $nom = $nouveauContact->nom;
+        $prenom = $nouveauContact->prenom;
+        $telephone = $nouveauContact->telephone;
+        $mail = $nouveauContact->mail;
+        $poste = $nouveauContact->poste;
+        $societeId = $nouveauContact->societeId;
+
+        // On récupère la societe pour l'associer à l'adresse
+        $societe = $societeRepository->find($societeId);
+
+        // On créer une instance de Adresse
+        $contact = new Contact();
+
+        // On hydrate l'objet
+        $contact->setNomContact($nom);
+        $contact->setPrenomContact($prenom);
+        $contact->setTelContact($telephone);
+        $contact->setEmailContact($mail);
+        $contact->setPosteContact($poste);
+        $contact->setSociete($societe);
+
+        // On créer une instance de la classe de formulaire que l'on associe à notre formulaire
+        $contactForm = $this->createForm(ContactFormType::class, $contact);
+
+        if ($request->getMethod() == 'POST') {
+
+            // On prend les données du formulaire soumis, et les injecte dans $societe
+            $contactForm->handleRequest($request);
+            $contactForm->submit(array_merge(['nom_contact' => $nom, 'prenom_contact' => $prenom, 'tel_contact' => $telephone, 'email_contact' => $mail, 'poste_contact' => $poste], $request->request->all()), false);
+
+            if ($contactForm->isSubmitted()) {
+                if ($contactForm->isValid()) {
+                    $resultat = 'success';
+                    $entityManager->persist($contact);
+                    $entityManager->flush();
+
+                    // On ajoute un message flash
+                    $this->addFlash("link", "Le contact a été ajouté");
+                    return new JsonResponse(['resultat' => $resultat]);
+                } else {
+                    $erreurs = $erreursServices->getErrorMessages($contactForm);
+                }
+            }
+        }
+        return new JsonResponse(['resultat' => $resultat, 'erreur' => $erreurs]);
+    }
+
+    /**
+     * @Route("/societe/supprimer/{id}", name="societe_supprimer", requirements={"id"="\d+"})
+     */
+    public function societeSupprimer($id,  EntityManagerInterface $entityManager, SocieteRepository $societeRepository): Response
+    {
+        // On récupère la société
+        $societe = $societeRepository->findAllInformationsBySociety($id);
+
+        // On supprime la société
+        $entityManager->remove($societe);
+        $entityManager->flush();
+
+        // On ajoute un message flash
+        $this->addFlash("link", "La société a été supprimée");
+
+        // On redirige vers societe_liste
+        return $this->redirectToRoute('societe_liste');
+    }
+
+    /**
+     * @Route("/societe/modifier/adresse/supprimer/{idAdresse}", name="adresse_supprimer", requirements={"id"="\d+"})
+     */
+    public function adresseSupprimer($idAdresse, EntityManagerInterface $entityManager, AdresseRepository $adresseRepository): Response
+    {
+        // On récupère la société
+        $adresse = $adresseRepository->find($idAdresse);
+
+        // On supprime la société
+        $entityManager->remove($adresse);
+        $entityManager->flush();
+
+        // On ajoute un message flash
+        $this->addFlash("link", "L'adresse a été supprimée");
+
+        // On redirige vers societe_liste
+        return $this->redirectToRoute('societe_liste');
     }
 }
