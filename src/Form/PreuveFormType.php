@@ -33,17 +33,17 @@ class PreuveFormType extends AbstractType
             ])
             ->add('fichier', FileType::class, [
                 'label' => 'Fichier : ',
-                'mapped' => false,
+                'mapped'=> false,
                 'constraints' => [
                     new File([
                         'maxSize' => '5M',
-                        'maxSizeMessage' => 'La taille max est de 5 mo'
+                        'maxSizeMessage' => 'La taille max est de  2mo'
                     ])
                 ]
             ])
             ->add('image', FileType::class, [
                 'label' => 'Image : ',
-                'mapped' => false,
+                'mapped'=> false,
                 'constraints' => [
                     new Image([
                         'maxSize' => '5M',

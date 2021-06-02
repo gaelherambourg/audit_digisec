@@ -65,15 +65,17 @@ class AuditControleController extends AbstractController
          //Création des formulaires
         $audit_form_controle = $this->createForm(AuditPointControleType::class, ['audit_controle' => $listeAuditControle, 'remarque' => $remarque]);
         //$audit_controle_form = $this->createForm(AuditControlFormType::class, $auditControle);
+        
+        
         $preuve_form = $this->createForm(PreuveFormType::class, $preuve);
 
         $audit_form_controle->handleRequest($request);
         //$audit_controle_form->handleRequest($request);
-        $preuve_form->handleRequest($request);
+        //$preuve_form->handleRequest($request);
         
         $preuves = $preuveRepository->findAll();
 
-        if ($preuve_form->isSubmitted() && $preuve_form->isValid()) {
+        /* if ($preuve_form->isSubmitted() && $preuve_form->isValid()) {
 
             $testAuditControle = $auditControleRepository->find($request->get('modPreuv'));
             $preuve->setAuditControle($testAuditControle);
@@ -94,7 +96,7 @@ class AuditControleController extends AbstractController
             $entityManager->flush();
 
             return $this->redirectToRoute('audit_controle', ['id' => $id, 'id_recommandation' => $id_recommandation]);
-        }
+        } */
                 
 
         /* if ($remarque_form->isSubmitted() && $remarque_form->isValid()) {

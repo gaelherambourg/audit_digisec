@@ -25,9 +25,6 @@ class Preuve
 
     /**
      * @ORM\Column(type="string", length=255, nullable=true)
-     * @Assert\Image(
-     *          mimeTypes="image/jpeg"
-     * )
      */
     private $image;
 
