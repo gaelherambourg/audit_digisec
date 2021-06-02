@@ -12,11 +12,12 @@ use App\Services\LogoServices;
 use Doctrine\ORM\EntityManager;
 use Symfony\Component\Form\Form;
 use App\Form\RechercheSimpleType;
+use App\Services\ErreursServices;
 use App\Form\AjoutSocieteFormType;
 use App\Form\ModifierSocieteFormType;
 use App\Repository\AdresseRepository;
+use App\Repository\ContactRepository;
 use App\Repository\SocieteRepository;
-use App\Services\ErreursServices;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -132,6 +133,7 @@ class SocieteController extends AbstractController
         $adresse = new Adresse();
         //dd($societe->getAdresse()[0]->getId());
         $idAdresse = $societe->getAdresse();
+        $idContact = $societe->getContact();
 
         // Crée une instance de la classe de formulaire que l'on associe à notre formulaire
         $societeForm = $this->createForm(ModifierSocieteFormType::class, ['societe' => $societe, 'adresse' => $societe->getAdresse(), 'contact' => $societe->getContact()]);
@@ -145,6 +147,10 @@ class SocieteController extends AbstractController
         if ($societeForm->isSubmitted()) {
             if ($societeForm->isValid()) {
 
+                // On vérifie si un logo existe déjà pour le supprimer
+                if ($societe->getLogo()) {
+                    $logoServices->deletePhoto($societe->getLogo());
+                }
                 // On récupère le logo et on utilise LogoServices pour l'enregistrement
                 $uploadedFile = $societeForm->get('societe')->get('logo')->getData();
                 if ($uploadedFile) {
@@ -154,7 +160,7 @@ class SocieteController extends AbstractController
 
                 // On ajoute la date de modification 
                 $societe->setDateModification(new \DateTime());
-            
+
                 // Sauvegarde en Bdd
                 $entityManager->persist($societe);
                 $entityManager->flush();
@@ -173,7 +179,8 @@ class SocieteController extends AbstractController
             "adresseForm" => $adresseForm->createView(),
             "logo" => $logo,
             "id" => $id,
-            "idAdresse" => $idAdresse
+            "idAdresse" => $idAdresse,
+            "idContact" => $idContact,
         ]);
     }
 
@@ -191,6 +198,7 @@ class SocieteController extends AbstractController
         $codePostal = $nouvelleAdresse->codePostal;
         $ville = $nouvelleAdresse->ville;
         $societeId = $nouvelleAdresse->societeId;
+        $token = $nouvelleAdresse->formAdresseToken;
 
         // On récupère la societe pour l'associer à l'adresse
         $societe = $societeRepository->find($societeId);
@@ -212,7 +220,7 @@ class SocieteController extends AbstractController
 
             // On prend les données du formulaire soumis, et les injecte dans $societe
             $adresseForm->handleRequest($request);
-            $adresseForm->submit(array_merge(['libelle' => $libelle, 'rue' => $rue, 'ville' => $ville, 'code_postal' => $codePostal], $request->request->all()), false);
+            $adresseForm->submit(array_merge(['libelle' => $libelle, 'rue' => $rue, 'ville' => $ville, 'code_postal' => $codePostal, '_token' => $token], $request->request->all()), false);
 
             if ($adresseForm->isSubmitted()) {
                 if ($adresseForm->isValid()) {
@@ -246,6 +254,7 @@ class SocieteController extends AbstractController
         $mail = $nouveauContact->mail;
         $poste = $nouveauContact->poste;
         $societeId = $nouveauContact->societeId;
+        $token = $nouveauContact->formContactToken;
 
         // On récupère la societe pour l'associer à l'adresse
         $societe = $societeRepository->find($societeId);
@@ -268,7 +277,7 @@ class SocieteController extends AbstractController
 
             // On prend les données du formulaire soumis, et les injecte dans $societe
             $contactForm->handleRequest($request);
-            $contactForm->submit(array_merge(['nom_contact' => $nom, 'prenom_contact' => $prenom, 'tel_contact' => $telephone, 'email_contact' => $mail, 'poste_contact' => $poste], $request->request->all()), false);
+            $contactForm->submit(array_merge(['nom_contact' => $nom, 'prenom_contact' => $prenom, 'tel_contact' => $telephone, 'email_contact' => $mail, 'poste_contact' => $poste, '_token' => $token], $request->request->all()), false);
 
             if ($contactForm->isSubmitted()) {
                 if ($contactForm->isValid()) {
@@ -320,6 +329,25 @@ class SocieteController extends AbstractController
 
         // On ajoute un message flash
         $this->addFlash("link", "L'adresse a été supprimée");
+
+        // On redirige vers societe_liste
+        return $this->redirectToRoute('societe_liste');
+    }
+
+    /**
+     * @Route("/societe/modifier/contact/supprimer/{idContact}", name="contact_supprimer", requirements={"id"="\d+"})
+     */
+    public function contactSupprimer($idContact, EntityManagerInterface $entityManager, ContactRepository $contactRepository): Response
+    {
+        // On récupère la société
+        $contact = $contactRepository->find($idContact);
+
+        // On supprime la société
+        $entityManager->remove($contact);
+        $entityManager->flush();
+
+        // On ajoute un message flash
+        $this->addFlash("link", "Le contact a été supprimée");
 
         // On redirige vers societe_liste
         return $this->redirectToRoute('societe_liste');

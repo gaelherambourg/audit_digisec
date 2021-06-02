@@ -19,7 +19,7 @@
 			class="navbar-end">
 
 			<!-- Lien accessible uniquement à un utilisateur connecté -->
-			<!-- TODO Ajouter le paramètrage -->
+			{% if is_granted("IS_AUTHENTICATED_FULLY") %}
 				<a class="navbar-item has-text-weight-bold" href="{{ path('audit_liste')}}">
 					Accueil
 				</a>
@@ -32,12 +32,13 @@
                 <a class="navbar-item has-text-weight-bold" href=#>
 					Profil
 				</a>
-
+			
 			<div class="navbar-item">
 					<a class="button is-link is-light" href="{{ path('app_logout') }}">
-						<strong>Se déconnecter</strong>
+						<strong>Se déconnecter ({{ app.user.username | striptags }})</strong>
 					</a>
 			</div>
+			{% endif %}
 		</div>
 	</div>
 </nav>
