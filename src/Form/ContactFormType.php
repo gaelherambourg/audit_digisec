@@ -35,7 +35,6 @@ class ContactFormType extends AbstractType
     {
         $resolver->setDefaults([
             'data_class' => Contact::class,
-            'csrf_protection' => false,
             'attr' => [
                 'novalidate' => 'novalidate', // Désactive la validation HTML5
         ]]);

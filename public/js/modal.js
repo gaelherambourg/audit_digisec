@@ -1,6 +1,7 @@
 window.onload = function () {
 
     cacherElement();
+    cacherElementContact();
 
     // Pour ajouter une adresse
     const ajouterAdresse = document.querySelector('#ajouterAdresse');
@@ -26,6 +27,7 @@ window.onload = function () {
         var rue = document.getElementById('adresse_form_rue').value;
         var codePostal = document.getElementById('adresse_form_code_postal').value;
         var ville = document.getElementById('adresse_form_ville').value;
+        var formAdresseToken = document.querySelector('#adresse_form__token').value;
         var societeId = urlId();
         // On créer un objet adresse
         var adresseObject = new Object();
@@ -34,6 +36,7 @@ window.onload = function () {
         adresseObject.codePostal = codePostal;
         adresseObject.ville = ville;
         adresseObject.societeId = societeId;
+        adresseObject.formAdresseToken = formAdresseToken;
         console.log(adresseObject);
         // On le transforme en JSON
         json = JSON.stringify(adresseObject);
@@ -51,6 +54,7 @@ window.onload = function () {
                     fermerModal();
                     location.reload();
                 } else {
+                    console.log('token' + data.verifToken);
                     removeAllSpan();
                     // Traitement si le formulaire retourne une erreur
                     const libelleParent = document.getElementById('adresse_form_libelle').parentNode;
@@ -174,6 +178,7 @@ window.onload = function () {
         var telephone = document.getElementById('contact_form_tel_contact').value;
         var mail = document.getElementById('contact_form_email_contact').value;
         var poste = document.getElementById('contact_form_poste_contact').value;
+        var formContactToken = document.querySelector('#contact_form__token').value;
         var societeId = urlId();
         // On créer un objet contact
         var contactObject = new Object();
@@ -183,6 +188,7 @@ window.onload = function () {
         contactObject.mail = mail;
         contactObject.poste = poste;
         contactObject.societeId = societeId;
+        contactObject.formContactToken = formContactToken;
         console.log(contactObject);
         // On le transforme en JSON
         json = JSON.stringify(contactObject);
@@ -327,13 +333,23 @@ window.onload = function () {
         for (var i = 2; i <= divCarres.length; i++) {
             document.getElementById('adresse' + i).style.display = "none";
             console.log(i);
-            console.log('button_details' + i);
+            console.log('bouton_detail_adresse' + i);
             ajouterListener(i);
         }
     }
 
+    function cacherElementContact() {
+        var divCarres = getElementsByRegexId(/contact*/, "span");
+        for (var i = 2; i <= divCarres.length; i++) {
+            document.getElementById('contact' + i).style.display = "none";
+            console.log(i);
+            console.log('bouton_detail_contact' + i);
+            ajouterListenerContact(i);
+        }
+    }
+
     function ajouterListener (i) {
-        document.getElementById('button_details' + i).addEventListener("click", function (e) {
+        document.getElementById('bouton_detail_adresse' + i).addEventListener("click", function (e) {
             e.preventDefault();
             console.log(i);
             console.log('adresse' + i);
@@ -341,6 +357,19 @@ window.onload = function () {
                 afficher('adresse' + i);
             } else {
                 cacher('adresse' + i);
+            }
+        })
+    }
+
+    function ajouterListenerContact (i) {
+        document.getElementById('bouton_detail_contact' + i).addEventListener("click", function (e) {
+            e.preventDefault();
+            console.log(i);
+            console.log('contact' + i);
+            if (document.getElementById('contact' + i).style.display == "none") {
+                afficher('contact' + i);
+            } else {
+                cacher('contact' + i);
             }
         })
     }
