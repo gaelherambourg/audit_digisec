@@ -76,7 +76,7 @@ class Audit
     private $echelle_notation;
 
     /**
-     * @ORM\OneToMany(targetEntity=Remarque::class, mappedBy="audit")
+     * @ORM\OneToMany(targetEntity=Remarque::class, mappedBy="audit", cascade={"persist"})
      */
     private $remarques;
 

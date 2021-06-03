@@ -19,6 +19,18 @@ class RecommandationRepository extends ServiceEntityRepository
         parent::__construct($registry, Recommandation::class);
     }
 
+    public function nbRecommandationByReferentieo($id_referentiel){
+        $queryBuilder = $this->createQueryBuilder('r');
+        return $queryBuilder
+            ->join('r.chapitre','c')->addSelect('c')
+            ->andWhere('c.referentiel = :id')
+            ->setParameter('id',$id_referentiel)
+            ->select('COUNT(r.id) AS cnt')
+            ->getQuery()
+            ->getSingleScalarResult();
+    }
+
+
     // /**
     //  * @return Recommandation[] Returns an array of Recommandation objects
     //  */

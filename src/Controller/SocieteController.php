@@ -162,7 +162,7 @@ class SocieteController extends AbstractController
                     $pictureFileName = $logoServices->upload($uploadedFile);
                     $societe->setLogo($pictureFileName);
                 }
-
+                dump($uploadedFile);
                 // On ajoute la date de modification 
                 $societe->setDateModification(new \DateTime());
 
@@ -174,7 +174,7 @@ class SocieteController extends AbstractController
                 $this->addFlash("link", "L'entreprise a été modifée");
 
                 // On redirige vers societe_liste
-                return $this->redirectToRoute('societe_liste');
+                //return $this->redirectToRoute('societe_liste');
             }
         }
         // On affiche le Twig avec les différents formulaires

@@ -4,8 +4,10 @@ namespace App\Form;
 
 use App\Entity\AuditControle;
 use App\Entity\PointControle;
+use App\Entity\Preuve;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Symfony\Component\Form\Extension\Core\Type\IntegerType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
@@ -19,17 +21,24 @@ class AuditControlFormType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
+            ->add('id', HiddenType::class, [
+                "mapped"=>false
+            ])
             ->add('remarque')
             ->add('note')
+            /* ->add('preuves', EntityType::class, [
+                "label"=> "Preuves :",
+                "class"=>Preuve::class,
+                "choice_label"=>"texte",
+                "multiple" => true
+            ]) */
             ->add('pointControle', EntityType::class,
             [
                 "class" => PointControle::class,
                 "choice_label" => "libelle",
                 'label' => 'Point de controle',
                 "disabled" => true
-            ])
-            
-        ;
+            ]);
     }
 
     public function configureOptions(OptionsResolver $resolver)

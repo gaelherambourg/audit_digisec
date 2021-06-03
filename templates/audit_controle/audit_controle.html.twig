@@ -10,6 +10,7 @@
     <div class="column has-text-centered">
 
         <h1 class="title">{{audit.nom}}</h1>
+        {{form_start(form_audit_controle)}}
         <fieldset class="box">
 			<legend class="label">Informations</legend>
             <div><!-- Id du chapitre et son libellé -->
@@ -21,11 +22,24 @@
             <div class="mt-5"><!-- Description de la recommandation -->
             {{recommandation.description}}
             </div>
+            <div class="columns is-mobile mt-5">
+                <div class="column is-4">
+                    {{ form_label(form_audit_controle.remarque.remarque, null, {'attr': {'class': 'has-text-link'} }) }}
+                </div>
+                <div class="column is-6">
+                    {{ form_widget(form_audit_controle.remarque.remarque, {'attr': {'class': 'input is-link', 'placeholder': 'Remarque'}}) }}
+                </div>
+            </div>
         </fieldset>
         <fieldset class="box">
 			<legend class="label">Contrôles</legend>
-            {{form_start(form_audit_controle)}}
+            
                 {% for audit_controle in form_audit_controle.audit_controle %}
+                    <div class="columns is-mobile">
+                        <div class="column is-6">
+                            {{ form_widget(audit_controle.id) }}
+                        </div>
+                    </div>
                     <div class="columns is-mobile">
                         <div class="column is-4">
                             {{ form_label(audit_controle.pointControle, null, {'attr': {'class': 'has-text-link'} }) }}
@@ -50,6 +64,41 @@
                             {{ form_widget(audit_controle.remarque, {'attr': {'class': 'input is-link', 'placeholder': 'Remarque'}}) }}
                         </div>
                     </div>
+                    <div class="columns is-mobile">
+                        <div class="column is-4">
+                            <label class="label has-text-link">Preuves</label>
+                        </div>
+                        <div class="column is-6 has-text-left"> 
+                            {% set nbPreuve = 0 %}                           
+                            {% for preuve in preuves %}
+                                
+                                {% if preuve.auditControle.id == audit_controle.vars.value.id %}
+                                    {% if preuve.texte is not empty %}
+                                        <div class="is-link">{{preuve.texte}}</div>
+                                    {% endif %}
+                                    {% if preuve.image is not empty %}
+                                        <div class="is-link"><a href="{{ asset('preuves/images/')}}{{preuve.image}}">{{preuve.image}}</a></div>
+                                    {% endif %}
+                                    {% if preuve.fichier is not empty %}
+                                        <div class="is-link"><a href="{{ asset('preuves/fichiers/')}}{{preuve.fichier}}">{{preuve.fichier}}</a></div>
+                                    {% endif %}
+                                        {% set nbPreuve = nbPreuve + 1 %}
+                                {% endif %}
+
+                            {% endfor %}
+                            {% if nbPreuve == 0 %}
+                                <div class="noPreuve">Aucune preuve n'est actuellement associée à ce point de contrôle.</div>
+                            {% endif %}
+                        </div>
+                    </div>
+                    
+                    
+                    <div class="columns is-mobile">
+                        <div class="column is-offset-4 has-text-left">
+                            <a class="button is-small is-link is-light is-3 ajouterPreuve" id="{{audit_controle.vars.value.id}}">Ajouter une preuve</a>
+                        </div>
+                    </div>
+                    
                 {% endfor %}
                     <div class="column is-10 has-text-right">
                         {{ form_widget(form_audit_controle.enregistrer) }}
@@ -60,5 +109,66 @@
 </div>
 
 
+<!-- Fenêtre modal Ajouter une preuve-->
+    <div id="modalPreuve" class="modal"> <div id="modalPreuveBg" class="modal-background"></div>
+    <div class="modal-card">
+        <header class="modal-card-head">
+            <p class="modal-card-title">Ajouter une preuve</p>
+            <button id="fermerPreuve" class="delete" aria-label="close"></button>
+        </header>
+        <section
+        
+            class="modal-card-body">
+            
+            <!-- Content ... -->
+            {{ form_start(preuveForm, {'attr': {'id': 'preuveForm'}}) }}
+            <div class="columns is-mobile">
+                <div class="column is-4">
+                    {{ form_label(preuveForm.preuve, null, {'attr': {'class': 'has-text-link'} }) }}
+                </div>
+                <div class="column is-8">
+                    {{ form_widget(preuveForm.preuve, {'attr': {'class': 'input is-link'}}) }}
+                </div>
+            </div>
+            <div class="columns is-mobile" id="texte-preuve">
+                <div class="column is-4">
+                    {{ form_label(preuveForm.texte, null, {'attr': {'class': 'has-text-link'} }) }}
+                </div>
+                <div class="column is-8">
+                    {{ form_widget(preuveForm.texte, {'attr': {'class': 'input is-link', 'placeholder': 'Texte'}}) }}
+                </div>
+            </div>
 
+            <div class="columns is-mobile" id="fichier-preuve">
+                <div class="column is-4">
+                    {{ form_label(preuveForm.fichier, null, {'attr': {'class': 'has-text-link'} }) }}
+                </div>
+                <div class="column is-8">
+                    {{ form_widget(preuveForm.fichier, {'attr': {'class': 'input is-link', 'placeholder': 'Fichier'}}) }}
+                </div>
+            </div>
+            <div class="columns is-mobile" id="image-preuve">
+                <div class="column is-4">
+                    {{ form_label(preuveForm.image, null, {'attr': {'class': 'has-text-link'} }) }}
+                </div>
+                <div class="column is-8">
+                    {{ form_widget(preuveForm.image, {'attr': {'class': 'input is-link', 'placeholder': 'Fichier'}}) }}
+                </div>
+            </div>
+            {{ form_widget(preuveForm._token)}}
+            <input type="hidden" id="id_auditControle" name="modPreuv">
+        </section>
+        <footer class="modal-card-foot">
+            <button type="submit" class="button is-medium is-link is-light is-3">Ajouter</button>
+        </footer>
+    </div>
+	</div>
+	{{ form_end(preuveForm) }}
+	<!-- Fin de la fenêtre modal -->
+
+
+{% endblock %}
+
+{% block javascripts %}
+	<script type="text/javascript" src="{{asset('js/preuve.js')}}"></script>
 {% endblock %}

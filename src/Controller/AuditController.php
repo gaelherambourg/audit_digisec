@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Entity\Audit;
 use App\Entity\AuditControle;
+use App\Entity\Remarque;
 use App\Entity\Societe;
 use App\Entity\Statut;
 use App\Form\AuditType;
@@ -74,6 +75,9 @@ class AuditController extends AbstractController
                         $entityManager->persist($audit_controle);
                         $audit->addAuditsControle($audit_controle);
                     }
+                    $remarque = new Remarque();
+                    $remarque->setRecommandation($recommandation);
+                    $audit->addRemarque($remarque);
                 }
             }
             

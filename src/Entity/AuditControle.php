@@ -34,7 +34,7 @@ class AuditControle
 
     /**
      * @ORM\Column(type="integer", nullable=true)
-     * @Assert\NotBlank(message="Ce champ ne doit pas être !!!!!!!!!!!!!!!!!!!!!!.")
+     * @Assert\NotBlank(message="Ce champ ne doit pas être vide.")
      */
     private $note;
 
