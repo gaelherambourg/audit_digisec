@@ -1,32 +1,30 @@
 window.onload = function () {
+    
     // Pour ajouter une preuve
-    var ajouterPreuve = document.getElementsByClassName('ajouterPreuve');
-    var inputHidden = document.getElementById('id_auditControle');
-    const preuve = document.querySelector('#modalPreuve');
-    const modalBgP = document.querySelector('#modalPreuveBg');
-    const fermerPreuve = document.querySelector('#fermerPreuve');
+    ouvrirModalPreuve();
+    fermerModal();
+    showTypePreuve();
+    ajoutPreuve();
+    
+}
 
-    for (var i = 0; i < ajouterPreuve.length; i++) {
+//Fonction permettant d'ouvrir la modal d'ajout de preuve au click sur le bouton ajouter preuve
+function ouvrirModalPreuve() {
+
+    let ajouterPreuve = document.getElementsByClassName('ajouterPreuve');
+    let inputHidden = document.getElementById('id_auditControle');
+    const preuve = document.getElementById('modalPreuve');
+
+    for (let i = 0; i < ajouterPreuve.length; i++) {
         ajouterPreuve[i].addEventListener("click", function () {
             preuve.className = "modal is-active";
             inputHidden.value = this.id;
             
         });
     }
-
-    modalBgP.addEventListener('click', function () {
-        preuve.className = "modal";
-    });
-    fermerPreuve.addEventListener('click', function () {
-        preuve.className = "modal";
-    });
-
-    
-    showTypePreuve();
-    ajoutPreuve();
-    
 }
 
+//Fonction permettant de naviguer entre les différents type de preuve en cachant/montrant les inputs associés
 function showTypePreuve() {
     var typePreuve = document.getElementById("preuve_form_preuve");
     var textePreuve = document.getElementById('texte-preuve');
@@ -64,33 +62,25 @@ function showTypePreuve() {
 
 }
 
+//Fonction d'ajout de preuve utilisant la méthode Fetch de l'API Fetch permettant l'échange de données avec le serveur (en l'occurence les données de preuve)
 function ajoutPreuve() {
     const formPreuve = document.getElementById('preuveForm');
 
     formPreuve.addEventListener("submit", function (e) {
         e.preventDefault();
 
-        //On récupère les champs
-        var texte = document.getElementById('preuve_form_texte').value;
-        var fichier = document.getElementById('preuve_form_fichier').files[0];
-        var image = document.getElementById('preuve_form_image').value;
-        var idAuditControle = document.getElementById('id_auditControle').value;
-        var token = document.getElementById('preuve_form__token').value;
-
-        var data = new FormData(formPreuve);
-        data.append('auditControleId', idAuditControle);
+        //On instancie un nouveau formData pour y insérer nos données à passer dans le body du fetch
+        let data = new FormData();
+        data.append('auditControleId', document.getElementById('id_auditControle').value);
+        data.append('texte', document.getElementById('preuve_form_texte').value)
         data.append('fichier', document.getElementById('preuve_form_fichier').files[0]);
         data.append('image', document.getElementById('preuve_form_image').files[0]);
-        var ancienneUrl = window.location.pathname;
-        var url = window.location.toString().replace(ancienneUrl, ("/audit_digisec/public/preuve/"));
+        data.append('token', document.getElementById('preuve_form__token').value);
 
-        // Affiche les valeurs
-        for (var value of data.values()) {
-            console.log(value);
-        }
-        for (var key of data.keys()) {
-            console.log(key);
-        }
+        //On créé l'url à passer au fetch
+        let ancienneUrl = window.location.pathname;
+        let url = window.location.toString().replace(ancienneUrl, ("/audit_digisec/public/preuve/"));
+
         fetch(url, {
             method: 'POST',
             body: data
@@ -98,21 +88,13 @@ function ajoutPreuve() {
             .then(function (response) {
                 return response.json();
             }).then(function (data) {
-                console.log(data.resultat);
+                //Si le formulaire a été soumis et valider, on ferme la modal et on recharge la page en faisant un clear des inputs de la preuve
                 if (data.resultat == 'success') {
-                    console.log("hehehehehe");
-                    console.log(data.preuveForm);
-                    console.log(data.adc);
                     fermerModal();
-                    //location.reload();
+                    location.reload();
                     clearInput();
                 } else {
-                    console.log('on est dans AJAX');
-                    console.log(data.erreur);
-                    console.log(data.adc);
-                    console.log("après erreur");
-                    console.log(data.test);
-                    console.log(data.preuveForm);
+                    //Si le formulaire n'est pas valide, on supprime les éventuels messages d'erreurs restant
                     removeAllSpan();
 
                     // Traitement si le formulaire retourne une erreur
@@ -125,7 +107,7 @@ function ajoutPreuve() {
 
                     // Créer un élément span avec la classe help is-danger
                     const span = document.getElementsByClassName("control");
-                    const classe = 'help is-danger'
+                    const classe = 'help is-danger spanMessagePreuve'
                     const spanTexte = document.createElement("span");
                     spanTexte.className = classe;
                     const spanFichier = document.createElement("span");
@@ -134,15 +116,17 @@ function ajoutPreuve() {
                     spanImage.className = classe;
 
                     if (data.erreur != null) {
-                        
+                        //Si ereur sur le texte
                         if (data.erreur.texte != "") {
                             spanTexte.textContent = data.erreur.texte;
                             texteParent.insertBefore(spanTexte, texteEnfant.nextSibling);
                         }
+                        //Si erreur sur le téléchargement du fichier
                         if (data.erreur.fichier != "") {
                             spanFichier.textContent = data.erreur.fichier;
                             fichierParent.insertBefore(spanFichier, fichierEnfant.nextSibling);
                         }
+                        //Si erreur sur le téléchargement de l'image
                         if (data.erreur.image != "") {
                             spanImage.textContent = data.erreur.image;
                             imageParent.insertBefore(spanImage, imageEnfant.nextSibling);
@@ -153,17 +137,32 @@ function ajoutPreuve() {
     })
 }
 
+//Fonction permettant de fermer la modal en cours
 function fermerModal() {
+
+    const modalBgP = document.getElementById('modalPreuveBg');
+    const fermerPreuve = document.getElementById('fermerPreuve');
+    const preuve = document.getElementById('modalPreuve');
+
     document.getElementById('modalPreuve').className = "modal";
+
+    modalBgP.addEventListener('click', function () {
+        preuve.className = "modal";
+    });
+    fermerPreuve.addEventListener('click', function () {
+        preuve.className = "modal";
+    });
 }
 
+//Fonction permettant de supprimer les éventuels messages d'erreurs situés dans des spans
 function removeAllSpan() {
-    var childs = document.getElementById('preuveForm').querySelectorAll('span');
+    var childs = document.getElementById('preuveForm').getElementsByClassName('spanMessagePreuve');
     for (var child of childs) {
         child.remove();
     }
 }
 
+//Fonction permettant un clear des values dans les champs de l'ajout de preuve
 function clearInput() {
     document.getElementById('preuve_form_texte').value = "";
     document.getElementById('preuve_form_fichier').value = "";

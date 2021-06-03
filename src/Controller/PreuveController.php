@@ -39,57 +39,60 @@ class PreuveController extends AbstractController
         // On créer une instance de la classe de formulaire que l'on associe à notre formulaire
         $preuveForm = $this->createForm(PreuveFormType::class, $preuve);
 
-
-
-
         if ($request->getMethod() == 'POST') {
 
             $texte = $request->get('texte');
             $fichier = $request->files->get('fichier');
             $image = $request->files->get('image');
+            $token = $request->get('token');
             
-
-            
-            //$preuveForm->handleRequest($request);
-            
-            $preuveForm->submit(array_merge(['texte' => $texte, 'fichier' => $fichier, 'image' => $image]), false);
-
-
+            $preuveForm->submit(array_merge(['texte' => $texte, 'fichier' => $fichier, 'image' => $image, '_token' => $token]), false);
 
             if ($preuveForm->isSubmitted()) {
-                $resultat = "dans le isSubmitted";
-                $test = $preuveForm->isValid();
+
                 if ($preuveForm->isValid()) {
+
                     $resultat = 'success';
 
+                    //On récupère l'audit Controle associé à la preuve 
                     $auditControle = $auditControleRepository->find($request->get('auditControleId'));
+
+                    //On hydrate le reste de l'entité preuve
                     $preuve->setAuditControle($auditControle);
                     $preuve->setDateCreation(new DateTime());
 
-                    // On récupère l'image'et on utilise FichierPreuveServices pour l'enregistrement
+                    // On récupère l'image'et on utilise FichierPreuveServices pour l'enregistrement du fichier
                     $uploadedFile = $request->files->get('fichier');
                     if ($uploadedFile) {
                         $pictureFileName = $fichierPreuveServices->upload($uploadedFile);
                         $preuve->setFichier($pictureFileName);
                     }
+                    // On récupère l'image'et on utilise ImagePreuveServices pour l'enregistrement de l'image
                     $uploadedImage = $request->files->get('image');
                     if ($uploadedImage) {
                         $pictureFileName = $imagePreuveServices->upload($uploadedImage);
                         $preuve->setImage($pictureFileName);
                     }
+
+                    //On persiste l'entité
                     $entityManager->persist($preuve);
+
+                    //On enregistre la preuve en bdd
                     $entityManager->flush();
 
-                    // On ajoute un message flash
+                    // On ajoute un message flash pour préciser à l'utilisateur à bien été ajouté
                     $this->addFlash("link", "La preuve a été ajoutée");
-                    return new JsonResponse(['resultat' => $resultat, 'preuveForm' =>$preuveForm]);
+
+                    //On renvoie la réponse Json pour le traitement dans la fonction ajoutPreuve dans preuve.js
+                    return new JsonResponse(['resultat' => $resultat]);
                 } else {
+
+                    //Si le formulaire soumis n'est pas valide, on récupère les messages d'erreurs que l'on transmet pour affichage
                     $erreurs = $erreursServices->getErrorMessages($preuveForm);
-                    $resultat = 'On passe dans le else';
                 }
             }
         }
 
-        return new JsonResponse(['resultat' => $resultat, 'erreur' => $erreurs, 'test' => $test, 'preuveForm' =>$preuveForm]);
+        return new JsonResponse(['resultat' => $resultat, 'erreur' => $erreurs]);
     }
 }

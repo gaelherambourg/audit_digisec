@@ -37,7 +37,7 @@ class PreuveFormType extends AbstractType
                 'constraints' => [
                     new File([
                         'maxSize' => '5M',
-                        'maxSizeMessage' => 'La taille max est de  2mo'
+                        'maxSizeMessage' => 'La taille maximum autorisée du fichier est de 5 mo'
                     ])
                 ]
             ])
@@ -47,7 +47,7 @@ class PreuveFormType extends AbstractType
                 'constraints' => [
                     new Image([
                         'maxSize' => '5M',
-                        'maxSizeMessage' => 'La taille max est de 5 mo'
+                        'maxSizeMessage' => 'La taille maximum autorisée de l\'image est de 5 mo'
                     ])
                 ]
             ])
