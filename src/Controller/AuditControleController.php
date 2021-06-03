@@ -34,7 +34,6 @@ class AuditControleController extends AbstractController
      */
     public function audit_controle(Request $request,
                                    EntityManagerInterface $entityManager,
-                                   $id,
                                    $id_recommandation,
                                    AuditControleRepository $auditControleRepository,
                                    AuditRepository $auditRepository,
@@ -44,6 +43,8 @@ class AuditControleController extends AbstractController
                                    ImagePreuveServices $imagePreuveServices,
                                    FichierPreuveServices $fichierPreuveServices)
     {
+
+        $id = $request->get('id');
         //$audit = $auditControleRepository->findById($id);
         $audit = $auditRepository->find($id);
         $recommandation = $entityManager->find(Recommandation::class, $id_recommandation);

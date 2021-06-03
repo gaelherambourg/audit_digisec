@@ -77,3 +77,8 @@ aside{
 .noPreuve{
     color: tomato;
 }
+.btnSupprimerPreuve{
+    background-color: transparent;
+    border: none;
+    cursor: pointer;
+}

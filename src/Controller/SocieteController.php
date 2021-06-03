@@ -169,7 +169,7 @@ class SocieteController extends AbstractController
                 $this->addFlash("link", "L'entreprise a été modifée");
 
                 // On redirige vers societe_liste
-                //return $this->redirectToRoute('societe_liste');
+                return $this->redirectToRoute('societe_liste');
             }
         }
 

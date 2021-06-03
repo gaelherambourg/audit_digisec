@@ -74,13 +74,31 @@
                                 
                                 {% if preuve.auditControle.id == audit_controle.vars.value.id %}
                                     {% if preuve.texte is not empty %}
-                                        <div class="is-link">{{preuve.texte}}</div>
+                                    <div class="columns">
+                                        <div class="is-link column is-11">{{preuve.texte}}</div>
+                                        <div class="column is-1 has-text-right">
+                                            <a href="{{ path('supprimer_preuve', {id:preuve.id, id_recommandation:recommandation.id})}}" class="btnSupprimerPreuve"><i class="fas fa-trash"></i></a>
+                                        </div>
+                                    </div>
                                     {% endif %}
                                     {% if preuve.image is not empty %}
-                                        <div class="is-link"><a href="{{ asset('preuves/images/')}}{{preuve.image}}">{{preuve.image}}</a></div>
+                                    <div class="columns">
+                                        <div class="is-link column is-11">
+                                            <a href="{{ asset('preuves/images/')}}{{preuve.image}}">{{preuve.image}}</a>
+                                            
+                                        </div>
+                                        <div class="column is-1 has-text-right">
+                                            <a href="{{ path('supprimer_preuve', {id:preuve.id, id_recommandation:recommandation.id})}}" class="btnSupprimerPreuve"><i class="fas fa-trash"></i></a>
+                                        </div>
+                                    </div>
                                     {% endif %}
                                     {% if preuve.fichier is not empty %}
-                                        <div class="is-link"><a href="{{ asset('preuves/fichiers/')}}{{preuve.fichier}}">{{preuve.fichier}}</a></div>
+                                    <div class="columns">
+                                        <div class="is-link column is-11"><a href="{{ asset('preuves/fichiers/')}}{{preuve.fichier}}">{{preuve.fichier}}</a></div>
+                                        <div class="column is-1 has-text-right">
+                                            <a href="{{ path('supprimer_preuve', {id:preuve.id, id_recommandation:recommandation.id})}}" class="btnSupprimerPreuve"><i class="fas fa-trash"></i></a>
+                                        </div>
+                                    </div>
                                     {% endif %}
                                         {% set nbPreuve = nbPreuve + 1 %}
                                 {% endif %}

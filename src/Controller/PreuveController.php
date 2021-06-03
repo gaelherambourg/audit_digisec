@@ -95,4 +95,43 @@ class PreuveController extends AbstractController
 
         return new JsonResponse(['resultat' => $resultat, 'erreur' => $erreurs]);
     }
+
+
+    /**
+     * @Route("/preuve/supprimer/{id}/{id_recommandation}", name="supprimer_preuve")
+     */
+    public function supprimerPreuve(Request $request,
+                                PreuveRepository $preuveRepository,
+                                ImagePreuveServices $imagePreuveServices,
+                                FichierPreuveServices $fichierPreuveServices,
+                                EntityManagerInterface $entityManager)
+    {
+
+        $id_preuve = $request->get('id');
+        $id_recommandation = $request->get('id_recommandation');
+
+        $preuve =$preuveRepository->find($id_preuve);
+
+        // On vérifie si un fichier existe déjà pour le supprimer
+        if ($preuve->getFichier()) {
+            $fichierPreuveServices->deletePhoto($preuve->getFichier());
+        }
+
+        // On vérifie si une image existe déjà pour le supprimer
+        if ($preuve->getImage()) {
+            $imagePreuveServices->deletePhoto($preuve->getImage());
+        }
+                 
+         // On supprime la preuve
+         $entityManager->remove($preuve);
+         $entityManager->flush();
+ 
+         // On ajoute un message flash
+         $this->addFlash("link", "La preuve a été supprimée");
+ 
+         // On redirige vers societe_liste
+         return $this->redirectToRoute('audit_controle', ['id' => $preuve->getAuditControle()->getAudit()->getId(), 'id_recommandation' => $id_recommandation]);
+
+
+    }
 }

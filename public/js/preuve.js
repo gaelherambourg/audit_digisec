@@ -40,6 +40,9 @@ function showTypePreuve() {
 
     typePreuve.onchange = function () {
 
+        clearInput();
+        removeAllSpan();
+
         if (typePreuve.selectedIndex == 0) {
             fichierPreuve.style.display = "none";
             imagePreuve.style.display = "none";
@@ -147,9 +150,13 @@ function fermerModal() {
     document.getElementById('modalPreuve').className = "modal";
 
     modalBgP.addEventListener('click', function () {
+        clearInput();
+        removeAllSpan();
         preuve.className = "modal";
     });
     fermerPreuve.addEventListener('click', function () {
+        clearInput();
+        removeAllSpan();
         preuve.className = "modal";
     });
 }
