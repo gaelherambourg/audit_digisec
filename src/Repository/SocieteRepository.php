@@ -19,12 +19,13 @@ class SocieteRepository extends ServiceEntityRepository
         parent::__construct($registry, Societe::class);
     }
 
-    public function findAllInformationsBySociety($id){
+    public function findAllInformationsBySociety($id)
+    {
         $queryBuilder = $this->createQueryBuilder('s')
-            ->leftJoin('s.adresse','a')->addSelect('a')
-            ->join('s.contact','c')->addSelect('c');
+            ->leftJoin('s.adresse', 'a')->addSelect('a')
+            ->join('s.contact', 'c')->addSelect('c');
         $queryBuilder
-            ->andWhere('s.id = :id')->setParameter('id',$id);
+            ->andWhere('s.id = :id')->setParameter('id', $id);
         $query = $queryBuilder->getQuery();
         return $query->getSingleResult();
     }
@@ -33,9 +34,21 @@ class SocieteRepository extends ServiceEntityRepository
     {
         //Recherche de la saisie formulaire societe en BDD
         $queryBuilder = $this->createQueryBuilder('s')
-                        ->andWhere('s.nom LIKE :ru')
-                        ->setParameter(':ru', '%'.$recherche_utilisateur.'%');
+            ->leftJoin('s.adresse', 'a')->addSelect('a')
+            ->join('s.contact', 'c')->addSelect('c');
+        $queryBuilder
+            ->andWhere('s.nom LIKE :ru')
+            ->setParameter(':ru', '%' . $recherche_utilisateur . '%');
         return $queryBuilder->getQuery()->getResult();
+    }
+
+    public function findAllInformations()
+    {
+        $queryBuilder = $this->createQueryBuilder('s')
+            ->leftJoin('s.adresse', 'a')->addSelect('a')
+            ->join('s.contact', 'c')->addSelect('c');
+        $query = $queryBuilder->getQuery();
+        return $query->getArrayResult();
     }
 
     // /**

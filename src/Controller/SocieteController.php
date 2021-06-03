@@ -95,7 +95,7 @@ class SocieteController extends AbstractController
         $recherche_utilisateur = "";
 
         //On récupère toutes les sociétés en bdd
-        $toutes_les_societes = $societeRepository->findAll();
+        $toutes_les_societes = $societeRepository->findAllInformations();
 
         if ($form->isSubmitted() && $form->isValid()) {
             $recherche_utilisateur = $form->get('recherche')->getData();
