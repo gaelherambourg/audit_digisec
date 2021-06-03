@@ -23,7 +23,6 @@ class PreuveController extends AbstractController
      * @Route("/preuve/", name="preuve")
      */
     public function ajoutPreuve(Request $request,
-                                PreuveRepository $preuveRepository,
                                 AuditControleRepository $auditControleRepository,
                                 ErreursServices $erreursServices,
                                 ImagePreuveServices $imagePreuveServices,
