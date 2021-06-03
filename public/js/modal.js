@@ -1,26 +1,31 @@
 window.onload = function () {
 
-    cacherElement();
-    cacherElementContact();
+    // Cache les éléments adresse
+    cacherElement(/adresse*/, 'adresse');
+    // Cache les éléments contact
+    cacherElement(/contact*/, 'contact');
 
-    // Pour ajouter une adresse
+    // Constantes liées à l'adresse
     const ajouterAdresse = document.querySelector('#ajouterAdresse');
     const adresse = document.querySelector('#modalAdresse');
     const modalBgA = document.querySelector('#modalAdresseBg');
     const fermerAdresse = document.querySelector('#fermerAdresse');
     const formAdresse = document.querySelector("#nouvelle_adresse");
-
+    // Affiche la fenêtre modal
     ajouterAdresse.addEventListener('click', function () {
         adresse.className = "modal is-active";
     });
+    // Ferme la fenêtre modal si on clique à côté
     modalBgA.addEventListener('click', function () {
         adresse.className = "modal";
     });
+    // Ferme la fenêtre modal si on clique sur le bouton
     fermerAdresse.addEventListener('click', function () {
         adresse.className = "modal";
     });
 
     formAdresse.addEventListener("submit", function (e) {
+        // On stop le comportement normal
         e.preventDefault();
         // On récupère les différents champs
         var libelle = document.getElementById('adresse_form_libelle').value;
@@ -37,14 +42,10 @@ window.onload = function () {
         adresseObject.ville = ville;
         adresseObject.societeId = societeId;
         adresseObject.formAdresseToken = formAdresseToken;
-        console.log(adresseObject);
         // On le transforme en JSON
         json = JSON.stringify(adresseObject);
-        console.log(json);
         // On l'injecte dans la requête
         var url = "adresse/" + json;
-        //var url = "adresse/" + 1;
-        console.log(url);
         // Requête Ajax
         fetch(url, { method: 'POST' })
             .then(function (response) {
@@ -54,123 +55,59 @@ window.onload = function () {
                     fermerModal();
                     location.reload();
                 } else {
-                    console.log('token' + data.verifToken);
-                    removeAllSpan();
+                    // On supprime les span
+                    removeAllSpan(formAdresse);
                     // Traitement si le formulaire retourne une erreur
                     const libelleParent = document.getElementById('adresse_form_libelle').parentNode;
-                    const libelleEnfant = document.getElementById("adresse_form_libelle")
+                    const libelleEnfant = document.getElementById("adresse_form_libelle");
                     const rueParent = document.getElementById('adresse_form_rue').parentNode;
-                    const rueEnfant = document.getElementById("adresse_form_rue")
+                    const rueEnfant = document.getElementById('adresse_form_rue');
                     const codePostalParent = document.getElementById('adresse_form_code_postal').parentNode;
-                    const codePostalEnfant = document.getElementById("adresse_form_code_postal")
+                    const codePostalEnfant = document.getElementById('adresse_form_code_postal');
                     const villeParent = document.getElementById('adresse_form_ville').parentNode;
-                    const villeEnfant = document.getElementById("adresse_form_ville")
-
+                    const villeEnfant = document.getElementById('adresse_form_ville');
                     // Créer un élément span avec la classe help is-danger
-                    const span = document.getElementsByClassName("control");
-                    const classe = 'help is-danger'
+                    const classe = 'help is-danger';
                     const spanLibelle = document.createElement("span");
-                    spanLibelle.className = classe;
-                    const spanCp = document.createElement("span");
-                    spanCp.className = classe;
-                    const spanVille = document.createElement("span");
-                    spanVille.className = classe;
                     const spanRue = document.createElement("span");
-                    spanRue.className = classe;
-
+                    const spanCp = document.createElement("span");
+                    const spanVille = document.createElement("span");
+                    // Si le data.erreur n'est pas vide
                     if (data.erreur != null) {
                         // S'il y a une erreur sur le libelle
-                        if (data.erreur.libelle != "") {
-                            spanLibelle.textContent = data.erreur.libelle;
-                            libelleParent.insertBefore(spanLibelle, libelleEnfant.nextSibling);
-                        }
+                        verifErreur(data.erreur.libelle, spanLibelle, classe, libelleParent, libelleEnfant);
                         // S'il y a une erreur sur la rue
-                        if (data.erreur.rue != "") {
-                            spanRue.textContent = data.erreur.rue;
-                            rueParent.insertBefore(spanRue, rueEnfant.nextSibling);
-                        }
+                        verifErreur(data.erreur.rue, spanRue, classe, rueParent, rueEnfant);
                         // S'il y a une erreur sur le code postal
-                        if (data.erreur.code_postal != "") {
-                            spanCp.textContent = data.erreur.code_postal;
-                            codePostalParent.insertBefore(spanCp, codePostalEnfant.nextSibling);
-                        }
+                        verifErreur(data.erreur.code_postal, spanCp, classe, codePostalParent, codePostalEnfant);
                         // S'il y a une erreur sur la ville
-                        if (data.erreur.ville != "") {
-                            spanVille.textContent = data.erreur.ville;
-                            villeParent.insertBefore(spanVille, villeEnfant.nextSibling);
-                        }
+                        verifErreur(data.erreur.ville, spanVille, classe, villeParent, villeEnfant);
                     }
                 }
             })
-
-        function urlId() {
-            // On récupère l'url
-            // Supprimons l'éventuel dernier slash de l'URL
-            var urlcourante = document.location.href;
-            var urlcourante = urlcourante.replace(/\/$/, "");
-            // On garde uniquement la dernière partie de l'url qui est l'id
-            return urlcourante.substring(urlcourante.lastIndexOf("/") + 1);
-        }
-
-        function removeAllSpan() {
-            var childs = formAdresse.querySelectorAll('span');
-            for (var child of childs) {
-                child.remove();
-            }
-        }
-
-        /*fetch(url, { method: 'POST' })
-            .then(function (response) {
-                if (response.ok) {
-                        console.log('Bonne réponse du réseau');
-                        return response.json();
-
-                } else {
-                    console.log('Mauvaise réponse du réseau');
-                }
-            })
-            .then(function (data) {
-                console.log('On dans la requete AJAX');
-                console.log(data.id);
-                console.log(data.verif);
-                console.log(data.test);
-                console.log(data.donnee);
-                if (data.verif == 'KO') {
-                    //console.log('on est dans le if');
-                    fermerModal();
-                    //location.reload();
-                    //alert('erreur sur le form');
-                }
-            })
-            .catch(function (error) {
-                console.log('Il y a eu un problème avec l\'opération fetch: ' + error.message);
-            });*/
-
     });
 
-    function fermerModal() {
-        contact.className = "modal";
-    }
-
-    // Pour ajouter un contact
+    // Constantes liées au contact
     const ajouterContact = document.querySelector('#ajouterContact');
     const contact = document.querySelector('#modalContact');
     const modalBgC = document.querySelector('#modalContactBg');
     const fermerContact = document.querySelector('#fermerContact');
     const formContact = document.querySelector('#nouveau_contact');
-
+    // Affiche la fenêtre modal
     ajouterContact.addEventListener('click', function () {
         contact.className = "modal is-active";
     });
-
+    // Ferme la fenêtre modal si on clique à côté
     modalBgC.addEventListener('click', function () {
         contact.className = "modal";
     });
+    // Ferme la fenêtre modal si on clique sur le bouton
     fermerContact.addEventListener('click', function () {
         contact.className = "modal";
     });
 
     formContact.addEventListener("submit", function (e) {
+        // On stop le comportement normal
         e.preventDefault();
         // On récupère les différents champs
         var nom = document.getElementById('contact_form_nom_contact').value;
@@ -189,7 +126,6 @@ window.onload = function () {
         contactObject.poste = poste;
         contactObject.societeId = societeId;
         contactObject.formContactToken = formContactToken;
-        console.log(contactObject);
         // On le transforme en JSON
         json = JSON.stringify(contactObject);
         // On l'injecte dans la requête
@@ -203,119 +139,86 @@ window.onload = function () {
                     fermerModal();
                     location.reload();
                 } else {
-                    console.log('on est dans AJAX');
-                    console.log(data.erreur);
-                    removeAllSpan();
+                    // On supprime les span
+                    removeAllSpan(formContact);
                     // Traitement si le formulaire retourne une erreur
                     const nomParent = document.getElementById('contact_form_nom_contact').parentNode;
-                    const nomEnfant = document.getElementById("contact_form_nom_contact")
+                    const nomEnfant = document.getElementById("contact_form_nom_contact");
                     const prenomParent = document.getElementById('contact_form_prenom_contact').parentNode;
-                    const prenomEnfant = document.getElementById("contact_form_prenom_contact")
+                    const prenomEnfant = document.getElementById("contact_form_prenom_contact");
                     const telephoneParent = document.getElementById('contact_form_tel_contact').parentNode;
-                    const telephoneEnfant = document.getElementById("contact_form_tel_contact")
+                    const telephoneEnfant = document.getElementById("contact_form_tel_contact");
                     const mailParent = document.getElementById('contact_form_email_contact').parentNode;
-                    const mailEnfant = document.getElementById("contact_form_email_contact")
+                    const mailEnfant = document.getElementById("contact_form_email_contact");
                     const posteParent = document.getElementById('contact_form_poste_contact').parentNode;
-                    const posteEnfant = document.getElementById("contact_form_poste_contact")
-
+                    const posteEnfant = document.getElementById("contact_form_poste_contact");
                     // Créer un élément span avec la classe help is-danger
-                    const span = document.getElementsByClassName("control");
-                    const classe = 'help is-danger'
+                    const classe = 'help is-danger';
                     const spanNom = document.createElement("span");
-                    spanNom.className = classe;
                     const spanPrenom = document.createElement("span");
-                    spanPrenom.className = classe;
                     const spanTelephone = document.createElement("span");
-                    spanTelephone.className = classe;
                     const spanMail = document.createElement("span");
-                    spanMail.className = classe;
                     const spanPoste = document.createElement("span");
-                    spanPoste.className = classe;
-
+                    // Si le data.erreur n'est pas vide
                     if (data.erreur != null) {
-                        // S'il y a une erreur sur le Nom
-                        if (data.erreur.nom_contact != "") {
-                            spanNom.textContent = data.erreur.nom_contact;
-                            nomParent.insertBefore(spanNom, nomEnfant.nextSibling);
-                        }
-                        if (data.erreur.prenom_contact != "") {
-                            spanPrenom.textContent = data.erreur.prenom_contact;
-                            prenomParent.insertBefore(spanPrenom, prenomEnfant.nextSibling);
-                        }
-                        if (data.erreur.tel_contact != "") {
-                            spanTelephone.textContent = data.erreur.tel_contact;
-                            telephoneParent.insertBefore(spanTelephone, telephoneEnfant.nextSibling);
-                        }
-                        if (data.erreur.email_contact != "") {
-                            spanMail.textContent = data.erreur.email_contact;
-                            mailParent.insertBefore(spanMail, mailEnfant.nextSibling);
-                        }
-                        if (data.erreur.poste_contact != "") {
-                            spanPoste.textContent = data.erreur.poste_contact;
-                            posteParent.insertBefore(spanPoste, posteEnfant.nextSibling);
-                        }
+                        // S'il y a une erreur sur le nom
+                        verifErreur(data.erreur.nom_contact, spanNom, classe, nomParent, nomEnfant);
+                        // S'il y a une erreur sur le prenom
+                        verifErreur(data.erreur.prenom_contact, spanPrenom, classe, prenomParent, prenomEnfant);
+                        // S'il y a une erreur sur le telephone
+                        verifErreur(data.erreur.tel_contact, spanTelephone, classe, telephoneParent, telephoneEnfant);
+                        // S'il y a une erreur sur le mail
+                        verifErreur(data.erreur.email_contact, spanMail, classe, mailParent, mailEnfant);
+                        // S'il y a une erreur sur le poste
+                        verifErreur(data.erreur.poste_contact, spanPoste, classe, posteParent, posteEnfant);
                     }
                 }
             })
-
-        function urlId() {
-            // On récupère l'url
-            // Supprimons l'éventuel dernier slash de l'URL
-            var urlcourante = document.location.href;
-            var urlcourante = urlcourante.replace(/\/$/, "");
-            // On garde uniquement la dernière partie de l'url qui est l'id
-            return urlcourante.substring(urlcourante.lastIndexOf("/") + 1);
-        }
-
-        function removeAllSpan() {
-            var childs = formContact.querySelectorAll('span');
-            for (var child of childs) {
-                child.remove();
-            }
-        }
-
-        /*fetch(url, { method: 'POST' })
-            .then(function (response) {
-                if (response.ok) {
-                        console.log('Bonne réponse du réseau');
-                        return response.json();
-
-                } else {
-                    console.log('Mauvaise réponse du réseau');
-                }
-            })
-            .then(function (data) {
-                console.log('On dans la requete AJAX');
-                console.log(data.id);
-                console.log(data.verif);
-                console.log(data.test);
-                console.log(data.donnee);
-                if (data.verif == 'KO') {
-                    //console.log('on est dans le if');
-                    fermerModal();
-                    //location.reload();
-                    //alert('erreur sur le form');
-                }
-            })
-            .catch(function (error) {
-                console.log('Il y a eu un problème avec l\'opération fetch: ' + error.message);
-            });*/
-
     });
 
-    function afficher(obj) {
-        document.getElementById(obj).style.display = "block";
+    /**
+     * Méthode permettant de récupérer les erreurs sur un champs et de les afficher
+     * @param erreur - Nom de l'erreur à récupérer
+     * @param span - Nom du span
+     * @param classe - Nom de la classe
+     * @param parent - Nom de l'élément HTML parent
+     * @param enfant - Nom de lélément HTML enfant
+     */
+    function verifErreur(erreur, span, classe, parent, enfant) {
+        if (erreur != "") {
+            span.textContent = erreur;
+            span.className = classe;
+            parent.insertBefore(span, enfant.nextSibling);
+        }
+    };
+
+    /**
+     * Méthode permettant de fermer la fenêtre modal
+     */
+    function fermerModal() {
+        contact.className = "modal";
     }
 
-    function cacher(obj) {
-        document.getElementById(obj).style.display = "none";
-    }
+    /**
+     * Méthode permettant de récupérer l'id de la page
+     * @returns - L'id de la page
+     */
+    function urlId() {
+        // On récupère l'url
+        // Supprimons l'éventuel dernier slash de l'URL
+        var urlcourante = document.location.href;
+        var urlcourante = urlcourante.replace(/\/$/, "");
+        // On garde uniquement la dernière partie de l'url qui est l'id
+        return urlcourante.substring(urlcourante.lastIndexOf("/") + 1);
+    };
 
-    //var childs = formAdresse.querySelectorAll('span');
-    //for (var child of childs) {
-    //     child.remove();
-    //}
-
+    /**
+     * Méthode permettant de trouver toutes les balises passée sur le tagParam, et dont l'id contient
+     * le regexParam
+     * @param regexpParam - C'est le mot à rechercher
+     * @param tagParam - C'est la balise à rechercher
+     * @returns - Un tableau avec les éléments trouvés
+     */
     function getElementsByRegexId(regexpParam, tagParam) {
         // Si aucun nom de balise n'est spécifié, on cherche sur toutes les balises  
         tagParam = (tagParam === undefined) ? '*' : tagParam;
@@ -326,60 +229,67 @@ window.onload = function () {
             }
         }
         return elementsTable;
-    }
+    };
 
-    function cacherElement() {
-        var divCarres = getElementsByRegexId(/adresse*/, "span");
-        for (var i = 2; i <= divCarres.length; i++) {
-            document.getElementById('adresse' + i).style.display = "none";
-            console.log(i);
-            console.log('bouton_detail_adresse' + i);
-            ajouterListener(i);
+    /**
+     * Méthode permettant de cacher les éléments commençant par le paramètre et ayant le nomAction
+     * Enuite un écouteur est ajouté sur le bouton lié à l'action via la méthode 'ajouterListener'
+     * @param {} parametre - C'est le paramètre recherché dans la page. (span commençant par ce mot)
+     * @param {*} nomAction - C'est le nom du span qu'il faut cacher
+     */
+    function cacherElement(parametre, nomAction) {
+        var nombreSpanAvecParametre = getElementsByRegexId(parametre, "span");
+        for (var i = 2; i <= nombreSpanAvecParametre.length; i++) {
+            document.getElementById(nomAction + i).style.display = "none";
+            ajouterListener(i, nomAction);
         }
-    }
+    };
 
-    function cacherElementContact() {
-        var divCarres = getElementsByRegexId(/contact*/, "span");
-        for (var i = 2; i <= divCarres.length; i++) {
-            document.getElementById('contact' + i).style.display = "none";
-            console.log(i);
-            console.log('bouton_detail_contact' + i);
-            ajouterListenerContact(i);
+    /**
+    * Méthode permettant de supprimer les balises span afin d'éviter que le message d'erreur
+    * ne s'affiche plusieurs fois
+    * @param nomFormulaire - C'est le nom du formulaire où les balises span doivent être supprimées
+    */
+    function removeAllSpan(nomFormulaire) {
+        var childs = nomFormulaire.querySelectorAll('span');
+        for (var child of childs) {
+            child.remove();
         }
-    }
+    };
 
-    function ajouterListener (i) {
-        document.getElementById('bouton_detail_adresse' + i).addEventListener("click", function (e) {
+    /**
+     * Méthode permettant d'ajouter un listener sur le nom de bouton passé en paramètre
+     * @param i - C'est l'itération sur laquelle l'action doit être effectuée
+     * @param nomAction - C'est le nom du bouton à écouter (contact ou adresse) 
+     */
+    function ajouterListener(i, nomAction) {
+        document.getElementById('bouton_detail_' + nomAction + i).addEventListener("click", function (e) {
             e.preventDefault();
-            console.log(i);
-            console.log('adresse' + i);
-            if (document.getElementById('adresse' + i).style.display == "none") {
-                afficher('adresse' + i);
+            if (document.getElementById(nomAction + i).style.display == "none") {
+                document.getElementById(nomAction + i).style.display = "block";
             } else {
-                cacher('adresse' + i);
+                document.getElementById(nomAction + i).style.display = "none";
             }
         })
-    }
-
-    function ajouterListenerContact (i) {
-        document.getElementById('bouton_detail_contact' + i).addEventListener("click", function (e) {
-            e.preventDefault();
-            console.log(i);
-            console.log('contact' + i);
-            if (document.getElementById('contact' + i).style.display == "none") {
-                afficher('contact' + i);
-            } else {
-                cacher('contact' + i);
-            }
-        })
-    }
-    /*btnDetail.addEventListener("click", function (e) {
-      e.preventDefault();
-      if (document.getElementById('adresse' + i).style.display == "none") {
-          afficher('adresse' + i);
-      } else {
-          cacher('adresse' + i);
-      }
-  })*/
-
+    };
 }
+
+// A TESTER
+
+/*fetch(url, { method: 'POST' })
+    .then(function (response) {
+        if (response.ok) {
+                console.log('Bonne réponse du réseau');
+                return response.json();
+
+        } else {
+            console.log('Mauvaise réponse du réseau');
+        }
+    })
+    .then(function (data) {
+        console.log('On dans la requete AJAX');
+    })
+    .catch(function (error) {
+        console.log('Il y a eu un problème avec l\'opération fetch: ' + error.message);
+    });*/
+

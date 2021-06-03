@@ -1,90 +1,132 @@
 {% extends "base.html.twig" %}
 
-{% block title %}Sociétés{% endblock %}
+{% block title %}Sociétés
+{% endblock %}
 
 {% block body %}
 
-<div class="titre-audit has-text-centered ">
-    <h1 class="title is-2">Liste des sociétés</h1>
-</div>
+	<div class="titre-audit has-text-centered ">
+		<h1 class="title is-2">Liste des sociétés</h1>
+	</div>
+	<div class="titre-utilisateur column is-3 is-offset-9">
+		<p>
+			<strong>Date du jour :
+			</strong>
+			<span>{{ "now"|date("d/m/Y") }}</span>
+		</p>
+		<p>
+			<strong>Utilisateur  :
+			</strong>
+			<span>{{ app.user.username }}</span>
+		</p>
+	</div>
 
-<div class="container is-widescreen is-centered is-vcentered has-text-centered">
+	<div
+		class="container is-widescreen is-centered is-vcentered has-text-centered">
 
-    <!-- Section Filtre sur le nom de l'entreprise -->
-    
-    {{ form_start(form_recherche_societe) }}
-    <div class="columns">
-    
-        <div class="column">
-        {{form_widget(form_recherche_societe.recherche)}}
-        </div>
-        <div class="column has-text-left">
-        {{form_widget(form_recherche_societe.rechercher)}}
-        </div>
-    
-    </div>
-    {{ form_end(form_recherche_societe) }}
-    <!-- Liste des entreprises  -->
-    <table class="table is-striped is-narrow is-hoverable is-fullwidth tab_audit_liste">
-        <thead class="table is-bordered">
-            <tr>
-                <th><abbr title="Nom de l'entreprise">Nom de l'entreprise</abbr></th>
-                <th><abbr title="Immatriculation RCS">Immatriculation RCS</abbr></th>
-                <th><abbr title="contact">Nom  contact</abbr></th>
-                <th><abbr title="téléphone">Téléphone Contact</abbr></th>
-                <th><abbr title="Email">Email Contact</abbr></th>
-            </tr>
-        </thead>
-        <tbody>
-        {% if societes_recherchees is not empty %} <!-- Si la recherche de l'utilisateur a donné des résultats -->
-            {% for societe in societes_recherchees %} <!-- on affiche les résultats -->
-            <tr class="is-bordered" id="{{ societe.id }}">
-                <td>{{societe.nom}}</td>
-                <td>{{societe.immatRcs}}</td>
-                
-                <td>{{societe.contact[0].nomContact}} {{societe.contact[0].prenomContact }}</td> <!-- On prend le premier contact dans la liste des contacts de la société-->
-                <td>{{societe.contact[0].telContact}}</td>
-                <td>{{societe.contact[0].emailContact}}</td>
-            </tr>
-            {% endfor %}
-        {% else %}
-            {% if recherche_utilisateur is not empty %} <!-- Si la recherche de l'utilisateur n'a pas donné de résultat -->
-            <div>{{baseVide}}</div><!-- On indique à l'utilisateur qu'aucune société ne correspond à la recherche -->
-            {% else %}
-                <!-- On affiche toutes les sociétés dans la liste si aucune recherche n'a été effectué -->
-                {% for societe in toutes_les_societes %}
-                <tr class="is-bordered" id="{{ societe.id }}">
-                    <td>{{societe.nom}}</td>
-                    <td>{{societe.immatRcs}}</td>
-                    
-                    <td>{{societe.contact[0].nomContact}} {{societe.contact[0].prenomContact }}</td> <!-- On prend le premier contact dans la liste des contacts de la société-->
-                    <td>{{societe.contact[0].telContact}}</td>
-                    <td>{{societe.contact[0].emailContact}}</td>
-                </tr>
-                {% endfor %}
-            {% endif %}
-        {% endif %}
-        </tbody>
-    </table>
+		<!-- Date et Participant connecté -->
+		<section class="columns my-3"></section>
 
-    <!-- Zone des boutons ajout - modif - créer audit -->
+		<!-- Section Filtre sur le nom de l'entreprise -->
 
-    <div class="columns has-text-right">
+		{{ form_start(form_recherche_societe) }}
+		<div class="columns">
 
-        <div class="column is-offset-two-fifths" id="divModifier">
-            <a id="lienModifier"><button title="Sélectionnez une société pour la modifier" class="button is-info is-fullwidth" id="btnModifier" disabled="true">Modifier une entreprise</button></a>
-        </div>
-        <div class="column">
-            <a href="{{path('societe_ajouter')}}"><button class="button is-info is-fullwidth">Ajouter une entreprise</button></a>
-        </div>
-        <div class="column">
-            <a id="lienCreerAudit"><button title="Sélectionnez une société pour créer un audit" class="button is-info is-fullwidth" id="btnCreer" disabled>Créer un audit</button></a>
-        </div>
-    </div>
+			<div class="column">
+				{{form_widget(form_recherche_societe.recherche)}}
+			</div>
+			<div class="column has-text-left">
+				{{form_widget(form_recherche_societe.rechercher)}}
+			</div>
 
-</div>
+		</div>
+		{{ form_end(form_recherche_societe) }}
+		<!-- Liste des entreprises  -->
+		<table class="table is-striped is-narrow is-hoverable is-fullwidth tab_audit_liste">
+			<thead class="table is-bordered">
+				<tr>
+					<th>
+						<abbr title="Nom de l'entreprise">Nom de l'entreprise</abbr>
+					</th>
+					<th>
+						<abbr title="Immatriculation RCS">Immatriculation RCS</abbr>
+					</th>
+					<th>
+						<abbr title="contact">Nom  contact</abbr>
+					</th>
+					<th>
+						<abbr title="téléphone">Téléphone Contact</abbr>
+					</th>
+					<th>
+						<abbr title="Email">Email Contact</abbr>
+					</th>
+				</tr>
+			</thead>
+			<tbody>
+				{% if societes_recherchees is not empty %}
+					<!-- Si la recherche de l'utilisateur a donné des résultats -->
+					{% for societe in societes_recherchees %}
+						<!-- on affiche les résultats -->
+						<tr class="is-bordered" id="{{ societe.id }}">
+							<td>{{societe.nom}}</td>
+							<td>{{societe.immatRcs}}</td>
+
+							<td>{{societe.contact[0].nomContact}}
+								{{societe.contact[0].prenomContact }}</td>
+							<!-- On prend le premier contact dans la liste des contacts de la société-->
+							<td>{{societe.contact[0].telContact}}</td>
+							<td>{{societe.contact[0].emailContact}}</td>
+						</tr>
+					{% endfor %}
+				{% else %}
+					{% if recherche_utilisateur is not empty %}
+						<!-- Si la recherche de l'utilisateur n'a pas donné de résultat -->
+						<div>{{baseVide}}</div>
+						<!-- On indique à l'utilisateur qu'aucune société ne correspond à la recherche -->
+					{% else %}
+						<!-- On affiche toutes les sociétés dans la liste si aucune recherche n'a été effectué -->
+						{% for societe in toutes_les_societes %}
+							<tr class="is-bordered" id="{{ societe.id }}">
+								<td>{{societe.nom}}</td>
+								<td>{{societe.immatRcs}}</td>
+
+								<td>{{societe.contact[0].nomContact}}
+									{{societe.contact[0].prenomContact }}</td>
+								<!-- On prend le premier contact dans la liste des contacts de la société-->
+								<td>{{societe.contact[0].telContact}}</td>
+								<td>{{societe.contact[0].emailContact}}</td>
+							</tr>
+						{% endfor %}
+					{% endif %}
+				{% endif %}
+			</tbody>
+		</table>
+
+		<!-- Zone des boutons ajout - modif - créer audit -->
+
+		<div class="columns has-text-right">
+
+			<div class="column is-offset-two-fifths" id="divModifier">
+				<a id="lienModifier">
+					<button title="Sélectionnez une société pour la modifier" class="button is-info is-fullwidth" id="btnModifier" disabled="true">Modifier une entreprise</button>
+				</a>
+			</div>
+			<div class="column">
+				<a href="{{path('societe_ajouter')}}">
+					<button class="button is-info is-fullwidth">Ajouter une entreprise</button>
+				</a>
+			</div>
+			<div class="column">
+				<a id="lienCreerAudit">
+					<button title="Sélectionnez une société pour créer un audit" class="button is-info is-fullwidth" id="btnCreer" disabled>Créer un audit</button>
+				</a>
+			</div>
+		</div>
+
+	</div>
 {% endblock %}
 
 {% block javascripts %}
-    <script type="text/javascript" src="{{asset('js/audit_liste.js')}}"></script>
+	{{ parent() }}
+	<script type="text/javascript" src="{{asset('js/audit_liste.js')}}"></script>
 {% endblock %}
