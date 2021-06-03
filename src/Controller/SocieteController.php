@@ -7,10 +7,7 @@ use App\Entity\Contact;
 use App\Entity\Societe;
 use App\Form\AdresseFormType;
 use App\Form\ContactFormType;
-use App\Form\SocieteFormType;
 use App\Services\LogoServices;
-use Doctrine\ORM\EntityManager;
-use Symfony\Component\Form\Form;
 use App\Form\RechercheSimpleType;
 use App\Services\ErreursServices;
 use App\Form\AjoutSocieteFormType;
@@ -23,18 +20,20 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\JsonResponse;
-use Symfony\Component\Validator\Constraints\IsTrue;
-use Symfony\Component\Validator\ConstraintViolationList;
-use Symfony\Component\Validator\Constraints\IsFalseValidator;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
 class SocieteController extends AbstractController
 {
     /**
+     * Ajoute une société
      * @Route("/societe/ajouter", name="societe_ajouter")
      */
-    public function societeAjouter(Request $request, EntityManagerInterface $entityManager, LogoServices $logoServices): Response
-    {
+    public function societeAjouter(
+        Request $request,
+        EntityManagerInterface $entityManager,
+        LogoServices $logoServices
+    ): Response {
+
         // On créé une instance de société, Adresse, et Contact
         $societe = new Societe();
         $adresse = new Adresse();
@@ -73,19 +72,20 @@ class SocieteController extends AbstractController
             return $this->redirectToRoute('societe_liste');
         }
 
+        // On retourne la page Twig avec le formulaire
         return $this->render('societe/societe_ajouter.html.twig', [
             "societeForm" => $societeForm->createView(),
         ]);
     }
 
     /**
+     * Affiche la liste des sociétés
      * @Route("/societe/liste", name="societe_liste")
      */
     public function listerSociete(
         Request $request,
-        EntityManagerInterface $entityManager,
         SocieteRepository $societeRepository
-    ) {
+    ): Response {
 
         //Création du formulaire de recherche
         $form = $this->createForm(RechercheSimpleType::class);
@@ -110,9 +110,6 @@ class SocieteController extends AbstractController
             ]);
         }
 
-
-
-
         return $this->render('societe/societe_liste.html.twig', [
             'toutes_les_societes' => $toutes_les_societes,
             'societes_recherchees' => $societes_recherchees,
@@ -122,16 +119,23 @@ class SocieteController extends AbstractController
     }
 
     /**
+     * Modifie les informations d'une societe
      * @Route("/societe/modifier/{id}", name="societe_modifier", requirements={"id"="\d+"})
      */
-    public function societeModifier($id, ErreursServices $erreursServices, Request $request, EntityManagerInterface $entityManager, LogoServices $logoServices, SocieteRepository $societeRepository): Response
-    {
+    public function societeModifier(
+        $id,
+        Request $request,
+        EntityManagerInterface $entityManager,
+        LogoServices $logoServices,
+        SocieteRepository $societeRepository
+    ): Response {
+
         // On créé une instance de société, Adresse, et Contact
         $societe = $societeRepository->findAllInformationsBySociety($id);
         $logo = $societe->getLogo();
         $contact = new Contact();
         $adresse = new Adresse();
-        //dd($societe->getAdresse()[0]->getId());
+        // On récupère les adresses et contacts de la societe
         $idAdresse = $societe->getAdresse();
         $idContact = $societe->getContact();
 
@@ -145,6 +149,7 @@ class SocieteController extends AbstractController
 
         // Si le formulaire est soumis
         if ($societeForm->isSubmitted()) {
+            // Si le formulaire est valide
             if ($societeForm->isValid()) {
 
                 // On vérifie si un logo existe déjà pour le supprimer
@@ -172,7 +177,7 @@ class SocieteController extends AbstractController
                 return $this->redirectToRoute('societe_liste');
             }
         }
-
+        // On affiche le Twig avec les différents formulaires
         return $this->render('societe/societe_modifier.html.twig', [
             "societeForm" => $societeForm->createView(),
             "contactForm" => $contactForm->createView(),
@@ -185,10 +190,17 @@ class SocieteController extends AbstractController
     }
 
     /**
+     * Ajout d'une adresse secondaire à une societe
      * @Route("/societe/modifier/adresse/{json}", name="societe_modifier_adresse")
      */
-    public function ajoutAdresse($json, ErreursServices $erreursServices, Request $request, EntityManagerInterface $entityManager, SocieteRepository $societeRepository): Response
-    {
+    public function ajoutAdresse(
+        $json,
+        ErreursServices $erreursServices,
+        Request $request,
+        EntityManagerInterface $entityManager,
+        SocieteRepository $societeRepository
+    ): Response {
+
         $resultat = "";
 
         // On récupère le JSON et on le décode
@@ -219,31 +231,43 @@ class SocieteController extends AbstractController
         if ($request->getMethod() == 'POST') {
 
             // On prend les données du formulaire soumis, et les injecte dans $societe
-            $adresseForm->handleRequest($request);
             $adresseForm->submit(array_merge(['libelle' => $libelle, 'rue' => $rue, 'ville' => $ville, 'code_postal' => $codePostal, '_token' => $token], $request->request->all()), false);
 
             if ($adresseForm->isSubmitted()) {
                 if ($adresseForm->isValid()) {
                     $resultat = 'success';
+
+                    // Sauvegarde en Bdd
                     $entityManager->persist($adresse);
                     $entityManager->flush();
 
                     // On ajoute un message flash
                     $this->addFlash("link", "L'adresse a été ajouté");
+
+                    // On retourne la réponse JSON
                     return new JsonResponse(['resultat' => $resultat]);
                 } else {
+                    // On retourne le tableau des erreurs de validation
                     $erreurs = $erreursServices->getErrorMessages($adresseForm);
                 }
             }
         }
+        // On retourne la réponse JSON
         return new JsonResponse(['resultat' => $resultat, 'erreur' => $erreurs]);
     }
 
     /**
+     * Ajout d'un contact secondaire à une société
      * @Route("/societe/modifier/contact/{json}", name="societe_modifier_contact")
      */
-    public function ajoutContact($json, ErreursServices $erreursServices, Request $request, EntityManagerInterface $entityManager, SocieteRepository $societeRepository): Response
-    {
+    public function ajoutContact(
+        $json,
+        ErreursServices $erreursServices,
+        Request $request,
+        EntityManagerInterface $entityManager,
+        SocieteRepository $societeRepository
+    ): Response {
+
         $resultat = "";
 
         // On récupère le JSON et on le décode
@@ -276,35 +300,51 @@ class SocieteController extends AbstractController
         if ($request->getMethod() == 'POST') {
 
             // On prend les données du formulaire soumis, et les injecte dans $societe
-            $contactForm->handleRequest($request);
             $contactForm->submit(array_merge(['nom_contact' => $nom, 'prenom_contact' => $prenom, 'tel_contact' => $telephone, 'email_contact' => $mail, 'poste_contact' => $poste, '_token' => $token], $request->request->all()), false);
 
             if ($contactForm->isSubmitted()) {
                 if ($contactForm->isValid()) {
                     $resultat = 'success';
+
+                    // Sauvegarde en Bdd
                     $entityManager->persist($contact);
                     $entityManager->flush();
 
                     // On ajoute un message flash
                     $this->addFlash("link", "Le contact a été ajouté");
+
+                    // On retourne la réponse JSON
                     return new JsonResponse(['resultat' => $resultat]);
                 } else {
+                    // On retourne le tableau des erreurs de validation
                     $erreurs = $erreursServices->getErrorMessages($contactForm);
                 }
             }
         }
+        // On retourne la réponse JSON
         return new JsonResponse(['resultat' => $resultat, 'erreur' => $erreurs]);
     }
 
     /**
+     * Supprime une société en fonction de son id
      * @Route("/societe/supprimer/{id}", name="societe_supprimer", requirements={"id"="\d+"})
      */
-    public function societeSupprimer($id,  EntityManagerInterface $entityManager, SocieteRepository $societeRepository): Response
-    {
+    public function societeSupprimer(
+        $id,
+        EntityManagerInterface $entityManager,
+        SocieteRepository $societeRepository,
+        LogoServices $logoServices
+    ): Response {
+
         // On récupère la société
         $societe = $societeRepository->findAllInformationsBySociety($id);
 
-        // On supprime la société
+        // On vérifie si un logo existe déjà pour le supprimer
+        if ($societe->getLogo()) {
+            $logoServices->deletePhoto($societe->getLogo());
+        }
+
+        // On supprime la société et on enregistre en bdd
         $entityManager->remove($societe);
         $entityManager->flush();
 
@@ -316,14 +356,19 @@ class SocieteController extends AbstractController
     }
 
     /**
+     * Supprime une adresse secondaire d'une société en fonction de son id
      * @Route("/societe/modifier/adresse/supprimer/{idAdresse}", name="adresse_supprimer", requirements={"id"="\d+"})
      */
-    public function adresseSupprimer($idAdresse, EntityManagerInterface $entityManager, AdresseRepository $adresseRepository): Response
-    {
-        // On récupère la société
+    public function adresseSupprimer(
+        $idAdresse,
+        EntityManagerInterface $entityManager,
+        AdresseRepository $adresseRepository
+    ): Response {
+
+        // On récupère l'adresse
         $adresse = $adresseRepository->find($idAdresse);
 
-        // On supprime la société
+        // On supprime l'adresse et on enregistre en bdd
         $entityManager->remove($adresse);
         $entityManager->flush();
 
@@ -335,14 +380,19 @@ class SocieteController extends AbstractController
     }
 
     /**
+     * Supprime un contact secondaire d'une société en fonction de son id
      * @Route("/societe/modifier/contact/supprimer/{idContact}", name="contact_supprimer", requirements={"id"="\d+"})
      */
-    public function contactSupprimer($idContact, EntityManagerInterface $entityManager, ContactRepository $contactRepository): Response
-    {
-        // On récupère la société
+    public function contactSupprimer(
+        $idContact,
+        EntityManagerInterface $entityManager,
+        ContactRepository $contactRepository
+    ): Response {
+
+        // On récupère le contact
         $contact = $contactRepository->find($idContact);
 
-        // On supprime la société
+        // On supprime le contact et on enregistre en bdd
         $entityManager->remove($contact);
         $entityManager->flush();
 

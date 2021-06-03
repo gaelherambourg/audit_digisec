@@ -40,14 +40,10 @@ class SocieteFormType extends AbstractType
                 'constraints' => [
                     new Image([
                         'maxSize' => '5M',
-                        'maxSizeMessage' => 'La taille max est de 5 mo'
+                        'maxSizeMessage' => 'La taille max est de 5 Mo'
                     ])
                 ]
-            ])
-            // Insetion du formulaire AdressFormType
-            //->add('adresse', AdresseFormType::class)
-            // Insertion du formulaire ContactFormType
-            //->add('contact', ContactFormType::class)          
+            ])        
         ;
     }
 

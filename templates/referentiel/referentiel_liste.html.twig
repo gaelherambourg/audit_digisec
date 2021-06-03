@@ -7,6 +7,10 @@
 <div class="titre-audit has-text-centered ">
     <h1 class="title is-2">Liste des référentiels</h1>
 </div>
+<div class="titre-utilisateur column is-3 is-offset-9">
+    <p><strong>Date du jour : </strong><span>{{ "now"|date("d/m/Y") }}</span></p>
+    <p><strong>Utilisateur  : </strong><span>{{ app.user.username }}</span></p>
+</div>
 
 <div class="container is-widescreen is-centered is-vcentered has-text-centered">
 
@@ -76,5 +80,6 @@
 {% endblock %}
 
 {% block javascripts %}
+    {{ parent() }}
     <script type="text/javascript" src="{{asset('js/audit_liste.js')}}"></script>
 {% endblock %}

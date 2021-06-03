@@ -388,5 +388,6 @@
 {% endblock %}
 
 {% block javascripts %}
+	{{ parent() }}
 	<script type="text/javascript" src="{{asset('js/modal.js')}}"></script>
 {% endblock %}
