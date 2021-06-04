@@ -42,6 +42,17 @@ class SocieteRepository extends ServiceEntityRepository
         return $queryBuilder->getQuery()->getResult();
     }
 
+    public function findAllInformationsDigisec(){
+        //SELECT * FROM societe WHERE est_digisec = '1';
+        $queryBuilder = $this->createQueryBuilder('s')
+            ->leftJoin('s.adresse','a')->addSelect('a')
+            ->join('s.contact','c')->addSelect('c');
+        $queryBuilder
+            ->andWhere('s.est_digisec = 1');
+        $query = $queryBuilder->getQuery();
+        return $query->getSingleResult();
+    }
+
     public function findAllInformations()
     {
         $queryBuilder = $this->createQueryBuilder('s')

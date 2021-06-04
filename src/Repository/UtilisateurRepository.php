@@ -36,6 +36,14 @@ class UtilisateurRepository extends ServiceEntityRepository implements PasswordU
         $this->_em->flush();
     }
 
+    public function loadUserByUsername($usernameOrEmail) {
+        return $this->createQueryBuilder('p')
+        ->where('p.username = :query OR p.email = :query')
+        ->setParameter('query', $usernameOrEmail)
+        ->getQuery()
+        ->getOneOrNullResult();
+    }
+
     // /**
     //  * @return Utilisateur[] Returns an array of Utilisateur objects
     //  */

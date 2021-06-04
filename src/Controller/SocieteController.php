@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Entity\Adresse;
+use App\Entity\societeDigisec;
 use App\Entity\Contact;
 use App\Entity\Societe;
 use App\Form\AdresseFormType;
@@ -401,5 +402,29 @@ class SocieteController extends AbstractController
 
         // On redirige vers societe_liste
         return $this->redirectToRoute('societe_liste');
+    }
+
+    /**
+     * @Route("/digisec", name="societe_digisec")
+     */
+    public function societeDigisec(SocieteRepository $societeRepository,
+                                   Request $request,
+                                   EntityManagerInterface $entityManager): Response
+    {
+         // On récupère la société digisec
+         $societe = $societeRepository->findAllInformationsDigisec();
+         dump($societe);
+        
+         // si il n'y a aucune societe 
+        if(is_null($societe)) {
+            throw $this->createNotFoundException();
+        }
+
+        //si une societe a est_digisec à TRUE on redirige vers societe_digisec
+        if ($societe->getEstDigisec() == TRUE) {
+            return $this->render('societe/societe_digisec.html.twig', ['societe'=>$societe]);
+        } else {
+            return $this->render('societe/societe_liste.html.twig');
+        }
     }
 }

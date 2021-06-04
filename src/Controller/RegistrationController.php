@@ -41,10 +41,13 @@ class RegistrationController extends AbstractController
 
             // On génère un token et on l'enregistre
             $utilisateur->setActivationToken(md5(uniqid()));
-            dump($utilisateur);
+
             $entityManager = $this->getDoctrine()->getManager();
             $entityManager->persist($utilisateur);
             $entityManager->flush();
+
+            $this->addFlash('success', 'Le nouvel utilisteur '.$utilisateur->getUsername().' a bien été créé.');
+            return $this->redirectToRoute('app_login');
 
             // do anything else you need here, like send an email
 
@@ -57,10 +60,10 @@ class RegistrationController extends AbstractController
             // On crée le texte avec la vue
             ->setBody(
                 $this->renderView(
-                    'email/activation.html.twig', ['token' => $utilisateur->getActivationToken()]
+                    'emails/activation.html.twig', ['token' => $utilisateur->getActivationToken()]
                 ),
                 'text/html'
-            )
+                )
             ;
             $mailer->send($message);
 
@@ -84,7 +87,7 @@ class RegistrationController extends AbstractController
         public function activation($token, UtilisateurRepository $utilisateur)
         {
             // On recherche si un utilisateur avec ce token existe dans la base de données
-            $user = $utilisateur->findOneBy(['activation_token' => $token]);
+            $utilisateur = $utilisateur->findOneBy(['activation_token' => $token]);
 
             // Si aucun utilisateur n'est associé à ce token
             if(!$utilisateur){
@@ -104,5 +107,4 @@ class RegistrationController extends AbstractController
             // On retourne à l'accueil
             return $this->redirectToRoute('audit_liste');
         }
-
 }

@@ -3,6 +3,7 @@
 namespace App\Security;
 
 use App\Entity\Utilisateur;
+use App\Repository\UtilisateurRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -68,7 +69,7 @@ class AppAuthenticator extends AbstractFormLoginAuthenticator implements Passwor
         }
 
         $user = $this->entityManager->getRepository(Utilisateur::class)->findOneBy(['username' => $credentials['username']]);
-
+        // $user = $this->entityManager->getRepository(Utilisateur::class)->loadUserByUsername($credentials['login']);
         if (!$user) {
             throw new UsernameNotFoundException('Username could not be found.');
         }

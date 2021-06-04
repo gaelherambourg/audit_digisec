@@ -3,6 +3,22 @@
 {% block title %}Connexion{% endblock %}
 
 {% block body %}
+{% for message in app.flashes('message') %}
+    <div class="alert alert-sucess" role="alert">
+    {{message}}
+    </div>
+{% endfor %}
+{% for message in app.flashes('warning') %}
+    <div class="alert alert-warning" role="alert">
+    {{message}}
+    </div>
+{% endfor %}
+{% for message in app.flashes('danger') %}
+    <div class="alert alert-danger" role="alert">
+    {{message}}
+    </div>
+{% endfor %}
+
 <form method="post">
 
     {% if app.user %}
@@ -19,7 +35,7 @@
 
         <div class="column">
             <p class="control has-icons-left has-icons-right">
-                <input type="text" value="{{ last_username }}" name="username" id="inputUsername" class="input" autocomplete="username" placeholder="Nom d'utilisateur" required autofocus>
+                <input type="text" value="{{ last_username }}" name="username" id="inputUsername" class="input" autocomplete="username" placeholder="Nom d'utilisateur">
                 <span class="icon is-small is-left">
                     <i class="fas fa-user"></i>
                 </span>
@@ -29,7 +45,7 @@
 
             <div class="field">
                 <p class="control has-icons-left">
-                    <input type="password" name="password" id="inputPassword" class="input" autocomplete="current-password" placeholder="Mot de passe" required>
+                    <input type="password" name="password" id="inputPassword" class="input" autocomplete="current-password" placeholder="Mot de passe">
                     <span class="icon is-small is-left">
                     <i class="fas fa-lock"></i>
                     </span>
@@ -46,8 +62,8 @@
                     <button class="button is-success" type="submit" value="login">
                     Se connecter
                     </button>
-                    <button class="button is-info" type="submit" value="oubliPass">
-                    Mot de passe oublié
+                    <button class="button is-info" href="{{ path('app_forgotten_password')}}">
+					Mot de passe oublié
                     </button>
                 </p>
             </div>
