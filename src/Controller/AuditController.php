@@ -65,7 +65,7 @@ class AuditController extends AbstractController
             $audit->setDateCreation(new \DateTime());
             $audit->setNom($societe_audit->getNom()." - ".$audit->getReferentiel()->getLibelle()." - ".$audit->getDateCreation()->format('d/m/Y'));
             $audit->setStatut($entityManager->find(Statut::class, 1));
-                        
+            
             foreach($audit->getReferentiel()->getChapitres() as $chapitre){
 
                 foreach($chapitre->getRecommandations() as $recommandation){

@@ -5,7 +5,7 @@ window.onload = function () {
     fermerModal();
     showTypePreuve();
     ajoutPreuve();
-    
+    couleurRecomandationSelectionnee();
 }
 
 //Fonction permettant d'ouvrir la modal d'ajout de preuve au click sur le bouton ajouter preuve
@@ -174,5 +174,22 @@ function clearInput() {
     document.getElementById('preuve_form_texte').value = "";
     document.getElementById('preuve_form_fichier').value = "";
     document.getElementById('preuve_form_image').value = "";
+}
+
+//Fonction permettant de différencier la couleur de fond du lien dans le menu latéral de la recommandation en cours d'audit
+function couleurRecomandationSelectionnee() {
+
+    let elem = document.getElementsByClassName('aSelected');
+    let recoEnCours = document.getElementById('idReco').dataset.id;
+    for (let i = 0; i < elem.length; i++) {
+        if (elem[i].id == recoEnCours) {
+            elem[i].style.backgroundColor = "white";
+        } else {
+            elem[i].style.backgroundColor = "rgb(207, 207, 230)";
+        }
+            
+            
+        ;
+    }
 }
 
