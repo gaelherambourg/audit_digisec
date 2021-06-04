@@ -22,7 +22,7 @@ class SocieteRepository extends ServiceEntityRepository
     public function findAllInformationsBySociety($id)
     {
         $queryBuilder = $this->createQueryBuilder('s')
-            ->leftJoin('s.adresse', 'a')->addSelect('a')
+            ->join('s.adresse', 'a')->addSelect('a')
             ->join('s.contact', 'c')->addSelect('c');
         $queryBuilder
             ->andWhere('s.id = :id')->setParameter('id', $id);
