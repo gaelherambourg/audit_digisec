@@ -16,7 +16,7 @@
             <div><!-- Id du chapitre et son libellé -->
             {{recommandation.chapitre.id}} - {{recommandation.chapitre.libelle}}
             </div>
-            <div class="mt-5"> <!-- Index référentiel de la recommandation et libellé de la recommandation -->
+            <div class="mt-5" id="idReco" data-id="{{recommandation.id}}"> <!-- Index référentiel de la recommandation et libellé de la recommandation -->
             {{recommandation.indexReferentiel}} - {{recommandation.libelle}}
             </div>
             <div class="mt-5"><!-- Description de la recommandation -->
@@ -35,6 +35,7 @@
 			<legend class="label">Contrôles</legend>
             
                 {% for audit_controle in form_audit_controle.audit_controle %}
+                <fieldset class="box">
                     <div class="columns is-mobile">
                         <div class="column is-6">
                             {{ form_widget(audit_controle.id) }}
@@ -45,7 +46,7 @@
                             {{ form_label(audit_controle.pointControle, null, {'attr': {'class': 'has-text-link'} }) }}
                         </div>
                         <div class="column is-6">
-                            {{ form_widget(audit_controle.pointControle, {'attr': {'class': 'input is-link'} }) }}
+                            {{ form_widget(audit_controle.pointControle, {'attr': {'class': 'input is-link has-text-weight-bold'} }) }}
                         </div>
                     </div>
                     <div class="columns is-mobile">
@@ -64,6 +65,26 @@
                             {{ form_widget(audit_controle.remarque, {'attr': {'class': 'input is-link', 'placeholder': 'Remarque'}}) }}
                         </div>
                     </div>
+                    <div class="columns is-mobile">
+                                <div class="column is-4">
+                                    <label class="label has-text-link">Remediations</label>
+                                </div>
+                                <div class="column is-6 has-text-left">
+                    {% for auditControle in listeAuditControle %}
+                        {% for remediation in auditControle.pointControle.remediations %}
+                            {% if remediation.pointControle.id == audit_controle.pointControle.vars.value %}
+                            
+                                <div>
+                                    <input type="checkbox" name="cbxRemediation" id="{{remediation.id}}"/>
+                                    <label for="{{remediation.id}}">{{remediation.libelle}}</label>
+                                </div>
+                            
+                            {% endif %}
+                        {% endfor %}
+                    {% endfor %}
+                        </div>
+                    </div>
+                    
                     <div class="columns is-mobile">
                         <div class="column is-4">
                             <label class="label has-text-link">Preuves</label>
@@ -116,7 +137,7 @@
                             <a class="button is-small is-link is-light is-3 ajouterPreuve" id="{{audit_controle.vars.value.id}}">Ajouter une preuve</a>
                         </div>
                     </div>
-                    
+                </fieldset>
                 {% endfor %}
                     <div class="column is-10 has-text-right">
                         {{ form_widget(form_audit_controle.enregistrer) }}

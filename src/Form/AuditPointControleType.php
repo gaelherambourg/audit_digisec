@@ -3,6 +3,7 @@
 namespace App\Form;
 
 use App\Entity\Audit;
+use App\Entity\AuditControle;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\CollectionType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
@@ -21,7 +22,7 @@ class AuditPointControleType extends AbstractType
             ])
             ->add('enregistrer', SubmitType::class, [
                 "attr"=>["value"=>"Enregistrer",
-                "class"=>"is-info is-small"
+                "class"=>"is-info is-medium"
                 ]
             ]);
         ;

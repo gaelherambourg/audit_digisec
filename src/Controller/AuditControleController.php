@@ -45,7 +45,6 @@ class AuditControleController extends AbstractController
     {
 
         $id = $request->get('id');
-        //$audit = $auditControleRepository->findById($id);
         $audit = $auditRepository->find($id);
         $recommandation = $entityManager->find(Recommandation::class, $id_recommandation);
         $nbReco = $recommandationRepository->nbRecommandationByReferentieo($audit->getReferentiel()->getId());
@@ -54,19 +53,11 @@ class AuditControleController extends AbstractController
         $preuve = new Preuve();
         $remarque = $remarqueRepository->findByAuditAndRecommandation($id, $id_recommandation);
         
-        // On créer une liste de point de controle correspondant à la recommandation ($id_recommandation)  == 290 requetes avec le foreach
-        /* foreach($audit->getAuditsControle() as $audit_controle){
-            if($audit_controle->getpointControle()->getRecommandation()->getId() == $id_recommandation){
-                $listeAuditControle->add($audit_controle);
-            }
-        } */
-
         $listeAuditControle = $auditControleRepository->findAllPointControleByAuditAndRecommandation($id, $id_recommandation);
-
+        dump($listeAuditControle);
          //Création des formulaires
         $audit_form_controle = $this->createForm(AuditPointControleType::class, ['audit_controle' => $listeAuditControle, 'remarque' => $remarque]);
         //$audit_controle_form = $this->createForm(AuditControlFormType::class, $auditControle);
-        
         
         $preuve_form = $this->createForm(PreuveFormType::class, $preuve);
 
@@ -76,47 +67,6 @@ class AuditControleController extends AbstractController
         
         $preuves = $preuveRepository->findAll();
 
-        /* if ($preuve_form->isSubmitted() && $preuve_form->isValid()) {
-
-            $testAuditControle = $auditControleRepository->find($request->get('modPreuv'));
-            $preuve->setAuditControle($testAuditControle);
-            $preuve->setDateCreation(new \DateTime());
-
-            // On récupère l'image'et on utilise LogoServices pour l'enregistrement
-            $uploadedFile = $preuve_form->get('fichier')->getData();
-            if ($uploadedFile) {
-                $pictureFileName = $fichierPreuveServices->upload($uploadedFile);
-                $preuve->setFichier($pictureFileName);
-            }
-            $uploadedImage = $preuve_form->get('image')->getData();
-            if ($uploadedImage) {
-                $pictureFileName = $imagePreuveServices->upload($uploadedImage);
-                $preuve->setImage($pictureFileName);
-            }
-            $entityManager->persist($preuve);
-            $entityManager->flush();
-
-            return $this->redirectToRoute('audit_controle', ['id' => $id, 'id_recommandation' => $id_recommandation]);
-        } */
-                
-
-        /* if ($remarque_form->isSubmitted() && $remarque_form->isValid()) {
-            $remarque->setAudit($audit);
-            $remarque->setRecommandation($recommandation);
-            $entityManager->persist($remarque);
-            $entityManager->flush();
-            
-            return $this->redirectToRoute('audit_liste');
-        } */
-
-        /* if ($audit_controle_form->isSubmitted() && $audit_controle_form->isValid()) {
-            $auditControle->setAudit($audit);
-            $entityManager->persist($auditControle);
-            $entityManager->flush();
-            dump($remarque);
-            return $this->redirectToRoute('referentiel_liste');
-        } */
-        
         // Si le formulaire est soumis
         if ($audit_form_controle->isSubmitted() && $audit_form_controle->isValid()) {
 
@@ -134,8 +84,6 @@ class AuditControleController extends AbstractController
                 //On redirige vers la liste d'audit si c'est la derniere recommandation de l'audit
                 return $this->redirectToRoute('audit_liste');
             }
-            
-            
         }
 
         return $this->render('audit_controle/audit_controle.html.twig', [
@@ -143,7 +91,8 @@ class AuditControleController extends AbstractController
             'preuveForm' => $preuve_form->createView(),
             'audit' => $audit,
             'preuves' => $preuves,
-            'recommandation' => $recommandation
+            'recommandation' => $recommandation,
+            'listeAuditControle' => $listeAuditControle
         ]);
     }
 }

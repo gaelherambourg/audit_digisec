@@ -7,7 +7,7 @@
         <li><a class="is-size-7">{{chapitre.libelle}}</a>
             <ul>
                 {% for recommandation in chapitre.recommandations %} <!-- On boucle sur les recommandations du chapitre -->
-                    <li><a href="{{ path('audit_controle', {id:audit.id, id_recommandation:recommandation.id})}}" id="{{recommandation.id}}">{{recommandation.libelle}}</a></li>
+                    <li><a href="{{ path('audit_controle', {id:audit.id, id_recommandation:recommandation.id})}}" class="aSelected" id="{{recommandation.id}}">{{recommandation.libelle}}</a></li>
                 {% endfor %}
             </ul>
         </li>        
