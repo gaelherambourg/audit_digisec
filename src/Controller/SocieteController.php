@@ -420,7 +420,7 @@ class SocieteController extends AbstractController
          // On récupère la société digisec
          $societe = $societeRepository->findAllInformationsDigisec();
          dump($societe);
-        
+        // commentaire
          // si il n'y a aucune societe 
         if(is_null($societe)) {
             throw $this->createNotFoundException();
