@@ -345,11 +345,17 @@ class SocieteController extends AbstractController
         }
 
         // On supprime la société et on enregistre en bdd
-        $entityManager->remove($societe);
-        $entityManager->flush();
+        if ($entityManager->remove($societe) != null) {
 
-        // On ajoute un message flash
-        $this->addFlash("link", "La société a été supprimée");
+            $entityManager->remove($societe);
+            $entityManager->flush();
+
+            // On ajoute un message flash
+            $this->addFlash("link", "La société a été supprimée");
+        } else {
+            // On ajoute un message flash
+            $this->addFlash("link", "Suppression impossible - Un audit est lié à cette société");
+        }
 
         // On redirige vers societe_liste
         return $this->redirectToRoute('societe_liste');

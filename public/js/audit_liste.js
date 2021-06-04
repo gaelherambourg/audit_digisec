@@ -4,6 +4,7 @@ window.onload = function () {
     cliqueTd();
     stopPropagationCliqueBtnModifier();
     focusInputRecherche();
+    modal();
 
 }
 //Lors d'un clique sur la page (hors bouton Modifier et la liste des entreprises)
@@ -83,6 +84,27 @@ function focusInputRecherche() {
     let inputRecherche = document.getElementById('recherche_simple_recherche');
     inputRecherche.focus();
     inputRecherche.setSelectionRange(inputRecherche.value.length, inputRecherche.value.length);
+}
+
+function modal() {
+// Constantes liées à l'adresse
+const ajouterAdresse = document.querySelector('#btnAjouter');
+const adresse = document.querySelector('#modalCsv');
+const modalBgA = document.querySelector('#modalCsvBg');
+const fermerAdresse = document.querySelector('#fermerCsv');
+//const formAdresse = document.querySelector("#nouvelle_adresse");
+// Affiche la fenêtre modal
+ajouterAdresse.addEventListener('click', function () {
+    adresse.className = "modal is-active";
+});
+// Ferme la fenêtre modal si on clique à côté
+modalBgA.addEventListener('click', function () {
+    adresse.className = "modal";
+});
+// Ferme la fenêtre modal si on clique sur le bouton
+fermerAdresse.addEventListener('click', function () {
+    adresse.className = "modal";
+});
 }
 
 
