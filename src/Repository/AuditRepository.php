@@ -19,6 +19,19 @@ class AuditRepository extends ServiceEntityRepository
         parent::__construct($registry, Audit::class);
     }
 
+    public function findAuditAllInformation($id)
+    {
+        return $this->createQueryBuilder('a')
+            ->leftJoin('a.referentiel', 'ref')->addSelect('ref')
+            ->join('ref.chapitres', 'chap')->addSelect('chap')
+            ->join('chap.recommandations', 'rec')->addSelect('rec')
+            ->andWhere('a.id = :val')
+            ->setParameter('val', $id)
+            ->getQuery()
+            ->getSingleResult()
+        ;
+    }
+
     // /**
     //  * @return Audit[] Returns an array of Audit objects
     //  */

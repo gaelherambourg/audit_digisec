@@ -95,7 +95,7 @@ class SocieteController extends AbstractController
         $recherche_utilisateur = "";
 
         //On récupère toutes les sociétés en bdd
-        $toutes_les_societes = $societeRepository->findAll();
+        $toutes_les_societes = $societeRepository->findAllInformations();
 
         if ($form->isSubmitted() && $form->isValid()) {
             $recherche_utilisateur = $form->get('recherche')->getData();
@@ -152,13 +152,13 @@ class SocieteController extends AbstractController
             // Si le formulaire est valide
             if ($societeForm->isValid()) {
 
-                // On vérifie si un logo existe déjà pour le supprimer
-                if ($societe->getLogo()) {
-                    $logoServices->deletePhoto($societe->getLogo());
-                }
                 // On récupère le logo et on utilise LogoServices pour l'enregistrement
                 $uploadedFile = $societeForm->get('societe')->get('logo')->getData();
                 if ($uploadedFile) {
+                    // On vérifie si un logo existe déjà pour le supprimer
+                    if ($societe->getLogo()) {
+                        $logoServices->deletePhoto($societe->getLogo());
+                    }
                     $pictureFileName = $logoServices->upload($uploadedFile);
                     $societe->setLogo($pictureFileName);
                 }

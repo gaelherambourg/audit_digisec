@@ -88,13 +88,13 @@
 						{% for societe in toutes_les_societes %}
 							<tr class="is-bordered" id="{{ societe.id }}">
 								<td>{{societe.nom}}</td>
-								<td>{{societe.immatRcs}}</td>
+								<td>{{societe.immat_rcs}}</td>
 
-								<td>{{societe.contact[0].nomContact}}
-									{{societe.contact[0].prenomContact }}</td>
+								<td>{{societe.contact[0].nom_contact}}
+									{{societe.contact[0].prenom_contact }}</td>
 								<!-- On prend le premier contact dans la liste des contacts de la société-->
-								<td>{{societe.contact[0].telContact}}</td>
-								<td>{{societe.contact[0].emailContact}}</td>
+								<td>{{societe.contact[0].tel_contact}}</td>
+								<td>{{societe.contact[0].email_contact}}</td>
 							</tr>
 						{% endfor %}
 					{% endif %}

@@ -45,13 +45,16 @@ class AuditControleController extends AbstractController
     {
 
         $id = $request->get('id');
-        $audit = $auditRepository->find($id);
+        //$audit = $auditControleRepository->findById($id);
+        //$audit = $auditRepository->find($id);
+        $audit = $auditRepository->findAuditAllInformation($id);
         $recommandation = $entityManager->find(Recommandation::class, $id_recommandation);
         $nbReco = $recommandationRepository->nbRecommandationByReferentieo($audit->getReferentiel()->getId());
         $auditControle = new AuditControle();
         $listeAuditControle = new ArrayCollection();
         $preuve = new Preuve();
         $remarque = $remarqueRepository->findByAuditAndRecommandation($id, $id_recommandation);
+        //dd($remarque);
         
         $listeAuditControle = $auditControleRepository->findAllPointControleByAuditAndRecommandation($id, $id_recommandation);
         dump($listeAuditControle);
