@@ -1,85 +1,123 @@
 {% extends "base.html.twig" %}
 
-{% block title %}Référentiels{% endblock %}
+{% block title %}Référentiels
+{% endblock %}
 
 {% block body %}
 
-<div class="titre-audit has-text-centered ">
-    <h1 class="title is-2">Liste des référentiels</h1>
-</div>
-<div class="titre-utilisateur column is-3 is-offset-9">
-    <p><strong>Date du jour : </strong><span>{{ "now"|date("d/m/Y") }}</span></p>
-    <p><strong>Utilisateur  : </strong><span>{{ app.user.username }}</span></p>
-</div>
+	<div class="titre-audit has-text-centered ">
+		<h1 class="title is-2">Liste des référentiels</h1>
+	</div>
+	<div class="titre-utilisateur column is-3 is-offset-9">
+		<p>
+			<strong>Date du jour :
+			</strong>
+			<span>{{ "now"|date("d/m/Y") }}</span>
+		</p>
+		<p>
+			<strong>Utilisateur  :
+			</strong>
+			<span>{{ app.user.username }}</span>
+		</p>
+	</div>
 
-<div class="container is-widescreen is-centered is-vcentered has-text-centered">
+	<div
+		class="container is-widescreen is-centered is-vcentered has-text-centered">
 
-    <!-- Section Filtre sur le nom du référentiel -->
-    
-    {{ form_start(form_recherche_referentiel) }}
-    <div class="columns">
-    
-        <div class="column">
-        {{form_widget(form_recherche_referentiel.recherche)}}
-        </div>
-        <div class="column has-text-left">
-        {{form_widget(form_recherche_referentiel.rechercher)}}
-        </div>
-    
-    </div>
-    {{ form_end(form_recherche_referentiel) }}
+		<!-- Section Filtre sur le nom du référentiel -->
 
-    <!-- Liste des référentiels  -->
-    <table class="table is-bordered is-striped is-narrow is-hoverable is-fullwidth tab_audit_liste">
-        <thead>
-            <tr>
-                <th><abbr title="Nom du référentiel">Nom du référentiel</abbr></th>
-                <th><abbr title="Type de référentiel">Type de référentiel</abbr></th>
-            </tr>
-        </thead>
-        <tbody>
-        {% if referentiel_recherches is not empty %} <!-- Si la recherche de l'utilisateur a donné des résultats -->
-            {% for referentiel in referentiel_recherches %} <!-- on affiche les résultats -->
-            <tr>
-                <td id="{{referentiel.id}}">{{ referentiel.libelle }}</td>
-                <td>{{ referentiel.typeReferentiel }}</td>
-            </tr>
-            {% endfor %}
-        {% else %}
-            {% if recherche_utilisateur is not empty %} <!-- Si la recherche de l'utilisateur n'a pas donné de résultat -->
-                <div>{{baseVide}}</div><!-- On indique à l'utilisateur qu'aucun référentiel ne correspond à la recherche -->
-            {% else %}
-                <!-- On affiche tous les référentielss dans la liste si aucune recherche n'a été effectué -->
-                {% for referentiel in tous_les_referentiels %} 
-                <tr>
-                    <td id="{{referentiel.id}}">{{ referentiel.libelle }}</td>
-                    <td>{{ referentiel.typeReferentiel }}</td>
-                </tr>
-                {% endfor %}
-            {% endif %}
-        {% endif %}
-        </tbody>
-    </table>
-    <!-- Zone des boutons ajout - modif - créer audit -->
+		{{ form_start(form_recherche_referentiel) }}
+		<div class="columns">
 
-    <div class="columns has-text-right">
-        
-        <div class="column is-offset-two-fifths" id="divModifier">
-            <a id="lienModifier"><button class="button is-info is-fullwidth" id="btnModifier" disabled="true">Modifier le referentiel</button></a>
-        </div>
-        <div class="column">
-            <a href="#"><button id="btnAjouter" name="btnAjouter" class="button is-info is-fullwidth">Ajouter un référentiel</button></a>
-        </div>
-        
-    </div>
+			<div class="column">
+				{{form_widget(form_recherche_referentiel.recherche)}}
+			</div>
+			<div class="column has-text-left">
+				{{form_widget(form_recherche_referentiel.rechercher)}}
+			</div>
 
-    
+		</div>
+		{{ form_end(form_recherche_referentiel) }}
 
-</div>
+		<!-- Liste des référentiels  -->
+		<table class="table is-bordered is-striped is-narrow is-hoverable is-fullwidth tab_audit_liste">
+			<thead>
+				<tr>
+					<th>
+						<abbr title="Nom du référentiel">Nom du référentiel</abbr>
+					</th>
+					<th>
+						<abbr title="Type de référentiel">Type de référentiel</abbr>
+					</th>
+				</tr>
+			</thead>
+			<tbody>
+				{% if referentiel_recherches is not empty %}
+					<!-- Si la recherche de l'utilisateur a donné des résultats -->
+					{% for referentiel in referentiel_recherches %}
+						<!-- on affiche les résultats -->
+						<tr>
+							<td id="{{referentiel.id}}">{{ referentiel.libelle }}</td>
+							<td>{{ referentiel.typeReferentiel }}</td>
+						</tr>
+					{% endfor %}
+				{% else %}
+					{% if recherche_utilisateur is not empty %}
+						<!-- Si la recherche de l'utilisateur n'a pas donné de résultat -->
+						<div>{{baseVide}}</div>
+						<!-- On indique à l'utilisateur qu'aucun référentiel ne correspond à la recherche -->
+					{% else %}
+						<!-- On affiche tous les référentielss dans la liste si aucune recherche n'a été effectué -->
+						{% for referentiel in tous_les_referentiels %}
+							<tr>
+								<td id="{{referentiel.id}}">{{ referentiel.libelle }}</td>
+								<td>{{ referentiel.typeReferentiel }}</td>
+							</tr>
+						{% endfor %}
+					{% endif %}
+				{% endif %}
+			</tbody>
+		</table>
+		<!-- Zone des boutons ajout - modif - créer audit -->
+
+		<div class="columns has-text-right">
+
+			<div class="column is-offset-two-fifths" id="divModifier">
+				<a id="lienModifier">
+					<button class="button is-info is-fullwidth" id="btnModifier" disabled="true">Modifier le referentiel</button>
+				</a>
+			</div>
+			<div class="column">
+				<a href="#">
+					<button id="btnAjouter" name="btnAjouter" class="button is-info is-fullwidth">Ajouter un référentiel</button>
+				</a>
+			</div>
+		</div>
+	</div>
+
+	<div class="modal" id="modalCsv">
+		<div class="modal-background" id="modalCsvBg"></div>
+		<div class="modal-card">
+			<header class="modal-card-head">
+				<p class="modal-card-title">Import CSV</p>
+				<button class="delete" aria-label="close" id="fermerCsv"></button>
+			</header>
+			<section
+				class="modal-card-body">
+				<!-- Content ... -->
+				{{ form_start(csvForm) }}
+				{{ form_row(csvForm.csvFile) }}
+			</section>
+			<footer class="modal-card-foot">
+				<button type="submit" class="button is-medium is-link is-light is-3">Importer</button>
+			</footer>
+		</div>
+	</div>
+	{{ form_end(csvForm) }}
 
 {% endblock %}
 
 {% block javascripts %}
-    {{ parent() }}
-    <script type="text/javascript" src="{{asset('js/audit_liste.js')}}"></script>
+	{{ parent() }}
+	<script type="text/javascript" src="{{asset('js/audit_liste.js')}}"></script>
 {% endblock %}
