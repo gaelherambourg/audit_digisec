@@ -19,7 +19,7 @@ class Remarque
     private $id;
 
     /**
-     * @ORM\Column(type="text")
+     * @ORM\Column(type="text", nullable=true)
      * @Assert\NotBlank(message="Ce champ ne doit pas être vide.")
      */
     private $remarque;

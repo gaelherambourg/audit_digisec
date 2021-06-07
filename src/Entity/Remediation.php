@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use App\Repository\RemediationRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -27,6 +29,16 @@ class Remediation
      * @ORM\JoinColumn(nullable=false)
      */
     private $pointControle;
+
+    /**
+     * @ORM\ManyToMany(targetEntity=AuditControle::class, mappedBy="remediations")
+     */
+    private $auditControles;
+
+    public function __construct()
+    {
+        $this->auditControles = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -53,6 +65,33 @@ class Remediation
     public function setPointControle(?PointControle $pointControle): self
     {
         $this->pointControle = $pointControle;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|AuditControle[]
+     */
+    public function getAuditControles(): Collection
+    {
+        return $this->auditControles;
+    }
+
+    public function addAuditControle(AuditControle $auditControle): self
+    {
+        if (!$this->auditControles->contains($auditControle)) {
+            $this->auditControles[] = $auditControle;
+            $auditControle->addRemediation($this);
+        }
+
+        return $this;
+    }
+
+    public function removeAuditControle(AuditControle $auditControle): self
+    {
+        if ($this->auditControles->removeElement($auditControle)) {
+            $auditControle->removeRemediation($this);
+        }
 
         return $this;
     }

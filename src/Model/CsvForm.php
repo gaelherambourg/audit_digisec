@@ -16,7 +16,7 @@ class CsvForm
      *     maxSizeMessage="Votre fichier .csv ne doit pas excéder 1Mo",
      *     )
      */
-    private ?UploadedFile $csvFile = null;
+    private $csvFile = null;
 
     /**
      * @return UploadedFile|null

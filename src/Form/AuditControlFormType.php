@@ -6,6 +6,7 @@ use App\Entity\AuditControle;
 use App\Entity\PointControle;
 use App\Entity\Preuve;
 use App\Entity\Remediation;
+use App\Entity\RemediationControle;
 use App\Repository\PointControleRepository;
 use App\Repository\RemediationRepository;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
@@ -39,7 +40,7 @@ class AuditControlFormType extends AbstractType
                 'label' => 'Point de controle',
                 "disabled" => true,
             ])
-            /* ->add('remediations', EntityType::class,
+            /*  ->add('remediations', EntityType::class,
             [
                 'class' => Remediation::class,
                 'query_builder' => function (RemediationRepository $er) use ($options){
@@ -52,7 +53,7 @@ class AuditControlFormType extends AbstractType
                 'mapped' => false,
                 'expanded' => true,
                 'multiple' => true
-            ]) */
+            ])*/
             ;
     }
 

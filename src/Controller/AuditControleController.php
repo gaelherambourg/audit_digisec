@@ -8,6 +8,7 @@ use App\Entity\Preuve;
 use App\Entity\Recommandation;
 use App\Entity\Referentiel;
 use App\Entity\Remarque;
+use App\Entity\Remediation;
 use App\Form\AuditControlFormType;
 use App\Form\AuditPointControleType;
 use App\Form\PreuveFormType;
@@ -50,11 +51,9 @@ class AuditControleController extends AbstractController
         $audit = $auditRepository->findAuditAllInformation($id);
         $recommandation = $entityManager->find(Recommandation::class, $id_recommandation);
         $nbReco = $recommandationRepository->nbRecommandationByReferentieo($audit->getReferentiel()->getId());
-        $auditControle = new AuditControle();
         $listeAuditControle = new ArrayCollection();
         $preuve = new Preuve();
         $remarque = $remarqueRepository->findByAuditAndRecommandation($id, $id_recommandation);
-        //dd($remarque);
         
         $listeAuditControle = $auditControleRepository->findAllPointControleByAuditAndRecommandation($id, $id_recommandation);
         dump($listeAuditControle);
@@ -65,13 +64,23 @@ class AuditControleController extends AbstractController
         $preuve_form = $this->createForm(PreuveFormType::class, $preuve);
 
         $audit_form_controle->handleRequest($request);
-        //$audit_controle_form->handleRequest($request);
-        //$preuve_form->handleRequest($request);
         
         $preuves = $preuveRepository->findAll();
 
+        $requete = $request->request->all();
+
         // Si le formulaire est soumis
         if ($audit_form_controle->isSubmitted() && $audit_form_controle->isValid()) {
+
+            foreach($audit_form_controle->getData("[audit_controle]") as $ac){
+                foreach($ac as $c){
+                    foreach($requete as $cle => $valeur){
+                        if($valeur == $c->getId()){
+                            $c->addRemediation($entityManager->find(Remediation::class, $cle));
+                        }
+                    }
+                }
+            }
 
             // Sauvegarde en Bdd
             $entityManager->persist($audit);

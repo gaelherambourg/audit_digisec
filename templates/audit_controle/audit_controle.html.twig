@@ -65,6 +65,7 @@
                             {{ form_widget(audit_controle.remarque, {'attr': {'class': 'input is-link', 'placeholder': 'Remarque'}}) }}
                         </div>
                     </div>
+
                     <div class="columns is-mobile">
                                 <div class="column is-4">
                                     <label class="label has-text-link">Remediations</label>
@@ -75,7 +76,7 @@
                             {% if remediation.pointControle.id == audit_controle.pointControle.vars.value %}
                             
                                 <div>
-                                    <input type="checkbox" name="cbxRemediation" id="{{remediation.id}}"/>
+                                    <input type="checkbox" name="{{remediation.id}}" id="{{auditControle.id}}" value="{{auditControle.id}}"/>
                                     <label for="{{remediation.id}}">{{remediation.libelle}}</label>
                                 </div>
                             
@@ -84,7 +85,7 @@
                     {% endfor %}
                         </div>
                     </div>
-                    
+
                     <div class="columns is-mobile">
                         <div class="column is-4">
                             <label class="label has-text-link">Preuves</label>
