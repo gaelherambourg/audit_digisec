@@ -69,14 +69,23 @@ class AuditControleController extends AbstractController
 
         $requete = $request->request->all();
 
+
         // Si le formulaire est soumis
         if ($audit_form_controle->isSubmitted() && $audit_form_controle->isValid()) {
 
-            foreach($audit_form_controle->getData("[audit_controle]") as $ac){
-                foreach($ac as $c){
+            // TODO : A AMELIORER  : on supprime les remediations lié à l'audit de controle et on boucle sur les résultats de la $requete
+            // pour connaitre les remediations cochées
+            foreach($listeAuditControle as $auditControle){
+                foreach($auditControle->getRemediations() as $remediation){
+                    $auditControle->removeRemediation($remediation);
+                }
+            }
+
+            foreach($audit_form_controle->getData("[audit_controle]") as $audit_controle){
+                foreach($audit_controle as $controle){
                     foreach($requete as $cle => $valeur){
-                        if($valeur == $c->getId()){
-                            $c->addRemediation($entityManager->find(Remediation::class, $cle));
+                        if($valeur == $controle->getId()){
+                            $controle->addRemediation($entityManager->find(Remediation::class, $cle));
                         }
                     }
                 }

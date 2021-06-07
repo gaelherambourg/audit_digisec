@@ -71,14 +71,23 @@
                                     <label class="label has-text-link">Remediations</label>
                                 </div>
                                 <div class="column is-6 has-text-left">
+
                     {% for auditControle in listeAuditControle %}
                         {% for remediation in auditControle.pointControle.remediations %}
+
                             {% if remediation.pointControle.id == audit_controle.pointControle.vars.value %}
-                            
-                                <div>
-                                    <input type="checkbox" name="{{remediation.id}}" id="{{auditControle.id}}" value="{{auditControle.id}}"/>
-                                    <label for="{{remediation.id}}">{{remediation.libelle}}</label>
-                                </div>
+
+                                    {% if (remediation in auditControle.remediations) %}
+                                        <div>
+                                            <input type="checkbox" name="{{remediation.id}}" id="{{auditControle.id}}" value="{{auditControle.id}}" checked/>
+                                            <label for="{{remediation.id}}">{{remediation.libelle}}</label>
+                                        </div>
+                                    {% else %}
+                                        <div>
+                                            <input type="checkbox" name="{{remediation.id}}" id="{{auditControle.id}}" value="{{auditControle.id}}"/>
+                                            <label for="{{remediation.id}}">{{remediation.libelle}}</label>
+                                        </div>
+                                    {% endif %}
                             
                             {% endif %}
                         {% endfor %}
