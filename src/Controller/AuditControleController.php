@@ -69,9 +69,16 @@ class AuditControleController extends AbstractController
 
         $requete = $request->request->all();
 
-
         // Si le formulaire est soumis
         if ($audit_form_controle->isSubmitted() && $audit_form_controle->isValid()) {
+
+            foreach($listeAuditControle as $auditControle){
+                dump($auditControle->getPreuves()->count());
+                if($auditControle->getPreuves()->count() < 1){
+                    $this->addFlash("danger", "Tous les points de contrôle doivent avoir au moins une preuve");
+                    return $this->redirectToRoute('audit_controle', ['id' => $id, 'id_recommandation' => $id_recommandation]);
+                }
+            }
 
             // TODO : A AMELIORER  : on supprime les remediations lié à l'audit de controle et on boucle sur les résultats de la $requete
             // pour connaitre les remediations cochées
@@ -90,6 +97,7 @@ class AuditControleController extends AbstractController
                     }
                 }
             }
+            //FIN TODOO A AMELIORER
 
             // Sauvegarde en Bdd
             $entityManager->persist($audit);
