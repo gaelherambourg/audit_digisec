@@ -37,7 +37,9 @@ class AuditControleRepository extends ServiceEntityRepository
     public function findAllPointControleByAuditAndRecommandation($id, $id_recommandation){
         $queryBuilder = $this->createQueryBuilder('c')
             ->join('c.pointControle','p')->addSelect('p')
-            ->join('p.recommandation','r')->addSelect('r');
+            ->join('p.recommandation','r')->addSelect('r')
+            ->leftJoin('c.preuves', 'pr')->addSelect('pr')
+            ->leftJoin('p.remediations', 'e')->addSelect('e');
         $queryBuilder
             ->andWhere('c.audit = :id')->setParameter('id',$id)
             ->andWhere('r.id = :id_recommandation')->setParameter('id_recommandation', $id_recommandation);

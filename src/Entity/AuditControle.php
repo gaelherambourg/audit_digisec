@@ -55,9 +55,15 @@ class AuditControle
      */
     private $audit;
 
+    /**
+     * @ORM\ManyToMany(targetEntity=Remediation::class, inversedBy="auditControles")
+     */
+    private $remediations;
+
     public function __construct()
     {
         $this->preuves = new ArrayCollection();
+        $this->remediations = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -257,9 +263,7 @@ class AuditControle
     public function isNoteValid(ExecutionContextInterface $context, $note)
     {
         $note = $this->getNote();
-        dump($note);
         $echelleNotation = $this->getAudit()->getEchelleNotation()->getId();
-        dump($echelleNotation);
         if($echelleNotation == 1){
             if($note < 0 || $note > 5){
                 $context->buildViolation('La note doit être comprise entre 0 et 5')
@@ -274,6 +278,30 @@ class AuditControle
                     ->addViolation();
             }
         }
+    }
+
+    /**
+     * @return Collection|Remediation[]
+     */
+    public function getRemediations(): Collection
+    {
+        return $this->remediations;
+    }
+
+    public function addRemediation(Remediation $remediation): self
+    {
+        if (!$this->remediations->contains($remediation)) {
+            $this->remediations[] = $remediation;
+        }
+
+        return $this;
+    }
+
+    public function removeRemediation(Remediation $remediation): self
+    {
+        $this->remediations->removeElement($remediation);
+
+        return $this;
     }
 
 }

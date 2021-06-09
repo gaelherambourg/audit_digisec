@@ -5,6 +5,7 @@ namespace App\Controller;
 use App\Entity\Audit;
 use App\Entity\AuditControle;
 use App\Entity\Remarque;
+use App\Entity\RemediationControle;
 use App\Entity\Societe;
 use App\Entity\Statut;
 use App\Form\AuditType;
@@ -82,6 +83,7 @@ class AuditController extends AbstractController
             }
             
             dump($audit->getAuditsControle());
+           
             // Sauvegarde en Bdd
             $entityManager->persist($audit);
             $entityManager->flush();
