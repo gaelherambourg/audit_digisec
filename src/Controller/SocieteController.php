@@ -17,6 +17,8 @@ use App\Repository\AdresseRepository;
 use App\Repository\ContactRepository;
 use App\Repository\SocieteRepository;
 use Doctrine\ORM\EntityManagerInterface;
+use Exception;
+use PhpParser\Node\Stmt\TryCatch;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -345,17 +347,13 @@ class SocieteController extends AbstractController
             $logoServices->deletePhoto($societe->getLogo());
         }
 
-        // On supprime la société et on enregistre en bdd
-        if ($entityManager->remove($societe) != null) {
-
+        try {
             $entityManager->remove($societe);
             $entityManager->flush();
-
             // On ajoute un message flash
             $this->addFlash("link", "La société a été supprimée");
-        } else {
-            // On ajoute un message flash
-            $this->addFlash("link", "Suppression impossible - Un audit est lié à cette société");
+        } catch (Exception $e) {
+            $this->addFlash("danger", "Suppression impossible - Un audit est lié à cette société");
         }
 
         // On redirige vers societe_liste
@@ -413,22 +411,23 @@ class SocieteController extends AbstractController
     /**
      * @Route("/digisec", name="societe_digisec")
      */
-    public function societeDigisec(SocieteRepository $societeRepository,
-                                   Request $request,
-                                   EntityManagerInterface $entityManager): Response
-    {
-         // On récupère la société digisec
-         $societe = $societeRepository->findAllInformationsDigisec();
-         dump($societe);
+    public function societeDigisec(
+        SocieteRepository $societeRepository,
+        Request $request,
+        EntityManagerInterface $entityManager
+    ): Response {
+        // On récupère la société digisec
+        $societe = $societeRepository->findAllInformationsDigisec();
+        dump($societe);
         // commentaire
-         // si il n'y a aucune societe 
-        if(is_null($societe)) {
+        // si il n'y a aucune societe 
+        if (is_null($societe)) {
             throw $this->createNotFoundException();
         }
 
         //si une societe a est_digisec à TRUE on redirige vers societe_digisec
         if ($societe->getEstDigisec() == TRUE) {
-            return $this->render('societe/societe_digisec.html.twig', ['societe'=>$societe]);
+            return $this->render('societe/societe_digisec.html.twig', ['societe' => $societe]);
         } else {
             return $this->render('societe/societe_liste.html.twig');
         }

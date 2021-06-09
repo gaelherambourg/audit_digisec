@@ -7,7 +7,7 @@ use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Form\Extension\Core\Type\CollectionType;
 
-class ModifierSocieteFormType extends AbstractType
+class DigisecFormType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options)
     {

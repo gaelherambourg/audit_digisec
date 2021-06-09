@@ -2,24 +2,38 @@
 
 namespace App\Services;
 
+use App\Entity\Chapitre;
+use App\Entity\Recommandation;
 use App\Entity\Referentiel;
+use App\Repository\ChapitreRepository;
+use App\Repository\ReferentielRepository;
 use Doctrine\ORM\EntityManagerInterface;
 
 class ImportCsvServices
 {
-    private const FILE_NAME = 'csv_test.csv';
+    private const REFERENTIEL = 'referentiel.csv';
+    private const CHAPITRE = 'chapitre.csv';
+    private const RECOMMANDATION = 'recommandation.csv';
+    private const TYPE_PREUVE = 'type_preuve.csv';
+    private const POINT_CONTROLE = 'point_controle.csv';
 
     private $uploadCsvDir;
-    private $participantRepository;
-    private $campusRepository;
+    private $referentielRepository;
+    private $chapitreRepository;
     private $passwordEncoder;
     private $entityManager;
 
 
-    public function __construct($uploadCsvDir, EntityManagerInterface $entityManager)
-    {
+    public function __construct(
+        $uploadCsvDir,
+        EntityManagerInterface $entityManager,
+        ReferentielRepository $referentielRepository,
+        ChapitreRepository $chapitreRepository
+    ) {
         $this->uploadCsvDir = $uploadCsvDir;
         $this->entityManager = $entityManager;
+        $this->referentielRepository = $referentielRepository;
+        $this->chapitreRepository = $chapitreRepository;
     }
 
 
@@ -33,12 +47,28 @@ class ImportCsvServices
     {
         $isItUploaded = true;
         /** @var UploadedFile $uploadedFile */
-        $uploadedFile = $csvRegisterForm->get('csvFile')->getData();
-        // on génere un nom de fichier générique
-        $newFileName = self::FILE_NAME;
+
+        // on récupère les fichiers
+        $uploadedFileReferentiel = $csvRegisterForm->get('referentielCsv')->getData();
+        $uploadedFileChapitre = $csvRegisterForm->get('chapitreCsv')->getData();
+        $uploadedFileRecommandation = $csvRegisterForm->get('recommandationCsv')->getData();
+        $uploadedFilePreuve = $csvRegisterForm->get('typePreuveCsv')->getData();
+        $uploadedFileControle = $csvRegisterForm->get('pointControleCsv')->getData();
+
+        // On donne un nom générique
+        $newFileNameReferentiel = self::REFERENTIEL;
+        $newFileNameChapitre = self::CHAPITRE;
+        $newFileNameRecommandation = self::RECOMMANDATION;
+        $newFileNamePreuve = self::TYPE_PREUVE;
+        $newFileNameControle = self::POINT_CONTROLE;
+
         // on déplace le fichier dans le répertoire public avant sa destruction
         try {
-            $uploadedFile->move($this->getUploadCsvDir(), $newFileName);
+            $uploadedFileReferentiel->move($this->getUploadCsvDir(), $newFileNameReferentiel);
+            $uploadedFileChapitre->move($this->getUploadCsvDir(), $newFileNameChapitre);
+            $uploadedFileRecommandation->move($this->getUploadCsvDir(), $newFileNameRecommandation);
+            $uploadedFilePreuve->move($this->getUploadCsvDir(), $newFileNamePreuve);
+            $uploadedFileControle->move($this->getUploadCsvDir(), $newFileNameControle);
         } catch (\Exception $e) {
             $isItUploaded = false;
         }
@@ -65,7 +95,8 @@ class ImportCsvServices
      */
     public function insertCsvFile()
     {
-        $fileStr = $this->getUploadCsvDir() . self::FILE_NAME;
+        // On ajoute le référentiel
+        $fileStr = $this->getUploadCsvDir() . self::REFERENTIEL;
         $handle = fopen($fileStr, 'r');
         $i = 0;
         while (($data = fgetcsv($handle, 1000, ";")) !== FALSE) {
@@ -77,8 +108,52 @@ class ImportCsvServices
             try {
                 $this->entityManager->persist($referentiel);
                 $this->entityManager->flush();
+                $id = $referentiel->getId();
             } catch (\Exception $e) {
-                $errorInsert = "L'import des participants a échoué lors de la ligne n° " . $i . " (Mr/Mme " . (string) $data[3] . " " . (string) $data[5] . ").";
+                $errorInsert = "L'import du référentiel a échoué lors de la ligne n° " . $i . ").";
+            }
+        }
+
+        // On ajoute les chapitres
+        $fileStr = $this->getUploadCsvDir() . self::CHAPITRE;
+        $handle = fopen($fileStr, 'r');
+        $i = 0;
+        $referentielId = $this->referentielRepository->find($id);
+        dump('on arrive aux chapitres');
+        while (($data = fgetcsv($handle, 1000, ";")) !== FALSE) {
+            $i++;
+            $chapitre = new Chapitre();
+            $chapitre
+                ->setReferentiel($referentielId)
+                ->setLibelle((string) $data[2]);
+            try {
+                $this->entityManager->persist($chapitre);
+                $this->entityManager->flush();
+            } catch (\Exception $e) {
+                $errorInsert = "L'import du référentiel a échoué lors de la ligne n° " . $i . ").";
+            }
+        }
+
+        // On ajoute les recommandations
+        $fileStr = $this->getUploadCsvDir() . self::RECOMMANDATION;
+        $handle = fopen($fileStr, 'r');
+        $i = 0;
+        $chapitreId = $this->chapitreRepository->chapitreParReferentiel($id);
+        while (($data = fgetcsv($handle, 1000, ";")) !== FALSE) {
+            foreach ($chapitreId as $chapitre) {
+                $oldValue = $chapitre->getId() + $data[1] ;
+                $i++;
+                $recommandation = new Recommandation();
+                $recommandation->setChapitre($chapitreId[$i]);
+                $recommandation->setIndexReferentiel('R' . $i);
+                $recommandation->setLibelle((string) $data[3]);
+                $recommandation->setDescription((string) $data[4]);
+                try {
+                    $this->entityManager->persist($recommandation);
+                    $this->entityManager->flush();
+                } catch (\Exception $e) {
+                    $errorInsert = "L'import du référentiel a échoué lors de la ligne n° " . $i . ").";
+                }
             }
         }
     }
@@ -86,7 +161,12 @@ class ImportCsvServices
     /**
      * Procédure de suppression du fichier CSV dans le répertoire "/public/files/"
      */
-    public function deleteCsvFile() {
-        unlink($this->getUploadCsvDir() . self::FILE_NAME);
+    public function deleteCsvFile()
+    {
+        unlink($this->getUploadCsvDir() . self::REFERENTIEL);
+        unlink($this->getUploadCsvDir() . self::CHAPITRE);
+        unlink($this->getUploadCsvDir() . self::RECOMMANDATION);
+        unlink($this->getUploadCsvDir() . self::TYPE_PREUVE);
+        unlink($this->getUploadCsvDir() . self::POINT_CONTROLE);
     }
 }
