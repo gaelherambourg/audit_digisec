@@ -3,29 +3,8 @@
 {% block title %}Connexion{% endblock %}
 
 {% block body %}
-{% for message in app.flashes('message') %}
-    <div class="alert alert-sucess" role="alert">
-    {{message}}
-    </div>
-{% endfor %}
-{% for message in app.flashes('warning') %}
-    <div class="alert alert-warning" role="alert">
-    {{message}}
-    </div>
-{% endfor %}
-{% for message in app.flashes('danger') %}
-    <div class="alert alert-danger" role="alert">
-    {{message}}
-    </div>
-{% endfor %}
 
 <form method="post">
-
-    {% if app.user %}
-        <div class="mb-3">
-            You are logged in as {{ app.user.username }}, <a href="{{ path('app_logout') }}">Logout</a>
-        </div>
-    {% endif %}
     
 <div class="field">
 	<div class="columns">

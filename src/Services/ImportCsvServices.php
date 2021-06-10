@@ -138,13 +138,11 @@ class ImportCsvServices
         $fileStr = $this->getUploadCsvDir() . self::RECOMMANDATION;
         $handle = fopen($fileStr, 'r');
         $i = 0;
-        $chapitreId = $this->chapitreRepository->chapitreParReferentiel($id);
+        //$chapitreId = $this->chapitreRepository->chapitreParReferentiel($id);
         while (($data = fgetcsv($handle, 1000, ";")) !== FALSE) {
-            foreach ($chapitreId as $chapitre) {
-                $oldValue = $chapitre->getId() + $data[1] ;
                 $i++;
                 $recommandation = new Recommandation();
-                $recommandation->setChapitre($chapitreId[$i]);
+                $recommandation->setChapitre($this->chapitreRepository->chapitreParReferentiel($data[1]));
                 $recommandation->setIndexReferentiel('R' . $i);
                 $recommandation->setLibelle((string) $data[3]);
                 $recommandation->setDescription((string) $data[4]);
@@ -154,7 +152,6 @@ class ImportCsvServices
                 } catch (\Exception $e) {
                     $errorInsert = "L'import du référentiel a échoué lors de la ligne n° " . $i . ").";
                 }
-            }
         }
     }
 
