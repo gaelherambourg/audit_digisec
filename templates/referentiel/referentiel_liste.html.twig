@@ -106,7 +106,11 @@
 				class="modal-card-body">
 				<!-- Content ... -->
 				{{ form_start(csvForm) }}
-				{{ form_row(csvForm.csvFile) }}
+				{{ form_row(csvForm.referentielCsv) }}
+				{{ form_row(csvForm.chapitreCsv) }}
+				{{ form_row(csvForm.recommandationCsv) }}
+				{{ form_row(csvForm.typePreuveCsv) }}
+				{{ form_row(csvForm.pointControleCsv) }}
 			</section>
 			<footer class="modal-card-foot">
 				<button type="submit" class="button is-medium is-link is-light is-3">Importer</button>

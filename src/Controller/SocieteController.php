@@ -12,11 +12,14 @@ use App\Services\LogoServices;
 use App\Form\RechercheSimpleType;
 use App\Services\ErreursServices;
 use App\Form\AjoutSocieteFormType;
+use App\Form\DigisecFormType;
 use App\Form\ModifierSocieteFormType;
 use App\Repository\AdresseRepository;
 use App\Repository\ContactRepository;
 use App\Repository\SocieteRepository;
 use Doctrine\ORM\EntityManagerInterface;
+use Exception;
+use PhpParser\Node\Stmt\TryCatch;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -139,11 +142,13 @@ class SocieteController extends AbstractController
         // On récupère les adresses et contacts de la societe
         $idAdresse = $societe->getAdresse();
         $idContact = $societe->getContact();
-
-        // Crée une instance de la classe de formulaire que l'on associe à notre formulaire
-        $societeForm = $this->createForm(ModifierSocieteFormType::class, ['societe' => $societe, 'adresse' => $societe->getAdresse(), 'contact' => $societe->getContact()]);
-        $contactForm = $this->createForm(ContactFormType::class, $contact);
-        $adresseForm = $this->createForm(AdresseFormType::class, $adresse);
+        
+        //si une societe a est_digisec à TRUE on redirige vers societe_digisec
+        
+            $societeForm = $this->createForm(ModifierSocieteFormType::class, ['societe' => $societe, 'adresse' => $societe->getAdresse(), 'contact' => $societe->getContact()]);
+            $contactForm = $this->createForm(ContactFormType::class, $contact);
+            $adresseForm = $this->createForm(AdresseFormType::class, $adresse);
+        
 
         // On prend les données du formulaire soumis, et les injecte dans $societe
         $societeForm->handleRequest($request);
@@ -345,17 +350,13 @@ class SocieteController extends AbstractController
             $logoServices->deletePhoto($societe->getLogo());
         }
 
-        // On supprime la société et on enregistre en bdd
-        if ($entityManager->remove($societe) != null) {
-
+        try {
             $entityManager->remove($societe);
             $entityManager->flush();
-
             // On ajoute un message flash
             $this->addFlash("link", "La société a été supprimée");
-        } else {
-            // On ajoute un message flash
-            $this->addFlash("link", "Suppression impossible - Un audit est lié à cette société");
+        } catch (Exception $e) {
+            $this->addFlash("danger", "Suppression impossible - Un audit est lié à cette société");
         }
 
         // On redirige vers societe_liste
@@ -417,10 +418,13 @@ class SocieteController extends AbstractController
                                    Request $request,
                                    EntityManagerInterface $entityManager): Response
     {
-         // On récupère la société digisec
-         $societe = $societeRepository->findAllInformationsDigisec();
-         dump($societe);
-        // commentaire
+        // On récupère la société digisec
+        $societe = $societeRepository->findAllInformationsDigisec();
+        dump($societe);
+
+        //On récupère le logo de DIGISEC
+        $logo = $societe->getLogo();
+
          // si il n'y a aucune societe 
         if(is_null($societe)) {
             throw $this->createNotFoundException();
@@ -428,7 +432,7 @@ class SocieteController extends AbstractController
 
         //si une societe a est_digisec à TRUE on redirige vers societe_digisec
         if ($societe->getEstDigisec() == TRUE) {
-            return $this->render('societe/societe_digisec.html.twig', ['societe'=>$societe]);
+            return $this->render('societe/societe_digisec.html.twig', ['societe'=>$societe, 'logo' => $logo]);
         } else {
             return $this->render('societe/societe_liste.html.twig');
         }

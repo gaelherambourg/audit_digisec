@@ -19,6 +19,15 @@ class ChapitreRepository extends ServiceEntityRepository
         parent::__construct($registry, Chapitre::class);
     }
 
+    public function chapitreParReferentiel($id)
+    {
+        return $this->createQueryBuilder('c')
+            ->andWhere('c.referentiel = :id')
+            ->setParameter('id', $id)
+            ->getQuery()
+            ->getResult();
+    }
+
     // /**
     //  * @return Chapitre[] Returns an array of Chapitre objects
     //  */

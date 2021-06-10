@@ -22,11 +22,16 @@ class SecurityController extends AbstractController
     public function login(AuthenticationUtils $authenticationUtils): Response
     {
         if ($this->getUser()) {
+            $this->addFlash("link", "Vous êtes déjà connecté");
             return $this->redirectToRoute('audit_liste');
         }
 
         // get the login error if there is one
         $error = $authenticationUtils->getLastAuthenticationError();
+        if ($error) {
+            // On ajoute un message flash
+            $this->addFlash("danger", "Merci de vérifier votre identifiant et/ou mot de passe");
+        }
         // last username entered by the user
         $lastUsername = $authenticationUtils->getLastUsername();
 

@@ -52,7 +52,7 @@ class ReferentielController extends AbstractController
             ]);
         }
 
-        // Soumission du formulaire de création d'un seul participant
+        // Soumission du formulaire de création d'un référentiel
         if ($csvRegisterForm->isSubmitted() && $csvRegisterForm->isValid()) {
             // On charge le fichier csv dans notre répertoire
             $isItUploaded = $importCsvServices->uploadCsvFile($csvRegisterForm);
@@ -61,7 +61,6 @@ class ReferentielController extends AbstractController
                 dump('Le fichier a été importé');
                 // on insert toutes les données en base
                 $data = $importCsvServices->insertCsvFile();
-                dump($data);
                 // on efface le fichier
                 $importCsvServices->deleteCsvFile();
                 // On ajoute un message flash

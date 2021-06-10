@@ -2,12 +2,9 @@
 	<div class="navbar-brand">
 		<div class="navbar-item">
 			<div class="buttons">
-			{% if app.user %}
 				<a class="button is-link is-light" href="{{ path('audit_liste')}}">
 					<img src="{{ asset('img/LOGO-DIGISEC-FULL-DETOURE.png') }}" height="50" alt="logo">Digisec
 				</a>
-				{% endif %}
-
 				<a role="button" class="navbar-burger" aria-label="menu" aria-expanded="false" data-target="navbarBasicExample">
 					<span aria-hidden="true"></span>
 					<span aria-hidden="true"></span>
@@ -19,7 +16,6 @@
 	<div id="navbarBasicExample" class="navbar-menu">
 		<div
 			class="navbar-end">
-			{% if app.user %}
 			<!-- Lien accessible uniquement à un utilisateur connecté -->
 			{% if is_granted("IS_AUTHENTICATED_FULLY") %}
 				<a class="navbar-item has-text-weight-bold" href="{{ path('audit_liste')}}">
@@ -34,14 +30,12 @@
 				<a class="navbar-item has-text-weight-bold" href="{{ path('societe_digisec') }}">
 				Profil
 				</a>
-			
 			<div class="navbar-item">
 					<a class="button is-link is-light" href="{{ path('app_logout') }}">
 						<strong>Se déconnecter ({{ app.user.username | striptags }})</strong>
 					</a>
 			{% endif %}
 			</div>
-			{% endif %}
 		</div>
 	</div>
 </nav>

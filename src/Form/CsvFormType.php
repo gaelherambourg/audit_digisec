@@ -13,8 +13,20 @@ class CsvFormType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('csvFile', FileType::class, [
-                'label' => 'Fichier CSV : ',
+            ->add('referentielCsv', FileType::class, [
+                'label' => 'Référentiel : ',
+            ])
+            ->add('chapitreCsv', FileType::class, [
+                'label' => 'Chapitres : ',
+            ])
+            ->add('recommandationCsv', FileType::class, [
+                'label' => 'Recommendations : ',
+            ])
+            ->add('typePreuveCsv', FileType::class, [
+                'label' => 'Preuves : ',
+            ])
+            ->add('pointControleCsv', FileType::class, [
+                'label' => 'Points de contrôle : ',
             ])
         ;
     }
