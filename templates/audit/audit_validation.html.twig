@@ -1,0 +1,51 @@
+{% extends "base.html.twig" %}
+
+{% block title %}Validation Audit{% endblock %}
+
+{% block body %}
+<div class="container mt-2">
+<h1 class="title has-text-centered">Valider l'audit : {{audit.nom}}</h1>
+
+{{ form_start(form_validation_audit) }}
+
+    <div class="columns is-mobile">
+        <div class="column is-4">
+            {{ form_label(form_validation_audit.ecart_constatation, null, {'attr': {'class': 'has-text-link'} }) }}
+        </div>
+        <div class="column is-8">
+            {{ form_widget(form_validation_audit.ecart_constatation, {'attr': {'class': 'input is-link', 'placeholder': 'Ecarts et constatations'}}) }}
+        </div>
+    </div>
+    <div class="columns is-mobile">
+        <div class="column is-4">
+            {{ form_label(form_validation_audit.recommandations, null, {'attr': {'class': 'has-text-link'} }) }}
+        </div>
+        <div class="column is-8">
+            {{ form_widget(form_validation_audit.recommandations, {'attr': {'class': 'input is-link', 'placeholder': 'Recommandations'}}) }}
+        </div>
+    </div>
+    <div class="columns is-mobile">
+        <div class="column is-4">
+            {{ form_label(form_validation_audit.commentaire_client, null, {'attr': {'class': 'has-text-link'} }) }}
+        </div>
+        <div class="column is-8">
+            {{ form_widget(form_validation_audit.commentaire_client, {'attr': {'class': 'input is-link', 'placeholder': 'Commentaire client'}}) }}
+        </div>
+    </div>
+    <div class="columns is-mobile">
+        <div class="column is-4">
+            {{ form_label(form_validation_audit.remarque_generale, null, {'attr': {'class': 'has-text-link'} }) }}
+        </div>
+        <div class="column is-8">
+            {{ form_widget(form_validation_audit.remarque_generale, {'attr': {'class': 'input is-link', 'placeholder': 'Remarque générale'}}) }}
+        </div>
+    </div>
+    <div class="has-text-right">
+        {{ form_widget(form_validation_audit.valider) }}
+    </div>
+    
+
+
+{{ form_end(form_validation_audit) }}
+</div>
+{% endblock %}
