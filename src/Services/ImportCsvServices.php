@@ -3,10 +3,14 @@
 namespace App\Services;
 
 use App\Entity\Chapitre;
+use App\Entity\PointControle;
 use App\Entity\Recommandation;
 use App\Entity\Referentiel;
+use App\Repository\AuditRepository;
 use App\Repository\ChapitreRepository;
+use App\Repository\RecommandationRepository;
 use App\Repository\ReferentielRepository;
+use App\Repository\TypePreuveRepository;
 use Doctrine\ORM\EntityManagerInterface;
 
 class ImportCsvServices
@@ -20,7 +24,8 @@ class ImportCsvServices
     private $uploadCsvDir;
     private $referentielRepository;
     private $chapitreRepository;
-    private $passwordEncoder;
+    private $recommandationRepository;
+    private $typePreuveRepository;
     private $entityManager;
 
 
@@ -28,12 +33,16 @@ class ImportCsvServices
         $uploadCsvDir,
         EntityManagerInterface $entityManager,
         ReferentielRepository $referentielRepository,
-        ChapitreRepository $chapitreRepository
+        ChapitreRepository $chapitreRepository,
+        RecommandationRepository $recommandationRepository,
+        TypePreuveRepository $typePreuveRepository
     ) {
         $this->uploadCsvDir = $uploadCsvDir;
         $this->entityManager = $entityManager;
         $this->referentielRepository = $referentielRepository;
         $this->chapitreRepository = $chapitreRepository;
+        $this->recommandationRepository = $recommandationRepository;
+        $this->typePreuveRepository = $typePreuveRepository;
     }
 
 
@@ -119,7 +128,6 @@ class ImportCsvServices
         $handle = fopen($fileStr, 'r');
         $i = 0;
         $referentielId = $this->referentielRepository->find($id);
-        dump('on arrive aux chapitres');
         while (($data = fgetcsv($handle, 1000, ";")) !== FALSE) {
             $i++;
             $chapitre = new Chapitre();
@@ -142,24 +150,53 @@ class ImportCsvServices
         $oldValue = 1;
         $chapitreId = $this->chapitreRepository->chapitreParReferentiel($id);
         while (($data = fgetcsv($handle, 1000, ";")) !== FALSE) {
-                $i++;
-                $recommandation = new Recommandation();
-                if ($data[1] == $oldValue) {
-                    $recommandation->setChapitre($chapitreId[$y]);
-                } else {
-                    $y++;
-                    $recommandation->setChapitre($chapitreId[$y]);
-                }
-                $recommandation->setIndexReferentiel($data[2]);
-                $recommandation->setLibelle((string) $data[3]);
-                $recommandation->setDescription((string) $data[4]);
-                try {
-                    $this->entityManager->persist($recommandation);
-                    $this->entityManager->flush();
-                } catch (\Exception $e) {
-                    $errorInsert = "L'import du référentiel a échoué lors de la ligne n° " . $i . ").";
-                }
-                $oldValue = $data[1];
+            $i++;
+            $recommandation = new Recommandation();
+            if ($data[1] == $oldValue) {
+                $recommandation->setChapitre($chapitreId[$y]);
+            } else {
+                $y++;
+                $recommandation->setChapitre($chapitreId[$y]);
+            }
+            $recommandation->setIndexReferentiel($data[2]);
+            $recommandation->setLibelle((string) $data[3]);
+            $recommandation->setDescription((string) $data[4]);
+            try {
+                $this->entityManager->persist($recommandation);
+                $this->entityManager->flush();
+            } catch (\Exception $e) {
+                $errorInsert = "L'import du référentiel a échoué lors de la ligne n° " . $i . ").";
+            }
+            $oldValue = $data[1];
+        }
+
+        // On ajoute les points de contrôles
+        $fileStr = $this->getUploadCsvDir() . self::POINT_CONTROLE;
+        $handle = fopen($fileStr, 'r');
+        $i = 0;
+        $y = 0;
+        $oldValue = 1;
+        $recommandationsId = $this->recommandationRepository->findByExampleField($id);
+        $typePreuveId = $this->typePreuveRepository->find(1);
+        while (($data = fgetcsv($handle, 1000, ";")) !== FALSE) {
+            $i++;
+            $pointControle = new PointControle();
+            if ($data[1] == $oldValue) {
+                $pointControle->setRecommandation($recommandationsId[$y]);
+            } else {
+                $y++;
+                $pointControle->setRecommandation($recommandationsId[$y]);
+            }
+            $pointControle->setTypePreuve($typePreuveId);
+            $pointControle->setLibelle((string) $data[3]);
+            $pointControle->setTypeCritere((string) $data[4]);
+            try {
+                $this->entityManager->persist($pointControle);
+                $this->entityManager->flush();
+            } catch (\Exception $e) {
+                $errorInsert = "L'import du référentiel a échoué lors de la ligne n° " . $i . ").";
+            }
+            $oldValue = $data[1];
         }
     }
 
