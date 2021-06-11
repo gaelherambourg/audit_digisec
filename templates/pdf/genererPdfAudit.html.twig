@@ -1,0 +1,56 @@
+
+<!--<link rel="stylesheet" href="{{ app.request.schemeAndHttpHost }}/audit_digisec/public/css/pdf.css">-->
+
+{% block body %}
+    <div class="logo">
+        <img src="{{ app.request.schemeAndHttpHost }}/audit_digisec/public/img/LOGO-DIGISEC-FULL-DETOURE.png">
+    </div>
+    <h1 class="h1">{{audit.nom}}</h1>
+
+    <h4>Description de l'audit</h4>
+    <div>{{audit.description}}</div>
+
+    <h4>Objectif et périmetre</h4>
+    <div>{{audit.objectifPerimetre}}</div>
+
+    <h4>Rôles et responsabilités</h4>
+    <div>{{audit.roleResponsabilite}}</div>
+
+    <h4>Contraintes</h4>
+    <div>{{audit.contraintes}}</div>
+
+    {% for auditControle in audit.auditsControle %}
+        
+        <div class="libellePC">{{auditControle.PointControle.libelle}}</div>
+        <div>{{auditControle.note}}</div>
+        <div>{{auditControle.remarque}}</div>
+
+        <h4>Preuves</h4>
+        {% for preuve in auditControle.preuves %}
+
+            {% if preuve.texte is not empty %}
+                <div>{{preuve.texte}}</div>
+            {% elseif preuve.fichier is not empty %}
+                <div>{{preuve.fichier}}</div>
+            {% else %}
+                <img src="{{ app.request.schemeAndHttpHost }}/audit_digisec/public/preuves/images/{{preuve.image}}" heignt="300px" width="300px">
+            {% endif %}
+            
+        {% endfor %}
+
+        <h4>Remédiations</h4>
+        {% for remediation in auditControle.remediations %}
+            <div>{{remediation.libelle}}</div>
+        {% endfor %}
+
+
+
+    {% endfor %}
+
+    <div>{{audit.ecartConstatation}}</div>
+    <div>{{audit.recommandations}}</div>
+    <div>{{audit.commentaireClient}}</div>
+    <div>{{audit.remarqueGenerale}}</div>
+
+{% endblock %}
+

@@ -111,7 +111,7 @@ class AuditControleController extends AbstractController
 
             }else{
                 //On redirige vers la liste d'audit si c'est la derniere recommandation de l'audit
-                return $this->redirectToRoute('audit_liste');
+                return $this->redirectToRoute('audit_validation', ['id' => $id]);
             }
         }
 

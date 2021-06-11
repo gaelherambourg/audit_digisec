@@ -98,6 +98,26 @@ class Audit
      */
     private $referentiel;
 
+    /**
+     * @ORM\Column(type="text", nullable=true)
+     */
+    private $ecart_constatation;
+
+    /**
+     * @ORM\Column(type="text", nullable=true)
+     */
+    private $recommandations;
+
+    /**
+     * @ORM\Column(type="text", nullable=true)
+     */
+    private $commentaire_client;
+
+    /**
+     * @ORM\Column(type="text", nullable=true)
+     */
+    private $remarque_generale;
+
     public function __construct()
     {
         $this->audits_controle = new ArrayCollection();
@@ -298,6 +318,54 @@ class Audit
     public function setReferentiel(?Referentiel $referentiel): self
     {
         $this->referentiel = $referentiel;
+
+        return $this;
+    }
+
+    public function getEcartConstatation(): ?string
+    {
+        return $this->ecart_constatation;
+    }
+
+    public function setEcartConstatation(?string $ecart_constatation): self
+    {
+        $this->ecart_constatation = $ecart_constatation;
+
+        return $this;
+    }
+
+    public function getRecommandations(): ?string
+    {
+        return $this->recommandations;
+    }
+
+    public function setRecommandations(?string $recommandations): self
+    {
+        $this->recommandations = $recommandations;
+
+        return $this;
+    }
+
+    public function getCommentaireClient(): ?string
+    {
+        return $this->commentaire_client;
+    }
+
+    public function setCommentaireClient(?string $commentaire_client): self
+    {
+        $this->commentaire_client = $commentaire_client;
+
+        return $this;
+    }
+
+    public function getRemarqueGenerale(): ?string
+    {
+        return $this->remarque_generale;
+    }
+
+    public function setRemarqueGenerale(?string $remarque_generale): self
+    {
+        $this->remarque_generale = $remarque_generale;
 
         return $this;
     }
