@@ -7,6 +7,7 @@ use App\Entity\Adresse;
 use App\Entity\Contact;
 use App\Entity\Societe;
 use App\Entity\Utilisateur;
+use App\Services\ImportCsvServices;
 use Doctrine\Persistence\ObjectManager;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 
@@ -122,10 +123,9 @@ class AppFixtures extends Fixture
                 ->addAdresse($adresse)
                 ->addAdresse($adresseUn)
                 ->addContact($contact)
-                ->addContact($$contactUn);
+                ->addContact($contactUn);
             $manager->persist($societe);
             $manager->flush();
         }
-
     }
 }
