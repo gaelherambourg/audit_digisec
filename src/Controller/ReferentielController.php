@@ -58,13 +58,18 @@ class ReferentielController extends AbstractController
             $isItUploaded = $importCsvServices->uploadCsvFile($csvRegisterForm);
             // on lit le fichier s'il est uploadé
             if ($isItUploaded) {
-                dump('Le fichier a été importé');
                 // on insert toutes les données en base
                 $data = $importCsvServices->insertCsvFile();
                 // on efface le fichier
                 $importCsvServices->deleteCsvFile();
-                // On ajoute un message flash
-                $this->addFlash("info", "L'insertion a fonctionnée");
+                if ($data['errorInsert'] != "") {
+                    $this->addFlash("warning", $data['errorInsert']);
+                } else {
+                    // On ajoute un message flash
+                    $this->addFlash("info", "L'insertion a fonctionnée");
+                }
+            } else {
+                $this->addFlash("danger", "Le téléchargement a échoué.");
             }
         }
 
