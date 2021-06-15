@@ -153,7 +153,7 @@
 								<div class="columns is-mobile">
 									<div class="column is-8"></div>
 									<div class="column is-3">
-										<a class="button is-small is-danger is-light is-3" id="supprimerAdresse" href="{{ path('adresse_supprimer',{idAdresse: idAdresse[(loop.index)-1].id} ) }}">Supprimer l'adresse</a>
+										<a class="button is-small is-danger is-light is-3 is-fullwidth" id="supprimerAdresse" href="{{ path('adresse_supprimer',{idAdresse: idAdresse[(loop.index)-1].id} ) }}">Supprimer l'adresse</a>
 									</div>
 								</div>
 							{% endif %}
@@ -163,7 +163,7 @@
 				<div class="columns is-mobile">
 					<div class="column is-9"></div>
 					<div class="column is-3">
-						<a class="button is-small is-link is-light is-3" id="ajouterAdresse">Ajouter une adresse</a>
+						<a class="button is-small is-link is-light is-3 is-fullwidth" id="ajouterAdresse">Ajouter une adresse</a>
 					</div>
 				</div>
 			</fieldset>
@@ -234,7 +234,7 @@
 								<div class="columns is-mobile">
 									<div class="column is-8"></div>
 									<div class="column is-3">
-										<a class="button is-small is-danger is-light is-3" id="supprimerContact" href="{{ path('contact_supprimer',{idContact: idContact[(loop.index)-1].id} ) }}">Supprimer le contact</a>
+										<a class="button is-small is-danger is-light is-3 is-fullwidth" id="supprimerContact" href="{{ path('contact_supprimer',{idContact: idContact[(loop.index)-1].id} ) }}">Supprimer le contact</a>
 									</div>
 								</div>
 							{% endif %}
@@ -244,18 +244,18 @@
 				<div class="columns is-mobile">
 					<div class="column is-9"></div>
 					<div class="column is-3">
-						<a class="button is-small is-link is-light is-3" id="ajouterContact">Ajouter un contact</a>
+						<a class="button is-small is-link is-light is-3 is-fullwidth" id="ajouterContact">Ajouter un contact</a>
 					</div>
 				</div>
 			</fieldset>
 
 			<div class="section columns">
 				<div class="column"></div>
-				<a class="button is-medium is-link is-light is-3" href="{{path('societe_liste')}}">Annuler</a>
+				<a class="button is-medium is-link is-light is-3 is-fullwidth"  href="{{path('societe_liste')}}">Annuler</a>
 				<div class="column"></div>
-				<a class="button is-medium is-danger is-light is-3" href="{{path('societe_supprimer', {id: id})}}">Supprimer</a>
+				<a class="button is-medium is-danger is-light is-3 is-fullwidth" href="{{path('societe_supprimer', {id: id})}}">Supprimer</a>
 				<div class="column"></div>
-				<button type="submit" class="button is-medium is-link is-light is-3">Modifier</button>
+				<button type="submit" class="button is-medium is-link is-light is-3 is-fullwidth">Modifier</button>
 			</div>
 		</div>
 		{{ form_end(societeForm, {render_rest: false}) }}
@@ -319,7 +319,7 @@
 				</div>
 			</section>
 			<footer class="modal-card-foot">
-				<button type="submit" class="button is-medium is-link is-light is-3">Créer</button>
+				<button type="submit" class="button is-medium is-link is-light is-3 is-fullwidth">Ajouter</button>
 			</footer>
 		</div>
 	</div>
@@ -376,7 +376,7 @@
 
 			</section>
 			<footer class="modal-card-foot">
-				<button id="boutonAdresse" type="submit" class="button is-medium is-link is-light is-3">Créer</button>
+				<button id="boutonAdresse" type="submit" class="button is-medium is-link is-light is-3 is-fullwidth">Ajouter</button>
 			</footer>
 		</div>
 	</div>

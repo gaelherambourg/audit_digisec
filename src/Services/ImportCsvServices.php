@@ -10,7 +10,10 @@ use App\Entity\Referentiel;
 use App\Entity\TypePreuve;
 use App\Repository\AuditRepository;
 use App\Repository\ChapitreRepository;
+use App\Repository\RecommandationRepository;
 use App\Repository\ReferentielRepository;
+use App\Repository\TypePreuveRepository;
+use Doctrine\DBAL\Types\Type;
 use Doctrine\ORM\EntityManagerInterface;
 
 class ImportCsvServices
@@ -24,20 +27,24 @@ class ImportCsvServices
     private $uploadCsvDir;
     private $referentielRepository;
     private $chapitreRepository;
-    private $passwordEncoder;
+    private $recommandationRepository;
+    private $typePreuveRepository;
     private $entityManager;
-
 
     public function __construct(
         $uploadCsvDir,
         EntityManagerInterface $entityManager,
         ReferentielRepository $referentielRepository,
-        ChapitreRepository $chapitreRepository
+        ChapitreRepository $chapitreRepository,
+        RecommandationRepository $recommandationRepository,
+        TypePreuveRepository $typePreuveRepository
     ) {
         $this->uploadCsvDir = $uploadCsvDir;
         $this->entityManager = $entityManager;
         $this->referentielRepository = $referentielRepository;
         $this->chapitreRepository = $chapitreRepository;
+        $this->recommandationRepository = $recommandationRepository;
+        $this->typePreuveRepository = $typePreuveRepository;
     }
 
 
@@ -140,13 +147,13 @@ class ImportCsvServices
                     ->setLibelle((string) $data[2]);
                 try {
                     $this->entityManager->persist($chapitre);
-                    $this->entityManager->flush();
                 } catch (\Exception $e) {
                     $errorInsert = "L'import des chapitres a échoué lors de la ligne n° " . $i;
                     $chapitreSuccess = false;
                 }
             }
-            dump($chapitreSuccess);
+            $this->entityManager->flush();
+            
             // On ajoute les recommandations
             if ($chapitreSuccess != false) {
                 $fileStr = $this->getUploadCsvDir() . self::RECOMMANDATION;
@@ -169,7 +176,6 @@ class ImportCsvServices
                         $recommandation->setLibelle((string) $data[3]);
                         $recommandation->setDescription((string) $data[4]);
                         $this->entityManager->persist($recommandation);
-                        $this->entityManager->flush();
                     } catch (\Exception $e) {
                         $errorInsert = "L'import des recommandations a échoué lors de la ligne n° " . $i;
                         $recommandationSuccess = false;
@@ -177,7 +183,8 @@ class ImportCsvServices
                     }
                     $oldValue = (int)$data[1];
                 }
-                dump($recommandationSuccess);
+                $this->entityManager->flush();
+                
                 // On ajoute les types preuves
                 if ($recommandationSuccess != false) {
                     $fileStr = $this->getUploadCsvDir() . self::TYPE_PREUVE;
@@ -192,14 +199,14 @@ class ImportCsvServices
                         $typePreuve->setTypePreuve4($data[4]);
                         try {
                             $this->entityManager->persist($typePreuve);
-                            $this->entityManager->flush();
-                            $idPreuve = $typePreuve->getId();
                         } catch (\Exception $e) {
                             $errorInsert = "L'import du type de preuve a échoué lors de la ligne n° " . $i;
                             $typePreuveSuccess = false;
                         }
                     }
-                    dump($typePreuveSuccess);
+                    $this->entityManager->flush();
+                    $idPreuve = $typePreuve->getId();
+                    
                     // On ajoute les points de contrôles
                     if ($typePreuveSuccess != false) {
                         $fileStr = $this->getUploadCsvDir() . self::POINT_CONTROLE;
@@ -223,12 +230,12 @@ class ImportCsvServices
                             $pointControle->setTypeCritere((string) $data[4]);
                             try {
                                 $this->entityManager->persist($pointControle);
-                                $this->entityManager->flush();
                             } catch (\Exception $e) {
                                 $errorInsert = "L'import des points de contrôles a échoué lors de la ligne n° " . $i;
                             }
                             $oldValue = $data[1];
                         }
+                        $this->entityManager->flush();
                     }
                 }
             }

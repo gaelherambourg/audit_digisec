@@ -30,6 +30,10 @@ footer{
     margin-bottom: 0;
 }
 
+.navbar-brand{
+    background-color: #191970
+}
+
 .navbar a,
 .color-bg a {
     color: white;
