@@ -218,8 +218,7 @@ class AuditController extends AbstractController
     public function pdfAudit(Request $request,
                                   EntityManagerInterface $entityManager,
                                   AuditRepository $auditRepository,
-                                  KernelInterface $kernel,
-                                  \Knp\Snappy\Pdf $snappy)
+                                  KernelInterface $kernel)
     {
 
         $audit = $auditRepository->find($request->get('id'));

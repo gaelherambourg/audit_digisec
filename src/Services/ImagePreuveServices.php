@@ -10,13 +10,11 @@ use Symfony\Component\String\Slugger\SluggerInterface;
 class ImagePreuveServices
 {
     private $targetDirectory;
-    private $targetDirectoryMin;
     private $slugger;
 
-    public function __construct($targetDirectory, $targetDirectoryMin, SluggerInterface $slugger)
+    public function __construct($targetDirectory, SluggerInterface $slugger)
     {
         $this->targetDirectory = $targetDirectory;
-        $this->targetDirectoryMin = $targetDirectoryMin;
         $this->slugger = $slugger;
     }
 

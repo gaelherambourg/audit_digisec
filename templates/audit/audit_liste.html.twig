@@ -57,6 +57,7 @@
     </thead>
     <tbody>
         {% for audit in tous_les_audits %}
+            {% set idReco = audit.referentiel.chapitres[0].recommandations[0].id%} <!-- On récupère l'id de la premiere recommandation de l'audit-->
             <tr>
             <td>{{audit.societe.nom}}</td>
             <td>{{audit.nom}}</td>
@@ -70,10 +71,10 @@
             {% endif %}
             <td>{{audit.statut.libelle}}</td>
             {% if audit.statut.libelle == "En cours" %}
-                <td><a href="{{ path('audit_controle', {id:audit.id, id_recommandation:1})}}">Reprendre</a>
+                <td><a href="{{ path('audit_controle', {id:audit.id, id_recommandation:idReco})}}">Reprendre</a>
             {% endif %}
             {% if audit.statut.libelle == "Termine" %}
-                <td><a href="{{ path('audit_controle', {id:audit.id, id_recommandation:1})}}">Modifier</a>
+                <td><a href="{{ path('audit_controle', {id:audit.id, id_recommandation:idReco})}}">Modifier</a>
             {% endif %}
             {% if audit.statut.libelle == "Remis" %}
                 <td><a href="">Consulter</a> - <a href="">Générer PDF</a></td>
