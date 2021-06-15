@@ -11,6 +11,7 @@ use App\Services\FichierPreuveServices;
 use App\Services\ImagePreuveServices;
 use DateTime;
 use Doctrine\ORM\EntityManagerInterface;
+use Liip\ImagineBundle\Service\FilterService;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -23,16 +24,16 @@ class PreuveController extends AbstractController
      * @Route("/preuve/", name="preuve")
      */
     public function ajoutPreuve(Request $request,
-                                PreuveRepository $preuveRepository,
                                 AuditControleRepository $auditControleRepository,
                                 ErreursServices $erreursServices,
                                 ImagePreuveServices $imagePreuveServices,
                                 FichierPreuveServices $fichierPreuveServices,
-                                EntityManagerInterface $entityManager): Response
+                                EntityManagerInterface $entityManager,
+                                FilterService $filterService
+                                ): Response
     {
 
         $resultat = "";
-        
         // On créer une instance de Adresse
         $preuve = new Preuve();
 
@@ -52,7 +53,7 @@ class PreuveController extends AbstractController
 
                 if ($preuveForm->isValid()) {
 
-                    $resultat = 'success';
+                    $resultat = 'success'; //Le formulaire est soumis et valide, on renvoit success.
 
                     //On récupère l'audit Controle associé à la preuve 
                     $auditControle = $auditControleRepository->find($request->get('auditControleId'));
@@ -66,12 +67,14 @@ class PreuveController extends AbstractController
                     if ($uploadedFile) {
                         $pictureFileName = $fichierPreuveServices->upload($uploadedFile);
                         $preuve->setFichier($pictureFileName);
+                        
                     }
                     // On récupère l'image'et on utilise ImagePreuveServices pour l'enregistrement de l'image
                     $uploadedImage = $request->files->get('image');
                     if ($uploadedImage) {
                         $pictureFileName = $imagePreuveServices->upload($uploadedImage);
                         $preuve->setImage($pictureFileName);
+                        $filterService->getUrlOfFilteredImage('preuves/images/'.$pictureFileName, 'miniature');
                     }
 
                     //On persiste l'entité
@@ -80,7 +83,7 @@ class PreuveController extends AbstractController
                     //On enregistre la preuve en bdd
                     $entityManager->flush();
 
-                    // On ajoute un message flash pour préciser à l'utilisateur à bien été ajouté
+                    // On ajoute un message flash pour préciser à l'utilisateur que la preuve a bien été ajouté
                     $this->addFlash("link", "La preuve a été ajoutée");
 
                     //On renvoie la réponse Json pour le traitement dans la fonction ajoutPreuve dans preuve.js

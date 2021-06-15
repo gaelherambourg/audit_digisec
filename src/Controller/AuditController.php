@@ -86,17 +86,15 @@ class AuditController extends AbstractController
                     $audit->addRemarque($remarque);
                 }
             }
-            
-            dump($audit->getAuditsControle());
-           
+                       
             // Sauvegarde en Bdd
             $entityManager->persist($audit);
             $entityManager->flush();
 
-            // On ajoute un message flash
+            // On ajoute un message flash pour la création de l'audit
             $this->addFlash("link", "L'audit a été créé");
 
-            // On redirige vers societe_liste
+            // On redirige vers la première recommandation de l'audit
             return $this->redirectToRoute('audit_controle', [
                 'id' => $audit->getId(),
                 'id_recommandation' => $audit->getReferentiel()->getChapitres()->first()->getRecommandations()->first()->getId()
@@ -117,10 +115,10 @@ class AuditController extends AbstractController
                                   EntityManagerInterface $entityManager,
                                   AuditRepository $auditRepository)
     {
-
+        //On récupère en bdd l'audit en fonction de l'id en paramètre
         $audit = $auditRepository->find($request->get('id'));
 
-        //Création du formulaire de recherche
+        //Création du formulaire de validation de l'audit
         $audit_validation_form = $this->createForm(ValidationAuditFormType::class, $audit);
 
         $audit_validation_form->handleRequest($request);
@@ -150,21 +148,22 @@ class AuditController extends AbstractController
      * @Route("/audit/genererPdf/{id}", name="generer_audit_pdf")
      */
     public function genererPdfAudit(Request $request,
-                                  EntityManagerInterface $entityManager,
                                   AuditRepository $auditRepository,
                                   KernelInterface $kernel)
     {
 
         $audit = $auditRepository->find($request->get('id'));
 
+        //On désactive la limite de la memory du php.ini pour passer le pdf
         ini_set('memory_limit','-1');
+
+        //On définit des options du pdf
         $options = new Options();
         $options->set( 'isRemoteEnabled', TRUE );
 
-        // instantiate and use the dompdf class
+        // On instancie la classe DomPdf
         $dompdf = new Dompdf($options);
-
-
+        //On définit le context du pdf
         $contxt = stream_context_create([
             'http' => [
                 'header'  => "Content-type: application/x-www-form-urlencoded\r\n",
@@ -179,38 +178,57 @@ class AuditController extends AbstractController
         ]);
         $dompdf->setHttpContext($contxt);
 
+        //On génére la vue Twig qui sera utiisée pour l'export vers le fichier pdf
         $html = $this->renderView('pdf/genererPdfAudit.html.twig', [
             'audit' => $audit
         ]);
-        // instantiate and use the dompdf class
+
+        // On charge le html dans domPdf
         $dompdf->loadHtml($html);
 
-        // (Optional) Setup the paper size and orientation
+        // On définit le format et l'orientation du pdf
         $dompdf->setPaper('A4', 'portrait');
 
         $dompdf->render();
 
         //On range les données du PDF
         $output = $dompdf->output();
-        dump($output);
+
         //On veut écrire le fichier pdf dans le directory public
         $publicDirectory = $kernel->getProjectDir() . '/public/pdf/audits';
         $pdfFilePath = $publicDirectory . '/' . $audit->getId() . '.pdf';
 
-        //$pdfFilePath = $publicDirectory . '/' . 'de' .'.pdf';
-
         //On écrit dans le chemin désiré
         file_put_contents($pdfFilePath, $output);
 
-        /* // Render the HTML as PDF
+        // On rend le html en pdf
         $dompdf->render();
 
-        // Output the generated PDF to Browser
-        $dompdf->stream("mypdf.pdf",[
-            "Attachment" => true
-        ]); */
+        //On redéfinit la memory_limit du php.ini
+        ini_set('memory_limit','20G');
 
-        ini_set('memory_limit','256MB');
-        return $this->redirectToRoute('audit_validation', ['id' => 7]);
+        //On redirige après le chargement du pdf
+        return $this->redirectToRoute('audit_validation', ['id' => 8]);
+    }
+
+    //FONCTION POUR VERIFIER LE RENDU DU PDF QUE L'ON VEUT EXPORTER (A SUPPRIMER QUAND L'EXPORT PDF EST FINI)
+    /**
+     * @Route("/audit/pdf/{id}", name="audit_pdf")
+     */
+    public function pdfAudit(Request $request,
+                                  EntityManagerInterface $entityManager,
+                                  AuditRepository $auditRepository,
+                                  KernelInterface $kernel,
+                                  \Knp\Snappy\Pdf $snappy)
+    {
+
+        $audit = $auditRepository->find($request->get('id'));
+
+
+        //$snappy = $this->get('knp_snappy.pdf');
+        return $this->render('pdf/genererPdfAudit.html.twig', [
+            'audit' => $audit
+        ]);
+
     }
 }

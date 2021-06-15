@@ -18,7 +18,7 @@ class RemarqueRepository extends ServiceEntityRepository
     {
         parent::__construct($registry, Remarque::class);
     }
-
+    //Récupère la remarque associée à un audit et une recommandation
     public function findByAuditAndRecommandation($id_audit, $id_recommandation)
     {
         return $this->createQueryBuilder('r')

@@ -20,10 +20,10 @@ class ReferentielController extends AbstractController
      */
     public function listerReferentiel(
         Request $request,
-        EntityManagerInterface $entitymanager,
         ReferentielRepository $referentielRepository,
         ImportCsvServices $importCsvServices
     ): Response {
+        
         //Création du formulaire de recherche
         $form = $this->createForm(RechercheSimpleType::class);
         $form->handleRequest($request);
