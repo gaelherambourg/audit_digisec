@@ -1,5 +1,7 @@
+<head>
+    <link rel="stylesheet" href="{{ app.request.schemeAndHttpHost }}/audit_digisec/public/css/pdf.css">
+</head>
 
-<!--<link rel="stylesheet" href="{{ app.request.schemeAndHttpHost }}/audit_digisec/public/css/pdf.css">-->
 
 {% block body %}
     <div class="logo">
@@ -33,7 +35,11 @@
             {% elseif preuve.fichier is not empty %}
                 <div>{{preuve.fichier}}</div>
             {% else %}
-                <img src="{{ app.request.schemeAndHttpHost }}/audit_digisec/public/preuves/images/{{preuve.image}}" heignt="300px" width="300px">
+                {% set img = 'media/cache/miniature/preuves/images/' ~ preuve.image %}
+               <!-- <img src="{{ asset('' ~ img| imagine_filter('miniature')) }}"> -->
+               <div class="imgPreuve">
+                    <img src="{{ absolute_url(asset('' ~ img)) }}">
+               </div>
             {% endif %}
             
         {% endfor %}

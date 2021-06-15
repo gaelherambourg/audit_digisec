@@ -33,7 +33,7 @@ class AuditControleRepository extends ServiceEntityRepository
             ->getResult()
         ;
     }
-    
+    //Récupère tous les points de contrôles (avec remédiations) d'une recommandation d'un audit
     public function findAllPointControleByAuditAndRecommandation($id, $id_recommandation){
         $queryBuilder = $this->createQueryBuilder('c')
             ->join('c.pointControle','p')->addSelect('p')

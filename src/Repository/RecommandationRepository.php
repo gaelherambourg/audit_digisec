@@ -18,7 +18,7 @@ class RecommandationRepository extends ServiceEntityRepository
     {
         parent::__construct($registry, Recommandation::class);
     }
-
+    //Compte le nombre de recommandation par référentiel
     public function nbRecommandationByReferentieo($id_referentiel){
         $queryBuilder = $this->createQueryBuilder('r');
         return $queryBuilder

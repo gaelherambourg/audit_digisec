@@ -18,7 +18,7 @@ class ChapitreRepository extends ServiceEntityRepository
     {
         parent::__construct($registry, Chapitre::class);
     }
-
+    //Récupère tous les chapitres par référentiel
     public function chapitreParReferentiel($id)
     {
         return $this->createQueryBuilder('c')

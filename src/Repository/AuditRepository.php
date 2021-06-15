@@ -18,7 +18,7 @@ class AuditRepository extends ServiceEntityRepository
     {
         parent::__construct($registry, Audit::class);
     }
-
+    //Récupère toutes les informations d'un audit
     public function findAuditAllInformation($id)
     {
         return $this->createQueryBuilder('a')

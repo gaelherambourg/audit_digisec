@@ -26,3 +26,9 @@ composer.json
 composer.lock
 
 public/pdf/audits/
+
+###> liip/imagine-bundle ###
+/public/media/cache/
+###< liip/imagine-bundle ###
+
+public/img/

@@ -30,9 +30,9 @@ class SocieteRepository extends ServiceEntityRepository
         return $query->getSingleResult();
     }
 
+    //Recherche de la saisie formulaire societe en BDD
     public function recherche($recherche_utilisateur)
     {
-        //Recherche de la saisie formulaire societe en BDD
         $queryBuilder = $this->createQueryBuilder('s')
             ->leftJoin('s.adresse', 'a')->addSelect('a')
             ->join('s.contact', 'c')->addSelect('c');
