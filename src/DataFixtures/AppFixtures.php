@@ -5,9 +5,10 @@ namespace App\DataFixtures;
 use Faker\Factory;
 use App\Entity\Adresse;
 use App\Entity\Contact;
+use App\Entity\EchelleNotation;
 use App\Entity\Societe;
+use App\Entity\Statut;
 use App\Entity\Utilisateur;
-use App\Services\ImportCsvServices;
 use Doctrine\Persistence\ObjectManager;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 
@@ -127,5 +128,20 @@ class AppFixtures extends Fixture
             $manager->persist($societe);
             $manager->flush();
         }
+        $echelleNotationGeneral = new EchelleNotation();
+        $echelleNotationGeneral->setEchelle("0 - 5");
+        $echelleNotationPetiteStructure = new EchelleNotation();
+        $echelleNotationPetiteStructure->setEchelle("0 - 4");
+        $echelleNotationBasique = new EchelleNotation();
+        $echelleNotationBasique->setEchelle("0 - 3");
+        $manager->persist($echelleNotationGeneral);
+        $manager->persist($echelleNotationPetiteStructure);
+        $manager->persist($echelleNotationBasique);
+        $manager->flush();
+
+        $statut = new Statut();
+        $statut->setLibelle("En cours");
+        $manager->persist($statut);
+        $manager->flush();
     }
 }
