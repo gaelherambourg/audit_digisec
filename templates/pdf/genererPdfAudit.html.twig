@@ -33,7 +33,10 @@
             {% if preuve.texte is not empty %}
                 <div>{{preuve.texte}}</div>
             {% elseif preuve.fichier is not empty %}
-                <div>{{preuve.fichier}}</div>
+                {% set fichier = 'preuves/fichiers/' ~ preuve.fichier %}
+                <div>
+                    <a href="{{ absolute_url(asset('' ~ fichier)) }}">{{preuve.fichier}}</a>
+                </div>
             {% else %}
                 {% set img = 'media/cache/miniature/preuves/images/' ~ preuve.image %}
                <!-- <img src="{{ asset('' ~ img| imagine_filter('miniature')) }}"> -->
