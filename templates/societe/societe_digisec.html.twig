@@ -1,6 +1,7 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Digisec{% endblock %}
+{% block title %}Digisec
+{% endblock %}
 
 {% block body %}
 	<div class="columns">
@@ -21,7 +22,7 @@
 			<fieldset class="box">
 				<legend class="label">DIGISEC</legend>
 
-				<div class="columns is-mobile">
+				<div class="columns is-tablet">
 					<div class="has-text-link column is-4">
 						Nom :
 					</div>
@@ -30,7 +31,7 @@
 					</div>
 				</div>
 
-				<div class="columns is-mobile">
+				<div class="columns is-tablet">
 					<div class="has-text-link column is-4">
 						Raison sociale :
 					</div>
@@ -39,7 +40,7 @@
 					</div>
 				</div>
 
-				<div class="columns is-mobile">
+				<div class="columns is-tablet">
 					<div class="has-text-link column is-4">
 						Type d'entreprise :
 					</div>
@@ -48,16 +49,17 @@
 					</div>
 				</div>
 
-				<div class="columns is-mobile">
+				<div class="columns is-tablet">
 					<div class="has-text-link column is-4">
 						Capital social :
 					</div>
 					<div class="column is-8">
-						{{societe.capitalSocial}} €
+						{{societe.capitalSocial}}
+						€
 					</div>
 				</div>
 
-				<div class="columns is-mobile">
+				<div class="columns is-tablet">
 					<div class="has-text-link column is-4">
 						Immatriculation RCS :
 					</div>
@@ -65,13 +67,13 @@
 						{{societe.immatRcs}}
 					</div>
 				</div>
-				
+
 			</fieldset>
 
 			<fieldset class="box">
 				<legend class="label">Adresse</legend>
 
-				<div class="columns is-mobile">
+				<div class="columns is-tablet">
 					<div class="has-text-link column is-3">
 						Rue :
 					</div>
@@ -80,7 +82,7 @@
 					</div>
 				</div>
 
-				<div class="columns is-mobile">
+				<div class="columns is-tablet">
 					<div class="has-text-link column is-3">
 						Code postal :
 					</div>
@@ -100,7 +102,7 @@
 			<fieldset class="box">
 				<legend class="label">Contact</legend>
 
-				<div class="columns is-mobile">
+				<div class="columns is-tablet">
 					<div class="has-text-link column is-3">
 						Nom :
 					</div>
@@ -115,7 +117,7 @@
 					</div>
 				</div>
 
-				<div class="columns is-mobile">
+				<div class="columns is-tablet">
 					<div class="has-text-link column is-3">
 						Téléphone :
 					</div>
@@ -135,11 +137,11 @@
 			<div class="section columns">
 				<div class="column"></div>
 
-			<div class="column">
-				<a href="{{path('societe_modifier', {id: societe.id})}}">
-					<button class="button is-info is-fullwidth">Modifier</button>
-				</a>
-			</div>
+				<div class="column">
+					<a href="{{path('societe_modifier', {id: societe.id})}}">
+						<button class="button is-info is-fullwidth">Modifier</button>
+					</a>
+				</div>
 
 				<div class="column"></div>
 			</div>

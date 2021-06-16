@@ -45,13 +45,13 @@
 		</header>
 		<main>
 			<div class="container mt-2">
-
+				<div class="titre-general">
 				{% for label, messages in app.flashes %}
 					{% for message in messages %}
 						<div class="notification is-{{ label }} is-light has-text-centered" role="alert">{{ message }}</div>
 					{% endfor %}
 				{% endfor %}
-
+				</div>
 				
 			</div>
 			{% block body %}{% endblock %}
