@@ -1,7 +1,7 @@
 <nav class="navbar is-transparent is-fixed-top" role="navigation" aria-label="main navigation">
 	<div class="navbar-brand">
-		<div class="navbar-item has-dropdown is-hoverable">
-			<div class="buttons">
+		<div class="navbar-item">
+			<div class="buttons ml-2">
 				<a class="button is-link is-light" href="{{ path('audit_liste')}}">
 					<img src="{{ asset('img/LOGO-DIGISEC-FULL-DETOURE.png') }}" height="50" alt="logo">Digisec
 				</a>
@@ -30,9 +30,9 @@
 				<a class="navbar-item has-text-weight-bold" href="{{ path('societe_digisec') }}">
 					Profil
 				</a>
-				<div class="navbar-item">
+				<div class="navbar-item mr-2">
 					<a class="button is-link is-light" href="{{ path('app_logout') }}">
-						<strong>Se déconnecter ({{ app.user.username | striptags }})</strong>
+						<strong>Se déconnecter</strong>
 					</a>
 				{% endif %}
 			</div>

@@ -31,7 +31,7 @@
 				<legend class="label">Entreprise</legend>
 				<fieldset class="box">
 
-					<div class="columns is-mobile">
+					<div class="columns is-tablet">
 						<div class="column is-4">
 							{{ form_label(societeForm.societe.nom, null, {'attr': {'class': 'has-text-link'} }) }}
 						</div>
@@ -40,7 +40,7 @@
 						</div>
 					</div>
 
-					<div class="columns is-mobile">
+					<div class="columns is-tablet">
 						<div class="column is-4">
 							{{ form_label(societeForm.societe.raison_social, null, {'attr': {'class': 'has-text-link'} }) }}
 						</div>
@@ -49,7 +49,7 @@
 						</div>
 					</div>
 
-					<div class="columns is-mobile">
+					<div class="columns is-tablet">
 						<div class="column is-4">
 							{{ form_label(societeForm.societe.siret, null, {'attr': {'class': 'has-text-link'} }) }}
 						</div>
@@ -58,7 +58,7 @@
 						</div>
 					</div>
 
-					<div class="columns is-mobile">
+					<div class="columns is-tablet">
 						<div class="column is-4">
 							{{ form_label(societeForm.societe.type_entreprise, null, {'attr': {'class': 'has-text-link'} }) }}
 						</div>
@@ -67,7 +67,7 @@
 						</div>
 					</div>
 
-					<div class="columns is-mobile">
+					<div class="columns is-tablet">
 						<div class="column is-4">
 							{{ form_label(societeForm.societe.capital_social, null, {'attr': {'class': 'has-text-link'} }) }}
 						</div>
@@ -76,7 +76,7 @@
 						</div>
 					</div>
 
-					<div class="columns is-mobile">
+					<div class="columns is-tablet">
 						<div class="column is-4">
 							{{ form_label(societeForm.societe.immat_rcs, null, {'attr': {'class': 'has-text-link'} }) }}
 						</div>
@@ -85,7 +85,7 @@
 						</div>
 					</div>
 
-					<div class="columns is-mobile">
+					<div class="columns is-tablet">
 						<div class="column is-4">
 							{{ form_label(societeForm.societe.logo, null, {'attr': {'class': 'has-text-link'} }) }}
 						</div>
@@ -103,7 +103,7 @@
 						{% if loop.index > 1 %}
 							<legend>Adresse secondaire</legend>
 						{% endif %}
-						<div class="columns is-mobile">
+						<div class="columns is-tablet">
 							<div class="column is-4">
 								{{ form_label(adresse.libelle, null, {'attr': {'class': 'has-text-link'} }) }}
 							</div>
@@ -123,7 +123,7 @@
 
 						<span id='adresse{{loop.index}}'>
 
-							<div class="columns is-mobile">
+							<div class="columns is-tablet">
 								<div class="column is-4">
 									{{ form_label(adresse.rue, null, {'attr': {'class': 'has-text-link'} }) }}
 								</div>
@@ -132,7 +132,7 @@
 								</div>
 							</div>
 
-							<div class="columns is-mobile">
+							<div class="columns is-tablet">
 								<div class="column is-4">
 									{{ form_label(adresse.code_postal, null, {'attr': {'class': 'has-text-link'} }) }}
 								</div>
@@ -141,7 +141,7 @@
 								</div>
 							</div>
 
-							<div class="columns is-mobile">
+							<div class="columns is-tablet">
 								<div class="column is-4">
 									{{ form_label(adresse.ville, null, {'attr': {'class': 'has-text-link'} }) }}
 								</div>
@@ -151,7 +151,7 @@
 							</div>
 
 							{% if loop.index > 1 %}
-								<div class="columns is-mobile">
+								<div class="columns is-tablet">
 									<div class="column is-8"></div>
 									<div class="column is-3">
 										<a class="button is-small is-danger is-light is-3 is-fullwidth" id="supprimerAdresse" href="{{ path('adresse_supprimer',{idAdresse: idAdresse[(loop.index)-1].id} ) }}">Supprimer l'adresse</a>
@@ -161,7 +161,7 @@
 						</span>
 					</fieldset>
 				{% endfor %}
-				<div class="columns is-mobile">
+				<div class="columns is-tablet">
 					<div class="column is-9"></div>
 					<div class="column is-3">
 						<a class="button is-small is-link is-light is-3 is-fullwidth" id="ajouterAdresse">Ajouter une adresse</a>
@@ -176,7 +176,7 @@
 						{% if loop.index > 1 %}
 							<legend>Contact secondaire</legend>
 						{% endif %}
-						<div class="columns is-mobile">
+						<div class="columns is-tablet">
 							<div class="column is-4">
 								{{ form_label(contact.nom_contact, null, {'attr': {'class': 'has-text-link'} }) }}
 							</div>
@@ -196,7 +196,7 @@
 
 						<span id='contact{{loop.index}}'>
 
-							<div class="columns is-mobile">
+							<div class="columns is-tablet">
 								<div class="column is-4">
 									{{ form_label(contact.prenom_contact, null, {'attr': {'class': 'has-text-link'} }) }}
 								</div>
@@ -205,7 +205,7 @@
 								</div>
 							</div>
 
-							<div class="columns is-mobile">
+							<div class="columns is-tablet">
 								<div class="column is-4">
 									{{ form_label(contact.tel_contact, null, {'attr': {'class': 'has-text-link'} }) }}
 								</div>
@@ -214,7 +214,7 @@
 								</div>
 							</div>
 
-							<div class="columns is-mobile">
+							<div class="columns is-tablet">
 								<div class="column is-4">
 									{{ form_label(contact.email_contact, null, {'attr': {'class': 'has-text-link'} }) }}
 								</div>
@@ -223,7 +223,7 @@
 								</div>
 							</div>
 
-							<div class="columns is-mobile">
+							<div class="columns is-tablet">
 								<div class="column is-4">
 									{{ form_label(contact.poste_contact, null, {'attr': {'class': 'has-text-link'} }) }}
 								</div>
@@ -232,7 +232,7 @@
 								</div>
 							</div>
 							{% if loop.index > 1 %}
-								<div class="columns is-mobile">
+								<div class="columns is-tablet">
 									<div class="column is-8"></div>
 									<div class="column is-3">
 										<a class="button is-small is-danger is-light is-3 is-fullwidth" id="supprimerContact" href="{{ path('contact_supprimer',{idContact: idContact[(loop.index)-1].id} ) }}">Supprimer le contact</a>
@@ -242,7 +242,7 @@
 						</span>
 					</fieldset>
 				{% endfor %}
-				<div class="columns is-mobile">
+				<div class="columns is-tablet">
 					<div class="column is-9"></div>
 					<div class="column is-3">
 						<a class="button is-small is-link is-light is-3 is-fullwidth" id="ajouterContact">Ajouter un contact</a>
@@ -275,7 +275,7 @@
 				class="modal-card-body">
 				<!-- Content ... -->
 				{{ form_start(contactForm, {'attr': {'id': 'nouveau_contact'}}) }}
-				<div class="columns is-mobile">
+				<div class="columns is-tablet">
 					<div class="column is-4">
 						{{ form_label(contactForm.nom_contact, null, {'attr': {'class': 'has-text-link'} }) }}
 					</div>
@@ -284,7 +284,7 @@
 					</div>
 				</div>
 
-				<div class="columns is-mobile">
+				<div class="columns is-tablet">
 					<div class="column is-4">
 						{{ form_label(contactForm.prenom_contact, null, {'attr': {'class': 'has-text-link'} }) }}
 					</div>
@@ -293,7 +293,7 @@
 					</div>
 				</div>
 
-				<div class="columns is-mobile">
+				<div class="columns is-tablet">
 					<div class="column is-4">
 						{{ form_label(contactForm.tel_contact, null, {'attr': {'class': 'has-text-link'} }) }}
 					</div>
@@ -302,7 +302,7 @@
 					</div>
 				</div>
 
-				<div class="columns is-mobile">
+				<div class="columns is-tablet">
 					<div class="column is-4">
 						{{ form_label(contactForm.email_contact, null, {'attr': {'class': 'has-text-link'} }) }}
 					</div>
@@ -311,7 +311,7 @@
 					</div>
 				</div>
 
-				<div class="columns is-mobile">
+				<div class="columns is-tablet">
 					<div class="column is-4">
 						{{ form_label(contactForm.poste_contact, null, {'attr': {'class': 'has-text-link'} }) }}
 					</div>
@@ -340,7 +340,7 @@
 				<!-- Content ... -->
 				{{ form_start(adresseForm, {'attr': {'id': 'nouvelle_adresse'}}) }}
 				{{ form_row(adresseForm._token) }}
-				<div class="columns is-mobile">
+				<div class="columns is-tablet">
 					<div class="column is-4">
 						{{ form_label(adresseForm.libelle, null, {'attr': {'class': 'has-text-link'} }) }}
 					</div>
@@ -349,7 +349,7 @@
 					</div>
 				</div>
 
-				<div class="columns is-mobile">
+				<div class="columns is-tablet">
 					<div class="column is-4">
 						{{ form_label(adresseForm.rue, null, {'attr': {'class': 'has-text-link'} }) }}
 					</div>
@@ -358,7 +358,7 @@
 					</div>
 				</div>
 
-				<div class="columns is-mobile">
+				<div class="columns is-tablet">
 					<div class="column is-4">
 						{{ form_label(adresseForm.code_postal, null, {'attr': {'class': 'has-text-link'} }) }}
 					</div>
@@ -367,7 +367,7 @@
 					</div>
 				</div>
 
-				<div class="columns is-mobile">
+				<div class="columns is-tablet">
 					<div class="column is-4">
 						{{ form_label(adresseForm.ville, null, {'attr': {'class': 'has-text-link'} }) }}
 					</div>

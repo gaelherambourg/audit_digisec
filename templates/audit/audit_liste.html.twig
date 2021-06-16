@@ -63,13 +63,13 @@
             <td>{{audit.nom}}</td>
             <td>{{audit.referentiel.libelle}}</td>
             <td>Gaël R.</td>
-            <td>{{audit.dateCreation|date("d/m/Y H:i:s", false)}}</td>
+            <td class="defaut">{{audit.dateCreation|date("d/m/Y", false)}}</td>
             {% if audit.dateModification is not null %}
-                <td>{{audit.dateModification|date("d/m/Y H:i:s", false)}}</td>
+                <td class="defaut">{{audit.dateModification|date("d/m/Y", false)}}</td>
             {% else %}
-                <td> - </td>
+                <td class="defaut"> - </td>
             {% endif %}
-            <td>{{audit.statut.libelle}}</td>
+            <td class="defaut">{{audit.statut.libelle}}</td>
             {% if audit.statut.libelle == "En cours" %}
                 <td><a href="{{ path('audit_controle', {id:audit.id, id_recommandation:idReco})}}">Reprendre</a>
             {% endif %}
@@ -85,7 +85,7 @@
         
     </tbody>
     </table>
-
+    <div class="column"></div>
     <!-- Bouton pour créer un audit depuis la page liste_audit (pertinent ?)
     <div class="has-text-right">
         <a href=""><button class="button is-info">Créer un audit</button></a>
