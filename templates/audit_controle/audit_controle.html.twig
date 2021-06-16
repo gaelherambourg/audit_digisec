@@ -41,12 +41,19 @@
                             {{ form_widget(audit_controle.id) }}
                         </div>
                     </div>
+                    <!-- TODO : A AMELIORER AFFICHAGE DES POINTS DE CONTROLE 
+                                ACTUELLEMENT : SELECT DISABLE SUR LE POINT DE CONTROLE CONCERNE -->
+                    
                     <div class="columns is-mobile">
                         <div class="column is-4">
-                            {{ form_label(audit_controle.pointControle, null, {'attr': {'class': 'has-text-link'} }) }}
+                            <label class="label has-text-link">Point de contrôle</label>
                         </div>
-                        <div class="column is-6">
-                            {{ form_widget(audit_controle.pointControle, {'attr': {'class': 'is-link has-text-weight-bold'} }) }}
+                        <div class="column is-6 has-text-left has-text-weight-bold">
+                            {% for auditControle in listeAuditControle %}
+                                {% if auditControle.id == audit_controle.vars.value.id %}
+                                    {{auditControle.pointControle.libelle}}
+                                {% endif %}
+                            {% endfor %}
                         </div>
                     </div>
                     <div class="columns is-mobile">
@@ -75,7 +82,7 @@
                     {% for auditControle in listeAuditControle %}
                         {% for remediation in auditControle.pointControle.remediations %}
 
-                            {% if remediation.pointControle.id == audit_controle.pointControle.vars.value %}
+                            {% if remediation.pointControle.id == auditControle.pointControle.id and auditControle.id == audit_controle.vars.value.id %}
 
                                     {% if (remediation in auditControle.remediations) %}
                                         <div>

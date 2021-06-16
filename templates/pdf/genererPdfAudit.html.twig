@@ -23,8 +23,9 @@
 
     {% for auditControle in audit.auditsControle %}
         
-        <div class="libellePC">{{auditControle.PointControle.libelle}}</div>
-        <div>{{auditControle.note}}</div>
+        <h3 class="libellePC">{{auditControle.PointControle.libelle}}</h3>
+        <div>Maturité : {{auditControle.note}}</div>
+        <h4>Remarque</h4>
         <div>{{auditControle.remarque}}</div>
 
         <h4>Preuves</h4>
@@ -56,9 +57,16 @@
 
     {% endfor %}
 
+    <h4>Ecarts et constatations</h4>
     <div>{{audit.ecartConstatation}}</div>
+    
+    <h4>Recommandations</h4>
     <div>{{audit.recommandations}}</div>
+    
+    <h4>Commentaire du client</h4>
     <div>{{audit.commentaireClient}}</div>
+    
+    <h4>Remarque générale</h4>
     <div>{{audit.remarqueGenerale}}</div>
 
 {% endblock %}
