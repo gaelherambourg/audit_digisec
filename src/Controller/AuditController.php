@@ -78,6 +78,8 @@ class AuditController extends AbstractController
                     foreach($recommandation->getPointsControle() as $pointControle){
                         $audit_controle = new AuditControle();
                         $audit_controle->setPointControle($pointControle);
+                        $audit_controle->setEstValide(false);
+                        $audit_controle->setRecommandation($recommandation);
                         $entityManager->persist($audit_controle);
                         $audit->addAuditsControle($audit_controle);
                     }

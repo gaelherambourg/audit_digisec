@@ -59,7 +59,7 @@ class AuditControleController extends AbstractController
         $remarque = $remarqueRepository->findByAuditAndRecommandation($id, $id_recommandation);
         //On remplit la liste d'audit_controles avec les points de controles équivalents au référentiel de l'audit en cours
         $listeAuditControle = $auditControleRepository->findAllPointControleByAuditAndRecommandation($id, $id_recommandation);
-
+        
          //Création du formulaire
         $audit_form_controle = $this->createForm(AuditPointControleType::class, ['audit_controle' => $listeAuditControle, 'remarque' => $remarque]);
         $preuve_form = $this->createForm(PreuveFormType::class, $preuve);
@@ -87,6 +87,7 @@ class AuditControleController extends AbstractController
                 foreach($auditControle->getRemediations() as $remediation){
                     $auditControle->removeRemediation($remediation);
                 }
+                $auditControle->setEstValide(true);
             }
 
             foreach($audit_form_controle->getData("[audit_controle]") as $audit_controle){
@@ -97,8 +98,9 @@ class AuditControleController extends AbstractController
                         }
                     }
                 }
+                
             }
-            //FIN TODOO A AMELIORER
+            //FIN TODO A AMELIORER
 
             // Sauvegarde en Bdd
             $entityManager->persist($audit);
@@ -112,6 +114,12 @@ class AuditControleController extends AbstractController
                 return $this->redirectToRoute('audit_controle', ['id' => $id, 'id_recommandation' => $id_suivant_recommandation]);
 
             }else{
+                $listeAuditControles = $auditControleRepository->findAllPointControleByAudit($id);
+                foreach($listeAuditControles as $auditControle){
+                    if($auditControle->getEstValide() == false){
+                        return $this->redirectToRoute('audit_controle', ['id' => $id, 'id_recommandation' => $auditControle->getRecommandation()->getId()]);
+                    }  
+                }
                 //On redirige vers la liste d'audit si c'est la derniere recommandation de l'audit
                 return $this->redirectToRoute('audit_validation', ['id' => $id]);
             }

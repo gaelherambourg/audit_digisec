@@ -60,6 +60,17 @@ class AuditControle
      */
     private $remediations;
 
+    /**
+     * @ORM\Column(type="boolean")
+     */
+    private $est_valide;
+
+    /**
+     * @ORM\ManyToOne(targetEntity=Recommandation::class, inversedBy="audit_controles")
+     * @ORM\JoinColumn(nullable=false)
+     */
+    private $recommandation;
+
     public function __construct()
     {
         $this->preuves = new ArrayCollection();
@@ -300,6 +311,30 @@ class AuditControle
     public function removeRemediation(Remediation $remediation): self
     {
         $this->remediations->removeElement($remediation);
+
+        return $this;
+    }
+
+    public function getEstValide(): ?bool
+    {
+        return $this->est_valide;
+    }
+
+    public function setEstValide(bool $est_valide): self
+    {
+        $this->est_valide = $est_valide;
+
+        return $this;
+    }
+
+    public function getRecommandation(): ?Recommandation
+    {
+        return $this->recommandation;
+    }
+
+    public function setRecommandation(?Recommandation $recommandation): self
+    {
+        $this->recommandation = $recommandation;
 
         return $this;
     }
