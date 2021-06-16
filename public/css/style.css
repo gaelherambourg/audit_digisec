@@ -26,7 +26,7 @@ fieldset .box {
 }
 
 footer{
-    padding: 30px 0;
+    padding: 20px 0;
     margin-bottom: 0;
 }
 
@@ -61,8 +61,8 @@ footer{
     width: 14,2%;
 }
 
-.titre-audit{
-    margin:50px 0px 10px 0px;
+.titre-general{
+    margin:80px 0px 10px 0px;
 }
 
 .titre-utilisateur{
