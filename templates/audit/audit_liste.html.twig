@@ -17,7 +17,7 @@
     <div class="columns is-vcentered">
         <div class="column">
             <div class="control">
-            <input class="input is-large" type="text" placeholder="Nom de l'entreprise" name="rechercheEntreprise" id="rechercheEntreprise">
+            <input class="input" type="text" placeholder="Nom de l'entreprise" name="rechercheEntreprise" id="rechercheEntreprise">
         </div>
         </div>
         <div class="column is-one-fifth">
@@ -37,7 +37,7 @@
             </div>
         </div>
         <div class="column has-text-left">
-            <button class="button is-info is-large"> Rechercher</button>
+            <button class="button is-info button is-primary button is-info"> Rechercher</button>
         </div>
     
     </div>
@@ -45,12 +45,12 @@
     <table class="table is-striped is-narrow is-hoverable is-fullwidth tab_audit_liste">
     <thead>
         <tr>
-            <th><abbr title="Nom de l'entreprise">Nom de l'entreprise</abbr></th>
+            <th class="auditMobile"><abbr title="Nom de l'entreprise">Nom de l'entreprise</abbr></th>
             <th><abbr title="Nom de l'audit">Nom de l'audit</abbr></th>
-            <th>Référentiel</th>
-            <th><abbr title="Auditeur">Auditeur</abbr></th>
-            <th><abbr title="Date de l'audit">Date de l'audit</abbr></th>
-            <th><abbr title="Dernière modif">Dernière Modif</abbr></th>
+            <th class="auditMobile">Référentiel</th>
+            <th class="auditMobile"><abbr title="Auditeur">Auditeur</abbr></th>
+            <th class="auditMobile"><abbr title="Date de l'audit">Date de l'audit</abbr></th>
+            <th class="auditMobile"><abbr title="Dernière modif">Dernière Modif</abbr></th>
             <th><abbr title="Statut">Statut</abbr></th>
             <th><abbr title="Actions">Actions</abbr></th>
         </tr>
@@ -59,15 +59,15 @@
         {% for audit in tous_les_audits %}
             {% set idReco = audit.referentiel.chapitres[0].recommandations[0].id%} <!-- On récupère l'id de la premiere recommandation de l'audit-->
             <tr>
-            <td>{{audit.societe.nom}}</td>
+            <td class="auditMobile">{{audit.societe.nom}}</td>
             <td>{{audit.nom}}</td>
-            <td>{{audit.referentiel.libelle}}</td>
-            <td>Gaël R.</td>
-            <td class="defaut">{{audit.dateCreation|date("d/m/Y", false)}}</td>
+            <td class="auditMobile">{{audit.referentiel.libelle}}</td>
+            <td class="auditMobile">Gaël R.</td>
+            <td class="auditMobile">{{audit.dateCreation|date("d/m/Y", false)}}</td>
             {% if audit.dateModification is not null %}
-                <td class="defaut">{{audit.dateModification|date("d/m/Y", false)}}</td>
+                <td class="auditMobile">{{audit.dateModification|date("d/m/Y", false)}}</td>
             {% else %}
-                <td class="defaut"> - </td>
+                <td class="auditMobile"> - </td>
             {% endif %}
             <td class="defaut">{{audit.statut.libelle}}</td>
             {% if audit.statut.libelle == "En cours" %}
