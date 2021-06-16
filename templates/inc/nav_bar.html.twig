@@ -7,11 +7,11 @@
 				</a>
 			</div>
 		</div>
-						<a role="button" class="navbar-burger burger" aria-label="menu" aria-expanded="false" data-target="navbarBasicExample">
-					<span aria-hidden="true"></span>
-					<span aria-hidden="true"></span>
-					<span aria-hidden="true"></span>
-				</a>
+		<a role="button" class="navbar-burger burger" aria-label="menu" aria-expanded="false" data-target="navbarBasicExample">
+			<span aria-hidden="true"></span>
+			<span aria-hidden="true"></span>
+			<span aria-hidden="true"></span>
+		</a>
 	</div>
 	<div id="navbarBasicExample" class="navbar-menu">
 		<div
@@ -30,6 +30,11 @@
 				<a class="navbar-item has-text-weight-bold" href="{{ path('societe_digisec') }}">
 					Profil
 				</a>
+				{% if is_granted("ROLE_ADMIN") %}
+				<a class="navbar-item has-text-weight-bold" href="{{ path('app_register') }}">
+					Utilisateur
+				</a>
+				{% endif %}
 				<div class="navbar-item mr-2">
 					<a class="button is-link is-light" href="{{ path('app_logout') }}">
 						<strong>Se déconnecter</strong>

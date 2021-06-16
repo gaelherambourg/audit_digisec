@@ -99,3 +99,12 @@ aside{
 progress{
     margin-top: 3px;
 }
+
+/* Nouvelles règles si la fenêtre fait au plus 1024px de large */
+@media all and (max-width: 768px)
+{
+    .auditMobile
+    {
+        display: none;
+    }
+}
