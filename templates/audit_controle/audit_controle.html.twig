@@ -19,7 +19,7 @@
             <div class="mt-5" id="idReco" data-id="{{recommandation.id}}"> <!-- Index référentiel de la recommandation et libellé de la recommandation -->
             {{recommandation.indexReferentiel}} - {{recommandation.libelle}}
             </div>
-            <div class="mt-5"><!-- Description de la recommandation -->
+            <div class="mt-5 mr-1"><!-- Description de la recommandation -->
             {{recommandation.description}}
             </div>
             <div class="columns is-mobile mt-5">
@@ -41,8 +41,6 @@
                             {{ form_widget(audit_controle.id) }}
                         </div>
                     </div>
-                    <!-- TODO : A AMELIORER AFFICHAGE DES POINTS DE CONTROLE 
-                                ACTUELLEMENT : SELECT DISABLE SUR LE POINT DE CONTROLE CONCERNE -->
                     
                     <div class="columns is-mobile">
                         <div class="column is-4">
