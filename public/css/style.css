@@ -96,3 +96,6 @@ aside{
 .dateAudit{
     width: 80px;
 }
+progress{
+    margin-top: 3px;
+}

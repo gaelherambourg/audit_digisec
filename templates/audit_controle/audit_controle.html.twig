@@ -16,10 +16,15 @@
             <div><!-- Id du chapitre et son libellé -->
             {{recommandation.chapitre.id}} - {{recommandation.chapitre.libelle}}
             </div>
-            <div class="mt-5" id="idReco" data-id="{{recommandation.id}}"> <!-- Index référentiel de la recommandation et libellé de la recommandation -->
-            {{recommandation.indexReferentiel}} - {{recommandation.libelle}}
+            <div class="mt-5 columns is-vcentered" id="idReco" data-id="{{recommandation.id}}"> <!-- Index référentiel de la recommandation et libellé de la recommandation -->
+                <div class="column is-8 has-text-right mr-5">
+                    {{recommandation.indexReferentiel}} - {{recommandation.libelle}} 
+                </div>
+                <div class="columns is-4 has-text-left">
+                    <progress class="progress is-info is-small" value="{{pourcentageValide}}" max="100">100%</progress>
+                </div> 
             </div>
-            <div class="mt-5 mr-1"><!-- Description de la recommandation -->
+            <div class="mt-5 mr-1 has-text-justified"><!-- Description de la recommandation -->
             {{recommandation.description}}
             </div>
             <div class="columns is-mobile mt-5">

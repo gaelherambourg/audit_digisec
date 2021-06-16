@@ -60,6 +60,17 @@ class AuditControleController extends AbstractController
         //On remplit la liste d'audit_controles avec les points de controles équivalents au référentiel de l'audit en cours
         $listeAuditControle = $auditControleRepository->findAllPointControleByAuditAndRecommandation($id, $id_recommandation);
         
+        $nbPointControle = 0;
+        $nbPointControleValide = 0;
+        foreach($listeAuditControle as $auditControle){
+            if($auditControle->getEstValide() == true){
+                $nbPointControleValide++;
+            }
+            $nbPointControle++;
+        }
+        $pourcentageValide = ($nbPointControleValide/$nbPointControle)*100;
+        dump($nbPointControle);
+        dump($nbPointControleValide);
          //Création du formulaire
         $audit_form_controle = $this->createForm(AuditPointControleType::class, ['audit_controle' => $listeAuditControle, 'remarque' => $remarque]);
         $preuve_form = $this->createForm(PreuveFormType::class, $preuve);
@@ -131,7 +142,8 @@ class AuditControleController extends AbstractController
             'audit' => $audit,
             'preuves' => $preuves,
             'recommandation' => $recommandation,
-            'listeAuditControle' => $listeAuditControle
+            'listeAuditControle' => $listeAuditControle,
+            'pourcentageValide' => $pourcentageValide
         ]);
     }
 }
