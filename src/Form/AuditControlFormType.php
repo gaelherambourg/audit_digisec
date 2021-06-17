@@ -32,7 +32,9 @@ class AuditControlFormType extends AbstractType
                 "mapped"=>false
             ])
             ->add('remarque')
-            ->add('note')
+            ->add('note', IntegerType::class, [
+                'label' => "Maturité"
+            ])
             /*  ->add('remediations', EntityType::class,
             [
                 'class' => Remediation::class,
