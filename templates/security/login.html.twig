@@ -4,56 +4,55 @@
 {% endblock %}
 
 {% block body %}
-	<div class="titre-general"> 
-		<form method="post">
 
-			<div class="field">
-				<div class="columns">
+<form method="post">
+    
+<div class="field">
+	<div class="columns">
 
-					<div class="column"></div>
+        <div class="column"></div>
 
-					<div class="column">
-						<p class="control has-icons-left has-icons-right">
-							<input type="text" value="{{ last_username }}" name="username" id="inputUsername" class="input" autocomplete="username" placeholder="Nom d'utilisateur">
-							<span class="icon is-small is-left">
-								<i class="fas fa-user"></i>
-							</span>
-							<span class="icon is-small is-right"></span>
-						</p>
+        <div class="column">
+            <p class="control has-icons-left has-icons-right">
+                <input type="text" value="{{ last_username }}" name="username" id="inputUsername" class="input" autocomplete="username" placeholder="Nom d'utilisateur" required>
+                <span class="icon is-small is-left">
+                    <i class="fas fa-user"></i>
+                </span>
+                <span class="icon is-small is-right">
+                </span>
+            </p>
 
-						<div class="field">
-							<p class="control has-icons-left">
-								<input type="password" name="password" id="inputPassword" class="input" autocomplete="current-password" placeholder="Mot de passe">
-								<span class="icon is-small is-left">
-									<i class="fas fa-lock"></i>
-								</span>
-							</p>
-						</div>
+            <div class="field">
+                <p class="control has-icons-left">
+                    <input type="password" name="password" id="inputPassword" class="input" autocomplete="current-password" placeholder="Mot de passe" required>
+                    <span class="icon is-small is-left">
+                    <i class="fas fa-lock"></i>
+                    </span>
+                </p>
+            </div>
 
-						<div class="checkbox mb-3">
-							<input type="checkbox" id="remember_me" name="_remember_me"/>
-							<label for="remember_me">Se souvenir de moi</label>
-						</div>
+            <div class="checkbox mb-3">
+                <input type="checkbox" id="remember_me" name="remember_me"/>
+                <label for="remember_me">Se souvenir de moi</label>
+            </div>
 
-						<div class="field">
-							<p class="control">
-								<button class="button is-success" type="submit" value="login">
-									Se connecter
-								</button>
-								<button class="button is-info" href="{{ path('app_forgotten_password')}}">
-									Mot de passe oublié
-								</button>
-							</p>
-						</div>
-					</div>
+            <div class="field">
+                <p class="control">
+                    <button class="button is-success" type="submit" value="login">
+                    Se connecter
+                    </button>
+                    <a class="button is-info" href="{{ path('app_forgotten_password')}}">Mot de passe oublié</a>
+                </p>
+            </div>
+        </div>
 
-					<div class="column"></div>
+        <div class="column"></div>
 
-				</div>
+  </div>
 
-				<input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}">
+    <input type="hidden" name="_csrf_token"
+           value="{{ csrf_token('authenticate') }}">
 
 
-			</form>
-		</div>
-	{% endblock %}
+</form>
+{% endblock %}

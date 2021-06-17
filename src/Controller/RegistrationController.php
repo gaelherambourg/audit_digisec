@@ -25,13 +25,19 @@ class RegistrationController extends AbstractController
                              GuardAuthenticatorHandler $guardHandler,
                              AppAuthenticator $authenticator, \Swift_Mailer $mailer): Response
     {
+        // On créé une instance d'utilisateur
         $utilisateur = new Utilisateur();
         $utilisateur->setAdmin(true);
+
+        // Crée une instance de la classe de formulaire que l'on associe à notre formulaire
         $form = $this->createForm(RegistrationFormType::class, $utilisateur);
+
+        // On prend les données du formulaire soumis, et les injecte dans $utilisateur
         $form->handleRequest($request);
 
+        // Si le formulaire est soumis
         if ($form->isSubmitted() && $form->isValid()) {
-            // encode the plain password
+            // on encode le mot de passe
             $utilisateur->setPassword(
                 $passwordEncoder->encodePassword(
                     $utilisateur,
@@ -42,21 +48,24 @@ class RegistrationController extends AbstractController
             // On génère un token et on l'enregistre
             $utilisateur->setActivationToken(md5(uniqid()));
 
+            // Sauvegarde en base de données
             $entityManager = $this->getDoctrine()->getManager();
             $entityManager->persist($utilisateur);
             $entityManager->flush();
-
+            
+            // On ajoute un message flash
             $this->addFlash('success', 'Le nouvel utilisteur '.$utilisateur->getUsername().' a bien été créé.');
             return $this->redirectToRoute('app_login');
 
-            // do anything else you need here, like send an email
-
             // On crée le message
             $message = (new \Swift_Message('Nouveau compte'))
+
             // On attribue l'expéditeur
-            ->setFrom('gael@digisec.fr')
+            ->setFrom('entreprise.digisec@gmail.fr')
+
             // On attribue le destinataire
             ->setTo($utilisateur->getEmail())
+
             // On crée le texte avec la vue
             ->setBody(
                 $this->renderView(
@@ -75,6 +84,7 @@ class RegistrationController extends AbstractController
             );
         }
 
+        // On retourne la page Twig avec le formulaire
         return $this->render('registration/register.html.twig', [
             'registrationForm' => $form->createView(),
         ]);
@@ -98,13 +108,15 @@ class RegistrationController extends AbstractController
             // On supprime le token
             $utilisateur->setActivationToken(null);
             $entityManager = $this->getDoctrine()->getManager();
+
+            // Sauvegarde en base de données
             $entityManager->persist($utilisateur);
             $entityManager->flush();
 
             // On génère un message
             $this->addFlash('message', 'Utilisateur activé avec succès');
 
-            // On retourne à l'accueil
+            // On retourne la page Twig de l'accueil
             return $this->redirectToRoute('audit_liste');
         }
 }

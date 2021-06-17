@@ -21,20 +21,22 @@ class SecurityController extends AbstractController
      */
     public function login(AuthenticationUtils $authenticationUtils): Response
     {
+        //si on essaye d'accéder à la page login déjà connecté
         if ($this->getUser()) {
             $this->addFlash("link", "Vous êtes déjà connecté");
             return $this->redirectToRoute('audit_liste');
         }
 
-        // get the login error if there is one
+        // obtenir l'erreur de connexion s'il y en a une
         $error = $authenticationUtils->getLastAuthenticationError();
         if ($error) {
             // On ajoute un message flash
             $this->addFlash("danger", "Merci de vérifier votre identifiant et/ou mot de passe");
         }
-        // last username entered by the user
+        // dernier nom d'utilisateur saisi par l'utilisateur
         $lastUsername = $authenticationUtils->getLastUsername();
 
+        // On retourne la page Twig de l'accueil
         return $this->render('security/login.html.twig', ['last_username' => $lastUsername, 'error' => $error]);
     }
 
@@ -43,7 +45,7 @@ class SecurityController extends AbstractController
      */
     public function logout(): void
     {
-        throw new \LogicException('This method can be blank - it will be intercepted by the logout key on your firewall.');
+        throw new \LogicException('Cette méthode peut être vide - elle sera interceptée par la clé de déconnexion de votre pare-feu.');
     }
 
     /**
@@ -71,7 +73,7 @@ class SecurityController extends AbstractController
                 // Si l'utilisateur n'existe pas
                 if (!$utilisateur) {
                     // On envoie une alerte disant que l'adresse e-mail est inconnue
-                    $this->addFlash('danger', 'Cette adresse n\'existe pas');
+                    $this->addFlash('danger', 'Cette adresse email n\'existe pas');
                     
                     // On retourne sur la page de connexion
                     return $this->redirectToRoute('app_login');
@@ -96,7 +98,7 @@ class SecurityController extends AbstractController
 
                 // On génère l'e-mail
                 $message = (new \Swift_Message('Mot de passe oublié'))
-                    ->setFrom('gael@digisec.fr')
+                    ->setFrom('entreprise.digisec@gmail.fr')
                     ->setTo($utilisateur->getEmail())
                     ->setBody(
                         "<p>Bonjour,</p><p>Une demande de réinitialisation de mot de passe a été effectuée pour le site Digisec. Veuillez cliquer sur le lien suivant : " . $url . '</p>',
@@ -129,7 +131,7 @@ class SecurityController extends AbstractController
             // Si l'utilisateur n'existe pas
             if ($utilisateur === null) {
                 // On affiche une erreur
-                $this->addFlash('danger', 'Token Inconnu');
+                $this->addFlash('danger', 'Vous avez déjà modifié votre mot de passe');
                 return $this->redirectToRoute('app_login');
             }
 
