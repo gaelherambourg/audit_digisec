@@ -141,7 +141,13 @@ class AppFixtures extends Fixture
 
         $statut = new Statut();
         $statut->setLibelle("En cours");
+        $statutTermine = new Statut();
+        $statutTermine->setLibelle("Termine");
+        $statutRemis = new Statut();
+        $statutRemis->setLibelle("Remis");
         $manager->persist($statut);
+        $manager->persist($statutTermine);
+        $manager->persist($statutRemis);
         $manager->flush();
     }
 }
