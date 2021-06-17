@@ -23,6 +23,9 @@
     "doctrine/common": {
         "version": "3.1.2"
     },
+    "doctrine/data-fixtures": {
+        "version": "1.5.0"
+    },
     "doctrine/dbal": {
         "version": "2.13.1"
     },
@@ -43,6 +46,18 @@
             "./config/packages/test/doctrine.yaml",
             "./src/Entity/.gitignore",
             "./src/Repository/.gitignore"
+        ]
+    },
+    "doctrine/doctrine-fixtures-bundle": {
+        "version": "3.0",
+        "recipe": {
+            "repo": "github.com/symfony/recipes",
+            "branch": "master",
+            "version": "3.0",
+            "ref": "e5b542d4ef47d8a003c91beb35650c76907f7e53"
+        },
+        "files": [
+            "./src/DataFixtures/AppFixtures.php"
         ]
     },
     "doctrine/doctrine-migrations-bundle": {
@@ -82,11 +97,20 @@
     "doctrine/sql-formatter": {
         "version": "1.1.1"
     },
+    "dompdf/dompdf": {
+        "version": "v1.0.2"
+    },
     "egulias/email-validator": {
         "version": "3.1.1"
     },
     "friendsofphp/proxy-manager-lts": {
         "version": "v1.0.3"
+    },
+    "fzaninotto/faker": {
+        "version": "v1.9.2"
+    },
+    "imagine/imagine": {
+        "version": "1.2.4"
     },
     "laminas/laminas-code": {
         "version": "3.4.1"
@@ -97,11 +121,30 @@
     "laminas/laminas-zendframework-bridge": {
         "version": "1.2.0"
     },
+    "liip/imagine-bundle": {
+        "version": "1.8",
+        "recipe": {
+            "repo": "github.com/symfony/recipes-contrib",
+            "branch": "master",
+            "version": "1.8",
+            "ref": "5a5bdc2d0e2533ed6935d5ae562f2b318a8fc1ee"
+        },
+        "files": [
+            "./config/packages/liip_imagine.yaml",
+            "./config/routes/liip_imagine.yaml"
+        ]
+    },
     "monolog/monolog": {
         "version": "2.2.0"
     },
     "nikic/php-parser": {
         "version": "v4.10.5"
+    },
+    "phenx/php-font-lib": {
+        "version": "0.5.2"
+    },
+    "phenx/php-svg-lib": {
+        "version": "v0.3.3"
     },
     "phpdocumentor/reflection-common": {
         "version": "2.2.0"
@@ -126,6 +169,9 @@
     },
     "psr/log": {
         "version": "1.1.4"
+    },
+    "sabberworm/php-css-parser": {
+        "version": "8.3.1"
     },
     "sensio/framework-extra-bundle": {
         "version": "5.2",
@@ -377,6 +423,9 @@
     },
     "symfony/polyfill-php80": {
         "version": "v1.22.1"
+    },
+    "symfony/polyfill-php81": {
+        "version": "v1.23.0"
     },
     "symfony/process": {
         "version": "v5.2.7"

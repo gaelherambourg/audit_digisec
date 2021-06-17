@@ -50,10 +50,16 @@ class Recommandation
      */
     private $remarques;
 
+    /**
+     * @ORM\OneToMany(targetEntity=AuditControle::class, mappedBy="recommandation")
+     */
+    private $audit_controles;
+
     public function __construct()
     {
         $this->points_controle = new ArrayCollection();
         $this->remarques = new ArrayCollection();
+        $this->audit_controles = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -163,6 +169,36 @@ class Recommandation
             // set the owning side to null (unless already changed)
             if ($remarque->getRecommandation() === $this) {
                 $remarque->setRecommandation(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|AuditControle[]
+     */
+    public function getAuditControles(): Collection
+    {
+        return $this->audit_controles;
+    }
+
+    public function addAuditControle(AuditControle $auditControle): self
+    {
+        if (!$this->audit_controles->contains($auditControle)) {
+            $this->audit_controles[] = $auditControle;
+            $auditControle->setRecommandation($this);
+        }
+
+        return $this;
+    }
+
+    public function removeAuditControle(AuditControle $auditControle): self
+    {
+        if ($this->audit_controles->removeElement($auditControle)) {
+            // set the owning side to null (unless already changed)
+            if ($auditControle->getRecommandation() === $this) {
+                $auditControle->setRecommandation(null);
             }
         }
 

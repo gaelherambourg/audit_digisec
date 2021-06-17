@@ -26,8 +26,12 @@ fieldset .box {
 }
 
 footer{
-    padding: 30px 0;
+    padding: 20px 0;
     margin-bottom: 0;
+}
+
+.navbar-brand{
+    background-color: #191970
 }
 
 .navbar a,
@@ -57,8 +61,8 @@ footer{
     width: 14,2%;
 }
 
-.titre-audit{
-    margin:50px 0px 10px 0px;
+.titre-general{
+    margin:80px 0px 10px 0px;
 }
 
 .titre-utilisateur{
@@ -85,4 +89,26 @@ aside{
     background-color: transparent;
     border: none;
     cursor: pointer;
+}
+.defaut{
+    width: 80px;
+}
+.dateAudit{
+    width: 80px;
+}
+progress{
+    margin-top: 3px;
+}
+.maturiteN1{
+    margin: auto;
+}
+
+
+/* Nouvelles règles si la fenêtre fait au plus 1024px de large */
+@media all and (max-width: 768px)
+{
+    .auditMobile
+    {
+        display: none;
+    }
 }

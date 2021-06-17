@@ -20,3 +20,17 @@ public/img/logos/
 public/preuves/fichiers/
 
 public/preuves/images/
+
+composer.json
+
+composer.lock
+
+public/pdf/audits/
+
+###> liip/imagine-bundle ###
+/public/media/cache/
+###< liip/imagine-bundle ###
+
+public/img/
+
+*.lock

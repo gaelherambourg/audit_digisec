@@ -50,21 +50,16 @@ class CsvForm
      */
     private $pointControleCsv;
 
-
-    /**
-     * @return UploadedFile|null
-     */
-    public function getReferentielCsv(): ?UploadedFile
+    public function getReferentielCsv()
     {
         return $this->referentielCsv;
     }
 
-    /**
-     * @param UploadedFile|null $referentielCsv
-     */
-    public function setReferentielCsv(?UploadedFile $referentielCsv): void
+    public function setReferentielCsv($referentielCsv)
     {
         $this->referentielCsv = $referentielCsv;
+
+        return $this;
     }
 
     /**

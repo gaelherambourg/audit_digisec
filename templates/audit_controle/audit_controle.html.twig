@@ -16,11 +16,42 @@
             <div><!-- Id du chapitre et son libellé -->
             {{recommandation.chapitre.id}} - {{recommandation.chapitre.libelle}}
             </div>
-            <div class="mt-5" id="idReco" data-id="{{recommandation.id}}"> <!-- Index référentiel de la recommandation et libellé de la recommandation -->
-            {{recommandation.indexReferentiel}} - {{recommandation.libelle}}
+            <div class="mt-5 columns is-vcentered" id="idReco" data-id="{{recommandation.id}}"> <!-- Index référentiel de la recommandation et libellé de la recommandation -->
+                <div class="column is-8 has-text-right mr-5">
+                    {{recommandation.indexReferentiel}} - {{recommandation.libelle}} 
+                </div>
+                <div class="columns is-4 has-text-left">
+                    <progress class="progress is-info is-small" value="{{pourcentageValide}}" max="100">100%</progress>
+                </div> 
             </div>
-            <div class="mt-5"><!-- Description de la recommandation -->
+            <div class="mt-5 mr-1 has-text-justified"><!-- Description de la recommandation -->
             {{recommandation.description}}
+            </div>
+            <div class="columns is-mobile mt-5">
+                <div class="column is-4">
+                    <label class="label has-text-link">Maturité</label>
+                </div>
+                <div class="column is-2">
+                    <div class="control input is-link has-text-centered">
+                    {% if maturiteReco == 0 %}
+                        <p class="maturiteN1">0<p>
+                    {% else %}                        
+                        <p class="maturiteN1">{{maturiteReco|number_format(2)}}<p>
+                    {% endif %}
+                    </div>
+                </div>
+                <div class="column is-2 has-text-centered">
+                    <label class="label has-text-link">Maturité N-1</label>
+                </div>
+                <div class="column is-2">
+                    <div class="control input is-link has-text-centered">
+                    {% if maturiteRecoN1 is not null %}
+                        <p class="maturiteN1">{{maturiteRecoN1|number_format(2)}}<p>
+                    {% else %}
+                        <p class="maturiteN1">N/A<p>
+                    {% endif %}
+                    </div>
+                </div>
             </div>
             <div class="columns is-mobile mt-5">
                 <div class="column is-4">
@@ -30,6 +61,20 @@
                     {{ form_widget(form_audit_controle.remarque.remarque, {'attr': {'class': 'input is-link', 'placeholder': 'Remarque'}}) }}
                 </div>
             </div>
+            {% if ancienAudit is not null %}
+                {% for remarque in ancienAudit.remarques %}
+                    {% if remarque.recommandation.id == recommandation.id %}
+                    <div class="columns is-mobile">
+                        <div class="column is-4">
+                            <label class="label has-text-link">Remarque N-1</label>
+                        </div>
+                        <div class="column is-6">
+                            <div class="control textarea has-text-justified is-link">{{remarque.remarque}}</div>
+                        </div>
+                    </div>
+                    {% endif %}
+                {% endfor %}
+            {% endif %}
         </fieldset>
         <fieldset class="box">
 			<legend class="label">Contrôles</legend>
@@ -41,21 +86,49 @@
                             {{ form_widget(audit_controle.id) }}
                         </div>
                     </div>
+                    
                     <div class="columns is-mobile">
                         <div class="column is-4">
-                            {{ form_label(audit_controle.pointControle, null, {'attr': {'class': 'has-text-link'} }) }}
+                            <label class="label has-text-link">Point de contrôle</label>
                         </div>
-                        <div class="column is-6">
-                            {{ form_widget(audit_controle.pointControle, {'attr': {'class': 'input is-link has-text-weight-bold'} }) }}
+                        <div class="column is-6 has-text-left has-text-weight-bold">
+                        {% set idPointControle = "" %}
+                            {% for auditControle in listeAuditControle %}
+                                {% if auditControle.id == audit_controle.vars.value.id %}
+                                    {{auditControle.pointControle.libelle}}
+                                    {% set idPointControle = auditControle.pointControle.id %}
+                                {% endif %}
+                            {% endfor %}
                         </div>
                     </div>
-                    <div class="columns is-mobile">
+                    <div class="columns is-mobile is-vcentered">
                         <div class="column is-4">
                             {{ form_label(audit_controle.note, null, {'attr': {'class': 'has-text-link'} }) }}
                         </div>
-                        <div class="column is-6">
+                        <div class="column is-2">
                             {{ form_widget(audit_controle.note, {'attr': {'class': 'input is-link', 'placeholder': 'Note'}}) }}
                         </div>
+                        <div class="column is-2 has-text-centered">
+                            <label class="label has-text-link">Maturité N-1</label>
+                        </div>
+                    
+                    {% if ancienAudit is not null %}
+                        {% for auditControle in ancienAudit.auditsControle %}
+                            {% if auditControle.pointControle.id == idPointControle %}
+                            <div class="column is-2">
+                                <div class="control input is-link has-text-centered">
+                                    <p class="maturiteN1">{{auditControle.note}}<p>
+                                </div>
+                            </div>
+                            {% endif %}
+                        {% endfor %}
+                    {% else %}
+                        <div class="column is-2">
+                                <div class="control input is-link has-text-centered">
+                                    <p class="maturiteN1">N/A<p>
+                                </div>
+                            </div>
+                    {% endif %}
                     </div>
                     <div class="columns is-mobile">
                         <div class="column is-4">
@@ -65,7 +138,7 @@
                             {{ form_widget(audit_controle.remarque, {'attr': {'class': 'input is-link', 'placeholder': 'Remarque'}}) }}
                         </div>
                     </div>
-
+                
                     <div class="columns is-mobile">
                                 <div class="column is-4">
                                     <label class="label has-text-link">Remediations</label>
@@ -75,7 +148,7 @@
                     {% for auditControle in listeAuditControle %}
                         {% for remediation in auditControle.pointControle.remediations %}
 
-                            {% if remediation.pointControle.id == audit_controle.pointControle.vars.value %}
+                            {% if remediation.pointControle.id == auditControle.pointControle.id and auditControle.id == audit_controle.vars.value.id %}
 
                                     {% if (remediation in auditControle.remediations) %}
                                         <div>
@@ -219,5 +292,6 @@
 {% endblock %}
 
 {% block javascripts %}
+    {{ parent() }}
 	<script type="text/javascript" src="{{asset('js/preuve.js')}}"></script>
 {% endblock %}

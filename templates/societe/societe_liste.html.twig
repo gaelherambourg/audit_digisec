@@ -5,7 +5,7 @@
 
 {% block body %}
 
-	<div class="titre-audit has-text-centered ">
+	<div class="titre-general has-text-centered ">
 		<h1 class="title is-2">Liste des sociétés</h1>
 	</div>
 	<div class="titre-utilisateur column is-3 is-offset-9">
@@ -19,8 +19,8 @@
 			</strong>
 			<span>{{ app.user.username }}</span>
 		</p>
-	</div>
-
+	</div>	
+	
 	<div
 		class="container is-widescreen is-centered is-vcentered has-text-centered">
 
@@ -48,7 +48,7 @@
 					<th>
 						<abbr title="Nom de l'entreprise">Nom de l'entreprise</abbr>
 					</th>
-					<th>
+					<th class="auditMobile">
 						<abbr title="Immatriculation RCS">Immatriculation RCS</abbr>
 					</th>
 					<th>
@@ -57,7 +57,7 @@
 					<th>
 						<abbr title="téléphone">Téléphone Contact</abbr>
 					</th>
-					<th>
+					<th class="auditMobile">
 						<abbr title="Email">Email Contact</abbr>
 					</th>
 				</tr>
@@ -88,13 +88,13 @@
 						{% for societe in toutes_les_societes %}
 							<tr class="is-bordered" id="{{ societe.id }}">
 								<td>{{societe.nom}}</td>
-								<td>{{societe.immat_rcs}}</td>
+								<td class="auditMobile">{{societe.immat_rcs}}</td>
 
 								<td>{{societe.contact[0].nom_contact}}
 									{{societe.contact[0].prenom_contact }}</td>
 								<!-- On prend le premier contact dans la liste des contacts de la société-->
 								<td>{{societe.contact[0].tel_contact}}</td>
-								<td>{{societe.contact[0].email_contact}}</td>
+								<td class="auditMobile">{{societe.contact[0].email_contact}}</td>
 							</tr>
 						{% endfor %}
 					{% endif %}
@@ -122,6 +122,8 @@
 				</a>
 			</div>
 		</div>
+	<div class="column"></div>
+		
 
 	</div>
 {% endblock %}

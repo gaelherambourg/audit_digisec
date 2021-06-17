@@ -20,7 +20,7 @@ class CsvFormType extends AbstractType
                 'label' => 'Chapitres : ',
             ])
             ->add('recommandationCsv', FileType::class, [
-                'label' => 'Recommendations : ',
+                'label' => 'Recommandations : ',
             ])
             ->add('typePreuveCsv', FileType::class, [
                 'label' => 'Preuves : ',

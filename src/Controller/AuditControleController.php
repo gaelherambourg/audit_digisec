@@ -40,40 +40,73 @@ class AuditControleController extends AbstractController
                                    AuditRepository $auditRepository,
                                    PreuveRepository $preuveRepository,
                                    RemarqueRepository $remarqueRepository,
-                                   RecommandationRepository $recommandationRepository,
-                                   ImagePreuveServices $imagePreuveServices,
-                                   FichierPreuveServices $fichierPreuveServices)
+                                   RecommandationRepository $recommandationRepository)
     {
 
+        //On récupère l'id de l'audit
         $id = $request->get('id');
-        //$audit = $auditControleRepository->findById($id);
-        //$audit = $auditRepository->find($id);
+        //On requête en bdd pour récupérer l'audit associé à l'id
         $audit = $auditRepository->findAuditAllInformation($id);
+        //On requête en bdd pour récupérer la recommandation grâce à l'id
         $recommandation = $entityManager->find(Recommandation::class, $id_recommandation);
+        //On vérifie combien de recommandations existent pour ce référentiel
         $nbReco = $recommandationRepository->nbRecommandationByReferentieo($audit->getReferentiel()->getId());
+        //On instancie une nouvelle liste d'audit_controle
         $listeAuditControle = new ArrayCollection();
+        //On instancie une nouvelle preuve
         $preuve = new Preuve();
+        //On récupère la remarque associé à l'audit en cours et à la recommandation en cours
         $remarque = $remarqueRepository->findByAuditAndRecommandation($id, $id_recommandation);
-        
+        //On remplit la liste d'audit_controles avec les points de controles équivalents au référentiel de l'audit en cours
         $listeAuditControle = $auditControleRepository->findAllPointControleByAuditAndRecommandation($id, $id_recommandation);
-        dump($listeAuditControle);
-         //Création des formulaires
-        $audit_form_controle = $this->createForm(AuditPointControleType::class, ['audit_controle' => $listeAuditControle, 'remarque' => $remarque]);
-        //$audit_controle_form = $this->createForm(AuditControlFormType::class, $auditControle);
         
+
+        //Recherche d'un éventuel ancien audit
+        $ancienAudit = null;
+        $listeAuditParSociete = $auditRepository->findAuditBySociete($audit->getSociete()->getId());
+
+        $sommeMaturite_N1 = null;
+        if(count($listeAuditParSociete) > 1 && $listeAuditParSociete[1]->getId() != $id){
+            $ancienAudit = $listeAuditParSociete[1];
+            foreach($ancienAudit->getAuditsControle() as $auditControle){                
+                if($auditControle->getRecommandation()->getId() == $id_recommandation){
+                    $sommeMaturite_N1 += $auditControle->getNote();
+                }
+            }           
+        }
+        
+        $sommeMaturite = 0;
+        $nbPointControle = 0;
+        $nbPointControleValide = 0;
+        foreach($listeAuditControle as $auditControle){
+            if($auditControle->getEstValide() == true){
+                $nbPointControleValide++;
+            }
+            $nbPointControle++;
+            $sommeMaturite += $auditControle->getNote();
+        }
+        $maturiteReco = $sommeMaturite/(count($listeAuditControle));
+        $maturiteRecoN1 = null;
+        if($sommeMaturite_N1 != null){
+            $maturiteRecoN1 = $sommeMaturite_N1/(count($listeAuditControle));
+        }
+        $pourcentageValide = ($nbPointControleValide/$nbPointControle)*100;
+
+         //Création du formulaire
+        $audit_form_controle = $this->createForm(AuditPointControleType::class, ['audit_controle' => $listeAuditControle, 'remarque' => $remarque]);
         $preuve_form = $this->createForm(PreuveFormType::class, $preuve);
 
         $audit_form_controle->handleRequest($request);
         
         $preuves = $preuveRepository->findAll();
-
         $requete = $request->request->all();
 
         // Si le formulaire est soumis
         if ($audit_form_controle->isSubmitted() && $audit_form_controle->isValid()) {
 
+            //On vérifie que tous les points de controles de la recommandation en cours aient au moins une preuve
+            //Si ce n'est pas le cas on recharge la page en affichant un message d'erreur
             foreach($listeAuditControle as $auditControle){
-                dump($auditControle->getPreuves()->count());
                 if($auditControle->getPreuves()->count() < 1){
                     $this->addFlash("danger", "Tous les points de contrôle doivent avoir au moins une preuve");
                     return $this->redirectToRoute('audit_controle', ['id' => $id, 'id_recommandation' => $id_recommandation]);
@@ -86,6 +119,7 @@ class AuditControleController extends AbstractController
                 foreach($auditControle->getRemediations() as $remediation){
                     $auditControle->removeRemediation($remediation);
                 }
+                $auditControle->setEstValide(true);
             }
 
             foreach($audit_form_controle->getData("[audit_controle]") as $audit_controle){
@@ -96,22 +130,30 @@ class AuditControleController extends AbstractController
                         }
                     }
                 }
+                
             }
-            //FIN TODOO A AMELIORER
+            //FIN TODO A AMELIORER
 
             // Sauvegarde en Bdd
             $entityManager->persist($audit);
-            
             $entityManager->flush();
 
+            //A l'enregistrement de la recommandation, on vérifie si celle-ci est la dernière du référentiel, si oui, on passe à la validation de l'audit
+            //sinon, on passe à la recommandation suivante
             if($id_recommandation < $nbReco){
                 $id_suivant_recommandation = $id_recommandation + 1;
                 // On redirige vers la recommandation suivante
                 return $this->redirectToRoute('audit_controle', ['id' => $id, 'id_recommandation' => $id_suivant_recommandation]);
 
             }else{
+                $listeAuditControles = $auditControleRepository->findAllPointControleByAudit($id);
+                foreach($listeAuditControles as $auditControle){
+                    if($auditControle->getEstValide() == false){
+                        return $this->redirectToRoute('audit_controle', ['id' => $id, 'id_recommandation' => $auditControle->getRecommandation()->getId()]);
+                    }  
+                }
                 //On redirige vers la liste d'audit si c'est la derniere recommandation de l'audit
-                return $this->redirectToRoute('audit_liste');
+                return $this->redirectToRoute('audit_validation', ['id' => $id]);
             }
         }
 
@@ -121,7 +163,11 @@ class AuditControleController extends AbstractController
             'audit' => $audit,
             'preuves' => $preuves,
             'recommandation' => $recommandation,
-            'listeAuditControle' => $listeAuditControle
+            'listeAuditControle' => $listeAuditControle,
+            'pourcentageValide' => $pourcentageValide,
+            'ancienAudit' => $ancienAudit,
+            'maturiteReco' => $maturiteReco,
+            'maturiteRecoN1' => $maturiteRecoN1
         ]);
     }
 }

@@ -1,0 +1,22 @@
+.logo{
+    text-align: center;
+}
+
+.h1{
+    color: red;
+    text-align: center;
+    margin-top: 20px;
+}
+h4{
+    margin-top: 30px;
+}
+.libellePC{
+    margin-top: 30px;
+    page-break-before: always;
+}
+img{
+    margin: 10px;
+}
+.imgPreuve{
+    text-align: center;
+}

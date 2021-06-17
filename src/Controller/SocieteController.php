@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Entity\Adresse;
+use App\Entity\Audit;
 use App\Entity\societeDigisec;
 use App\Entity\Contact;
 use App\Entity\Societe;
@@ -88,7 +89,8 @@ class SocieteController extends AbstractController
      */
     public function listerSociete(
         Request $request,
-        SocieteRepository $societeRepository
+        SocieteRepository $societeRepository,
+        EntityManagerInterface $entityManager
     ): Response {
 
         //Création du formulaire de recherche
@@ -101,10 +103,14 @@ class SocieteController extends AbstractController
         //On récupère toutes les sociétés en bdd
         $toutes_les_societes = $societeRepository->findAllInformations();
 
+        //Si le formulaire est soumis et valide
         if ($form->isSubmitted() && $form->isValid()) {
+            //On récupère les données saisies par l'utilisateur
             $recherche_utilisateur = $form->get('recherche')->getData();
-
+            //On requête la bdd pour trouver les résultats correspondant à la recherche
             $societes_recherchees = $societeRepository->recherche($recherche_utilisateur);
+
+            //On redirige vers la liste de société avec les résultats de la recherche
             return $this->render('societe/societe_liste.html.twig', [
                 'toutes_les_societes' => $toutes_les_societes,
                 'baseVide' => 'Aucune société ne correspond à votre recherche.',
@@ -114,6 +120,7 @@ class SocieteController extends AbstractController
             ]);
         }
 
+        //On dirige vers la liste de toutes les sociétés
         return $this->render('societe/societe_liste.html.twig', [
             'toutes_les_societes' => $toutes_les_societes,
             'societes_recherchees' => $societes_recherchees,

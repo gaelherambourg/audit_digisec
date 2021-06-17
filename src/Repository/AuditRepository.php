@@ -18,7 +18,7 @@ class AuditRepository extends ServiceEntityRepository
     {
         parent::__construct($registry, Audit::class);
     }
-
+    //Récupère toutes les informations d'un audit
     public function findAuditAllInformation($id)
     {
         return $this->createQueryBuilder('a')
@@ -29,6 +29,16 @@ class AuditRepository extends ServiceEntityRepository
             ->setParameter('val', $id)
             ->getQuery()
             ->getSingleResult()
+        ;
+    }
+
+    public function findAuditBySociete($id_societe){
+        return $this->createQueryBuilder('a')
+            ->andWhere('a.societe = :val')
+            ->setParameter('val', $id_societe)
+            ->orderBy('a.date_creation', 'DESC')
+            ->getQuery()
+            ->getResult()
         ;
     }
 

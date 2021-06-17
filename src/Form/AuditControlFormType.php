@@ -32,13 +32,8 @@ class AuditControlFormType extends AbstractType
                 "mapped"=>false
             ])
             ->add('remarque')
-            ->add('note')
-            ->add('pointControle', EntityType::class,
-            [
-                "class" => PointControle::class,
-                "choice_label" => "libelle",
-                'label' => 'Point de controle',
-                "disabled" => true,
+            ->add('note', IntegerType::class, [
+                'label' => "Maturité"
             ])
             /*  ->add('remediations', EntityType::class,
             [

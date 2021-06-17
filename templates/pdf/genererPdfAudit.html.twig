@@ -1,0 +1,73 @@
+<head>
+    <link rel="stylesheet" href="{{ app.request.schemeAndHttpHost }}/audit_digisec/public/css/pdf.css">
+</head>
+
+
+{% block body %}
+    <div class="logo">
+        <img src="{{ app.request.schemeAndHttpHost }}/audit_digisec/public/img/LOGO-DIGISEC-FULL-DETOURE.png">
+    </div>
+    <h1 class="h1">{{audit.nom}}</h1>
+
+    <h4>Description de l'audit</h4>
+    <div>{{audit.description}}</div>
+
+    <h4>Objectif et périmetre</h4>
+    <div>{{audit.objectifPerimetre}}</div>
+
+    <h4>Rôles et responsabilités</h4>
+    <div>{{audit.roleResponsabilite}}</div>
+
+    <h4>Contraintes</h4>
+    <div>{{audit.contraintes}}</div>
+
+    {% for auditControle in audit.auditsControle %}
+        
+        <h3 class="libellePC">{{auditControle.PointControle.libelle}}</h3>
+        <div>Maturité : {{auditControle.note}}</div>
+        <h4>Remarque</h4>
+        <div>{{auditControle.remarque}}</div>
+
+        <h4>Preuves</h4>
+        {% for preuve in auditControle.preuves %}
+
+            {% if preuve.texte is not empty %}
+                <div>{{preuve.texte}}</div>
+            {% elseif preuve.fichier is not empty %}
+                {% set fichier = 'preuves/fichiers/' ~ preuve.fichier %}
+                <div>
+                    <a href="{{ absolute_url(asset('' ~ fichier)) }}">{{preuve.fichier}}</a>
+                </div>
+            {% else %}
+                {% set img = 'media/cache/miniature/preuves/images/' ~ preuve.image %}
+               <!-- <img src="{{ asset('' ~ img| imagine_filter('miniature')) }}"> -->
+               <div class="imgPreuve">
+                    <img src="{{ absolute_url(asset('' ~ img)) }}">
+               </div>
+            {% endif %}
+            
+        {% endfor %}
+
+        <h4>Remédiations</h4>
+        {% for remediation in auditControle.remediations %}
+            <div>{{remediation.libelle}}</div>
+        {% endfor %}
+
+
+
+    {% endfor %}
+
+    <h4>Ecarts et constatations</h4>
+    <div>{{audit.ecartConstatation}}</div>
+    
+    <h4>Recommandations</h4>
+    <div>{{audit.recommandations}}</div>
+    
+    <h4>Commentaire du client</h4>
+    <div>{{audit.commentaireClient}}</div>
+    
+    <h4>Remarque générale</h4>
+    <div>{{audit.remarqueGenerale}}</div>
+
+{% endblock %}
+

@@ -30,15 +30,15 @@ class SocieteRepository extends ServiceEntityRepository
         return $query->getSingleResult();
     }
 
+    //Recherche de la saisie formulaire societe en BDD
     public function recherche($recherche_utilisateur)
     {
-        //Recherche de la saisie formulaire societe en BDD
         $queryBuilder = $this->createQueryBuilder('s')
             ->leftJoin('s.adresse', 'a')->addSelect('a')
             ->join('s.contact', 'c')->addSelect('c');
         $queryBuilder
-            ->andWhere('s.nom LIKE :ru')
-            ->setParameter(':ru', '%' . $recherche_utilisateur . '%');
+            ->andWhere('s.nom LIKE :ru')->setParameter(':ru', '%' . $recherche_utilisateur . '%')
+            ->andWhere('s.est_digisec = 0');
         return $queryBuilder->getQuery()->getResult();
     }
 
@@ -58,6 +58,8 @@ class SocieteRepository extends ServiceEntityRepository
         $queryBuilder = $this->createQueryBuilder('s')
             ->leftJoin('s.adresse', 'a')->addSelect('a')
             ->join('s.contact', 'c')->addSelect('c');
+        $queryBuilder
+            ->andWhere('s.est_digisec = 0');
         $query = $queryBuilder->getQuery();
         return $query->getArrayResult();
     }

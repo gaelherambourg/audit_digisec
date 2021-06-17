@@ -42,4 +42,5 @@ class ImagePreuveServices
     {
         unlink($this->getTargetDirectory().$pictureFilename);
     }
+
 }

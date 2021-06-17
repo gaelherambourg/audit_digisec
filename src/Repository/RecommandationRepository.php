@@ -18,7 +18,7 @@ class RecommandationRepository extends ServiceEntityRepository
     {
         parent::__construct($registry, Recommandation::class);
     }
-
+    //Compte le nombre de recommandation par référentiel
     public function nbRecommandationByReferentieo($id_referentiel){
         $queryBuilder = $this->createQueryBuilder('r');
         return $queryBuilder
@@ -30,6 +30,17 @@ class RecommandationRepository extends ServiceEntityRepository
             ->getSingleScalarResult();
     }
 
+    public function findByExampleField($id)
+    {
+        return $this->createQueryBuilder('r')
+            ->join('r.chapitre','c')->addSelect('c')
+            ->join('c.referentiel','ref')->addSelect('ref')
+            ->andWhere('c.referentiel = :val')
+            ->setParameter('val', $id)
+            ->getQuery()
+            ->getResult()
+        ;
+    }
 
     // /**
     //  * @return Recommandation[] Returns an array of Recommandation objects

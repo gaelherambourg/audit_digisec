@@ -33,7 +33,7 @@ class AuditControleRepository extends ServiceEntityRepository
             ->getResult()
         ;
     }
-    
+    //Récupère tous les points de contrôles (avec remédiations) d'une recommandation d'un audit
     public function findAllPointControleByAuditAndRecommandation($id, $id_recommandation){
         $queryBuilder = $this->createQueryBuilder('c')
             ->join('c.pointControle','p')->addSelect('p')
@@ -43,6 +43,18 @@ class AuditControleRepository extends ServiceEntityRepository
         $queryBuilder
             ->andWhere('c.audit = :id')->setParameter('id',$id)
             ->andWhere('r.id = :id_recommandation')->setParameter('id_recommandation', $id_recommandation);
+        $query = $queryBuilder->getQuery();
+        return $query->getResult();
+    }
+
+    public function findAllPointControleByAudit($id){
+        $queryBuilder = $this->createQueryBuilder('c')
+            ->join('c.pointControle','p')->addSelect('p')
+            ->join('p.recommandation','r')->addSelect('r')
+            ->leftJoin('c.preuves', 'pr')->addSelect('pr')
+            ->leftJoin('p.remediations', 'e')->addSelect('e');
+        $queryBuilder
+            ->andWhere('c.audit = :id')->setParameter('id',$id);
         $query = $queryBuilder->getQuery();
         return $query->getResult();
     }
