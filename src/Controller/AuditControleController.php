@@ -60,6 +60,38 @@ class AuditControleController extends AbstractController
         //On remplit la liste d'audit_controles avec les points de controles équivalents au référentiel de l'audit en cours
         $listeAuditControle = $auditControleRepository->findAllPointControleByAuditAndRecommandation($id, $id_recommandation);
         
+
+        //Recherche d'un éventuel ancien audit
+        $ancienAudit = null;
+        $listeAuditParSociete = $auditRepository->findAuditBySociete($audit->getSociete()->getId());
+
+        $sommeMaturite_N1 = null;
+        if(count($listeAuditParSociete) > 1 && $listeAuditParSociete[1]->getId() != $id){
+            $ancienAudit = $listeAuditParSociete[1];
+            foreach($ancienAudit->getAuditsControle() as $auditControle){                
+                if($auditControle->getRecommandation()->getId() == $id_recommandation){
+                    $sommeMaturite_N1 += $auditControle->getNote();
+                }
+            }           
+        }
+        
+        $sommeMaturite = 0;
+        $nbPointControle = 0;
+        $nbPointControleValide = 0;
+        foreach($listeAuditControle as $auditControle){
+            if($auditControle->getEstValide() == true){
+                $nbPointControleValide++;
+            }
+            $nbPointControle++;
+            $sommeMaturite += $auditControle->getNote();
+        }
+        $maturiteReco = $sommeMaturite/(count($listeAuditControle));
+        $maturiteRecoN1 = null;
+        if($sommeMaturite_N1 != null){
+            $maturiteRecoN1 = $sommeMaturite_N1/(count($listeAuditControle));
+        }
+        $pourcentageValide = ($nbPointControleValide/$nbPointControle)*100;
+
          //Création du formulaire
         $audit_form_controle = $this->createForm(AuditPointControleType::class, ['audit_controle' => $listeAuditControle, 'remarque' => $remarque]);
         $preuve_form = $this->createForm(PreuveFormType::class, $preuve);
@@ -131,7 +163,11 @@ class AuditControleController extends AbstractController
             'audit' => $audit,
             'preuves' => $preuves,
             'recommandation' => $recommandation,
-            'listeAuditControle' => $listeAuditControle
+            'listeAuditControle' => $listeAuditControle,
+            'pourcentageValide' => $pourcentageValide,
+            'ancienAudit' => $ancienAudit,
+            'maturiteReco' => $maturiteReco,
+            'maturiteRecoN1' => $maturiteRecoN1
         ]);
     }
 }

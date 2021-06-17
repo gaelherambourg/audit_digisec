@@ -32,6 +32,16 @@ class AuditRepository extends ServiceEntityRepository
         ;
     }
 
+    public function findAuditBySociete($id_societe){
+        return $this->createQueryBuilder('a')
+            ->andWhere('a.societe = :val')
+            ->setParameter('val', $id_societe)
+            ->orderBy('a.date_creation', 'DESC')
+            ->getQuery()
+            ->getResult()
+        ;
+    }
+
     // /**
     //  * @return Audit[] Returns an array of Audit objects
     //  */

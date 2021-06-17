@@ -96,6 +96,13 @@ aside{
 .dateAudit{
     width: 80px;
 }
+progress{
+    margin-top: 3px;
+}
+.maturiteN1{
+    margin: auto;
+}
+
 
 /* Nouvelles règles si la fenêtre fait au plus 1024px de large */
 @media all and (max-width: 768px)
