@@ -129,13 +129,10 @@ class AppFixtures extends Fixture
             $manager->flush();
         }
         $echelleNotationGeneral = new EchelleNotation();
-        $echelleNotationGeneral->setEchelle("0 - 5");
-        $echelleNotationPetiteStructure = new EchelleNotation();
-        $echelleNotationPetiteStructure->setEchelle("0 - 4");
+        $echelleNotationGeneral->setEchelle("NA - 0 - 1 - 2 - 3 - 4 - 5");
         $echelleNotationBasique = new EchelleNotation();
-        $echelleNotationBasique->setEchelle("0 - 3");
+        $echelleNotationBasique->setEchelle("NA - 0 - 1 - 2 - 3");
         $manager->persist($echelleNotationGeneral);
-        $manager->persist($echelleNotationPetiteStructure);
         $manager->persist($echelleNotationBasique);
         $manager->flush();
 
