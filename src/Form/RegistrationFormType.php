@@ -18,42 +18,24 @@ class RegistrationFormType extends AbstractType
         $builder
             ->add('username', TextType::class, [
                 'label' => 'Nom d\'utilisateur : ',
+                'constraints' => [
+                    new NotBlank([
+                        'message' => 'Ce champ ne doit pas être vide'
+                    ]),
+                    new Length([
+                        'max' => 50,
+                        'maxMessage' => 'Merci de renseigner 50 caractères maximum'
+                    ])
+                ]
             ])
             ->add('prenom', TextType::class, [
-                'label' => 'Prénom : ',
-                'constraints' => [
-                    new NotBlank([
-                        'message' => 'Ce champ ne doit pas être vide'
-                    ]),
-                    new Length([
-                        'max' => 50,
-                        'maxMessage' => 'Merci de renseigner 50 caractères maximum'
-                    ])
-                ]
+                'label' => 'Prénom : '
             ])
             ->add('nom', TextType::class, [
-                'label' => 'Nom : ',
-                'constraints' => [
-                    new NotBlank([
-                        'message' => 'Ce champ ne doit pas être vide'
-                    ]),
-                    new Length([
-                        'max' => 50,
-                        'maxMessage' => 'Merci de renseigner 50 caractères maximum'
-                    ])
-                ]
+                'label' => 'Nom : '
             ])
             ->add('email', TextType::class, [
-                'label' => 'Email : ',
-                'constraints' => [
-                    new NotBlank([
-                        'message' => 'Ce champ ne doit pas être vide'
-                    ]),
-                    new Length([
-                        'max' => 180,
-                        'maxMessage' => 'Merci de renseigner 180 caractères maximum'
-                    ])
-                ]
+                'label' => 'Email : '
             ])
             
             ->add('plainPassword', PasswordType::class, [
@@ -64,11 +46,11 @@ class RegistrationFormType extends AbstractType
                 'attr' => ['autocomplete' => 'new-password'],
                 'constraints' => [
                     new NotBlank([
-                        'message' => 'Please enter a password',
+                        'message' => 'Ce champ ne doit pas être vide',
                     ]),
                     new Length([
                         'min' => 6,
-                        'minMessage' => 'Your password should be at least {{ limit }} characters',
+                        'minMessage' => 'Votre mot de passe doit contenir minimum {{ limit }} caractères',
                         // max length allowed by Symfony for security reasons
                         'max' => 4096,
                     ]),
