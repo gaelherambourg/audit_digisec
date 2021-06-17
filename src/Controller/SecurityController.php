@@ -49,7 +49,7 @@ class SecurityController extends AbstractController
     }
 
     /**
-    * @Route("/oubli-pass", name="app_forgotten_password")
+    * @Route("/login/oubli-pass", name="app_forgotten_password")
     */
     public function oubliPass(Request $request,
                               UtilisateurRepository $utilisateur,
