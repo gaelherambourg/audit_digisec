@@ -1,0 +1,19 @@
+{# templates/bundles/TwigBundle/Exception/error404.html.twig #}
+{# Pour tester la page d'erreur 403 --> http://localhost/audit_digisec/public/_error/403.html #}
+{# composer require symfony/twig-pack #}
+{# modifier le mode dev vers prod dans le fichier env.local #}
+{# Lien vers la doc: https://symfony.com/doc/current/controller/error_pages.html#testing-error-pages #}
+
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    <h1>Page not found</h1>
+
+<h1>403</h1>
+    <h2>Unexpected Error <b>:(</b></h2>
+    <h3>
+
+       Oups !! Vous n'êtes pas autorisé à consulter cette page :-( <br>
+    <a href="{{ path('audit_liste') }}"> revenez à la page d'accueil</a>.
+    </h3>
+{% endblock %}
