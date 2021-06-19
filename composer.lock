@@ -413,21 +413,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/doctrine/dbal.git",
-<<<<<<< HEAD
                 "reference": "f1453c5c1bedc1d60baa6849fdce9b442c79811a"
             },
             "dist": {
                 "type": "zip",
                 "url": "https://api.github.com/repos/doctrine/dbal/zipball/f1453c5c1bedc1d60baa6849fdce9b442c79811a",
                 "reference": "f1453c5c1bedc1d60baa6849fdce9b442c79811a",
-=======
-                "reference": "c800380457948e65bbd30ba92cc17cda108bf8c9"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/doctrine/dbal/zipball/c800380457948e65bbd30ba92cc17cda108bf8c9",
-                "reference": "c800380457948e65bbd30ba92cc17cda108bf8c9",
->>>>>>> parent of 03c9da2... c
                 "shasum": ""
             },
             "require": {
@@ -521,11 +512,7 @@
                     "type": "tidelift"
                 }
             ],
-<<<<<<< HEAD
             "time": "2021-06-16T21:54:12+00:00"
-=======
-            "time": "2021-04-17T17:30:19+00:00"
->>>>>>> parent of 03c9da2... c
         },
         {
             "name": "doctrine/deprecations",
@@ -8611,7 +8598,6 @@
         },
         {
             "name": "symfony/maker-bundle",
-<<<<<<< HEAD
             "version": "v1.31.1",
             "source": {
                 "type": "git",
@@ -8622,18 +8608,6 @@
                 "type": "zip",
                 "url": "https://api.github.com/repos/symfony/maker-bundle/zipball/4f57a44cef0b4555043160b8bf223fcde8a7a59a",
                 "reference": "4f57a44cef0b4555043160b8bf223fcde8a7a59a",
-=======
-            "version": "v1.31.0",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/symfony/maker-bundle.git",
-                "reference": "d01a475fb9a96a46d0c75dbc7fae6eb9a8c85ddb"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/symfony/maker-bundle/zipball/d01a475fb9a96a46d0c75dbc7fae6eb9a8c85ddb",
-                "reference": "d01a475fb9a96a46d0c75dbc7fae6eb9a8c85ddb",
->>>>>>> parent of 03c9da2... c
                 "shasum": ""
             },
             "require": {
@@ -8692,11 +8666,7 @@
             ],
             "support": {
                 "issues": "https://github.com/symfony/maker-bundle/issues",
-<<<<<<< HEAD
                 "source": "https://github.com/symfony/maker-bundle/tree/v1.31.1"
-=======
-                "source": "https://github.com/symfony/maker-bundle/tree/v1.31.0"
->>>>>>> parent of 03c9da2... c
             },
             "funding": [
                 {
@@ -8712,11 +8682,7 @@
                     "type": "tidelift"
                 }
             ],
-<<<<<<< HEAD
             "time": "2021-05-12T14:01:20+00:00"
-=======
-            "time": "2021-05-05T18:41:31+00:00"
->>>>>>> parent of 03c9da2... c
         },
         {
             "name": "symfony/phpunit-bridge",
