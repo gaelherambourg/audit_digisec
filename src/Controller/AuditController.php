@@ -34,8 +34,8 @@ class AuditController extends AbstractController
     {
 
         //On récupère la liste de tous les audits en bdd
-        $tous_les_audits = $auditRepository->findAll();
-
+        $tous_les_audits = $auditRepository->findAllAuditAllInformation();
+        dump($tous_les_audits);
         return $this->render('audit/audit_liste.html.twig', [
             'tous_les_audits' => $tous_les_audits
         ]);

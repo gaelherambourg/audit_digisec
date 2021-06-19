@@ -28,13 +28,11 @@ class AuditControle
 
     /**
      * @ORM\Column(type="text", nullable=true)
-     * @Assert\NotBlank(message="Ce champ ne doit pas être vide.")
      */
     private $remarque;
 
     /**
      * @ORM\Column(type="integer", nullable=true)
-     * @Assert\NotBlank(message="Ce champ ne doit pas être vide.")
      */
     private $note;
 
