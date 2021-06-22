@@ -11,56 +11,41 @@ class CsvForm
 {
 
     /**
-     * @Assert\NotBlank(message="Merci de sélectionner un fichier .csv")
      * @Assert\File(
      *      maxSize = "2048k",
      *      maxSizeMessage="Votre fichier .csv ne doit pas excéder 2 Mo",
-     *      mimeTypes = {"text/csv"},
-     *      mimeTypesMessage = "Merci d'uploader un fichier de type .csv"
      *              )
      */
     private $referentielCsv;
 
     /**
-     * @Assert\NotBlank(message="Merci de sélectionner un fichier .csv")
      * @Assert\File(
      *      maxSize = "2048k",
      *      maxSizeMessage="Votre fichier .csv ne doit pas excéder 2 Mo",
-     *      mimeTypes = {"text/csv"},
-     *      mimeTypesMessage = "Merci d'uploader un fichier de type .csv"
      *              )
      */
     private $chapitreCsv;
 
     /**
-     * @Assert\NotBlank(message="Merci de sélectionner un fichier .csv")
      * @Assert\File(
      *      maxSize = "2048k",
      *      maxSizeMessage="Votre fichier .csv ne doit pas excéder 2 Mo",
-     *      mimeTypes = {"text/csv"},
-     *      mimeTypesMessage = "Merci d'uploader un fichier de type .csv"
      *              )
      */
     private $recommandationCsv;
 
     /**
-     * @Assert\NotBlank(message="Merci de sélectionner un fichier .csv")
      * @Assert\File(
      *      maxSize = "2048k",
      *      maxSizeMessage="Votre fichier .csv ne doit pas excéder 2 Mo",
-     *      mimeTypes = {"text/csv"},
-     *      mimeTypesMessage = "Merci d'uploader un fichier de type .csv"
      *              )
      */
     private $pointControleCsv;
 
     /**
-     * @Assert\NotBlank(message="Merci de sélectionner un fichier .csv")
      * @Assert\File(
      *      maxSize = "2048k",
      *      maxSizeMessage="Votre fichier .csv ne doit pas excéder 2 Mo",
-     *      mimeTypes = {"text/csv"},
-     *      mimeTypesMessage = "Merci d'uploader un fichier de type .csv"
      *              )
      */
     private $remediationCsv;
@@ -128,36 +113,36 @@ class CsvForm
     /**
      * @Assert\Callback
      */
-    /*public function validateExtensionFile(ExecutionContextInterface $context)
+    public function validateExtensionFile(ExecutionContextInterface $context)
     {
-        if ($this->referentielCsv->getClientOriginalExtension() != "csv") {
+        if ($this->referentielCsv == "" || $this->referentielCsv->getClientOriginalExtension() != "csv") {
             $context->buildViolation('Veuillez télécharger un fichier .csv')
                 ->atPath('referentielCsv')
                 ->addViolation();
         }
         
-        if ($this->chapitreCsv->getClientOriginalExtension() != "csv") {
+        if ($this->chapitreCsv == "" || $this->chapitreCsv->getClientOriginalExtension() != "csv") {
             $context->buildViolation('Veuillez télécharger un fichier .csv')
                 ->atPath('chapitreCsv')
                 ->addViolation();
         }
 
-        if ($this->recommandationCsv->getClientOriginalExtension() != "csv") {
+        if ($this->recommandationCsv == "" || $this->recommandationCsv->getClientOriginalExtension() != "csv") {
             $context->buildViolation('Veuillez télécharger un fichier .csv')
                 ->atPath('recommandationCsv')
                 ->addViolation();
         }
 
-        if ($this->pointControleCsv->getClientOriginalExtension() != "csv") {
+        if ($this->pointControleCsv == "" || $this->pointControleCsv->getClientOriginalExtension() != "csv") {
             $context->buildViolation('Veuillez télécharger un fichier .csv')
                 ->atPath('pointControleCsv')
                 ->addViolation();
         }
 
-        if ($this->remediationCsv->getClientOriginalExtension() != "csv") {
+        if ($this->remediationCsv == "" || $this->remediationCsv->getClientOriginalExtension() != "csv") {
             $context->buildViolation('Veuillez télécharger un fichier .csv')
                 ->atPath('remediationCsv')
                 ->addViolation();
         }
-    }*/
+    }
 }

@@ -24,7 +24,6 @@ class ImportCsvServices
     private const REFERENTIEL = 'referentiel.csv';
     private const CHAPITRE = 'chapitre.csv';
     private const RECOMMANDATION = 'recommandation.csv';
-    private const TYPE_PREUVE = 'type_preuve.csv';
     private const POINT_CONTROLE = 'point_controle.csv';
     private const REMEDIATION = 'remediation.csv';
 
@@ -138,7 +137,7 @@ class ImportCsvServices
                 $this->entityManager->flush();
                 $id = $referentiel->getId();
             } catch (\Exception $e) {
-                $errorInsert = "L'import du référentiel a échoué lors de la ligne n° " . $i;
+                $errorInsert = "L'import du référentiel a échoué lors de la ligne n° " . $i . " - Aucun import enregistré en base de données";
                 $referentielSuccess = false;
             }
         }
@@ -158,14 +157,14 @@ class ImportCsvServices
                         ->setLibelle((string) $data[2]);
                     $this->entityManager->persist($chapitre);
                 } catch (\Exception $e) {
-                    $errorInsert = "L'import des chapitres a échoué lors de la ligne n° " . $i;
+                    $errorInsert = "L'import des chapitres a échoué lors de la ligne n° " . $i . " - Aucun import enregistré en base de données";
                     $chapitreSuccess = false;
                 }
             }
             try {
                 $this->entityManager->flush();
             } catch (\Exception $e) {
-                $errorInsert = "L'import des chapitres a échoué lors du flush()";
+                $errorInsert = "L'import des chapitres a échoué - Aucun import enregistré en base de données";
                 $chapitreSuccess = false;
             }
 
@@ -192,7 +191,7 @@ class ImportCsvServices
                         $recommandation->setDescription((string) $data[4]);
                         $this->entityManager->persist($recommandation);
                     } catch (\Exception $e) {
-                        $errorInsert = "L'import des recommandations a échoué lors de la ligne n° " . $i;
+                        $errorInsert = "L'import des recommandations a échoué lors de la ligne n° " . $i . " - Aucun import enregistré en base de données";
                         $recommandationSuccess = false;
                     }
                     $oldValue = (int)$data[1];
@@ -200,7 +199,7 @@ class ImportCsvServices
                 try {
                     $this->entityManager->flush();
                 } catch (\Exception $e) {
-                    $errorInsert = "L'import des recommandations a échoué lors du flush()";
+                    $errorInsert = "L'import des recommandations a échoué - Aucun import enregistré en base de données";
                     $recommandationSuccess = false;
                 }
 
@@ -228,14 +227,14 @@ class ImportCsvServices
                             $pointControle->setTypeCritere((string) $data[4]);
                             $this->entityManager->persist($pointControle);
                         } catch (\Exception $e) {
-                            $errorInsert = "L'import des points de contrôles a échoué lors de la ligne n° " . $i;
+                            $errorInsert = "L'import des points de contrôles a échoué lors de la ligne n° " . $i . " - Aucun import enregistré en base de données";
                         }
                         $oldValue = $data[1];
                     }
                     try {
                         $this->entityManager->flush();
                     } catch (\Exception $e) {
-                        $errorInsert = "L'import des points de contrôles a échoué lors du flush()";
+                        $errorInsert = "L'import des points de contrôles a échoué - Aucun import enregistré en base de données";
                         $pointControleSuccess = false;
                     }
 
@@ -260,14 +259,14 @@ class ImportCsvServices
                                 $remediation->setLibelle((string) $data[1]);
                                 $this->entityManager->persist($remediation);
                             } catch (\Exception $e) {
-                                $errorInsert = "L'import des remédiations a échoué lors de la ligne n° " . $i;
+                                $errorInsert = "L'import des remédiations a échoué lors de la ligne n° " . $i . " - Aucun import enregistré en base de données";
                             }
                             $oldValue = $data[0];
                         }
                         try {
                             $this->entityManager->flush();
                         } catch (\Exception $e) {
-                            $errorInsert = "L'import des remédiations a échoué lors du flush()";
+                            $errorInsert = "L'import des remédiations a échoué - Aucun import enregistré en base de données";
                         }
                     }
                 }

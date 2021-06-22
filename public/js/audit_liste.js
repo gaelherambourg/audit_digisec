@@ -184,8 +184,15 @@ function modal() {
         }
     };
 
-    //Fonction permettant de fermer la modal en cours
+    /**
+     * Méthode permettant de fermer la fenêtre modal
+     */
     function fermerModal() {
+        csv.className = "modal";
+    }
+
+    //Fonction permettant de fermer la modal en cours
+    /*function fermerModal() {
 
         const modalBgP = document.getElementById('modalPreuveBg');
         const fermerPreuve = document.getElementById('fermerPreuve');
@@ -203,7 +210,7 @@ function modal() {
             removeAllSpan();
             preuve.className = "modal";
         });
-    };
+    };*/
 
     //Fonction permettant de supprimer les éventuels messages d'erreurs situés dans des spans
     function removeAllSpan() {
