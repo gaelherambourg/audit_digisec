@@ -88,7 +88,7 @@
 				</a>
 			</div>
 			<div class="column">
-				<a href="#">
+				<a>
 					<button id="btnAjouter" name="btnAjouter" class="button is-info is-fullwidth">Ajouter un référentiel</button>
 				</a>
 			</div>
@@ -106,12 +106,12 @@
 			<section
 				class="modal-card-body">
 				<!-- Content ... -->
-				{{ form_start(csvForm) }}
+				{{ form_start(csvForm, {'attr': {'id': 'nouveau_csv'}}) }}
 				{{ form_row(csvForm.referentielCsv) }}
 				{{ form_row(csvForm.chapitreCsv) }}
 				{{ form_row(csvForm.recommandationCsv) }}
-				{{ form_row(csvForm.typePreuveCsv) }}
 				{{ form_row(csvForm.pointControleCsv) }}
+				{{ form_row(csvForm.remediationCsv) }}
 			</section>
 			<footer class="modal-card-foot">
 				<button type="submit" class="button is-medium is-link is-light is-3">Importer</button>

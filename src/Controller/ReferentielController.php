@@ -5,25 +5,27 @@ namespace App\Controller;
 use App\Model\CsvForm;
 use App\Form\CsvFormType;
 use App\Form\RechercheSimpleType;
+use App\Services\ErreursServices;
+use App\Services\ImportCsvServices;
 use Doctrine\ORM\EntityManagerInterface;
 use App\Repository\ReferentielRepository;
-use App\Services\ImportCsvServices;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
 class ReferentielController extends AbstractController
 {
     /**
-     * @Route("/referentiel/liste", name="referentiel_liste")
+     * @Route("/referentiel/liste/", name="referentiel_liste")
      */
     public function listerReferentiel(
         Request $request,
         ReferentielRepository $referentielRepository,
         ImportCsvServices $importCsvServices
     ): Response {
-        
+
         //Création du formulaire de recherche
         $form = $this->createForm(RechercheSimpleType::class);
         $form->handleRequest($request);
@@ -80,5 +82,68 @@ class ReferentielController extends AbstractController
             'form_recherche_referentiel' => $form->createView(),
             'csvForm' => $csvRegisterForm->createView(),
         ]);
+    }
+
+    /**
+     * @Route("/referentiel/liste/csv/", name="referentiel_liste_import")
+     */
+    public function importCsv(
+        Request $request,
+        ErreursServices $erreursServices,
+        ImportCsvServices $importCsvServices,
+        EntityManagerInterface $entityManager
+    ): Response {
+
+        $resultat = "";
+
+        // On créer une instance de csvForm
+        $csv = new CsvForm();
+
+        // On créer une instance de la classe de formulaire que l'on associe à notre formulaire
+        $csvForm = $this->createForm(CsvFormType::class, $csv);
+
+        if ($request->getMethod() == 'POST') {
+
+            $referentiel = $request->files->get('referentielCsv');
+            $chapitre = $request->files->get('chapitreCsv');
+            $recommandation = $request->files->get('recommandationCsv');
+            $pointControle = $request->files->get('pointControleCsv');
+            $remediation = $request->files->get('remediationCsv');
+            $token = $request->get('token');
+
+            // On prend les données du formulaire soumis, et les injecte dans $societe
+            $csvForm->submit(array_merge(['referentielCsv' => $referentiel, 'chapitreCsv' => $chapitre, 'recommandationCsv' => $recommandation, 'pointControleCsv' => $pointControle, 'remediationCsv' => $remediation, '_token' => $token]), false);
+
+            if ($csvForm->isSubmitted()) {
+                if ($csvForm->isValid()) {
+                    $resultat = 'success';
+
+                    // On charge le fichier csv dans notre répertoire
+                    $isItUploaded = $importCsvServices->uploadCsvFile($csvForm);
+                    // on lit le fichier s'il est uploadé
+                    if ($isItUploaded) {
+                        // on insert toutes les données en base
+                        $data = $importCsvServices->insertCsvFile();
+                        // on efface le fichier
+                        $importCsvServices->deleteCsvFile();
+                        if ($data['errorInsert'] != "") {
+                            $this->addFlash("warning", $data['errorInsert']);
+                        } else {
+                            // On ajoute un message flash
+                            $this->addFlash("info", "L'insertion a fonctionnée");
+                        }
+                    } else {
+                        $this->addFlash("danger", "Le téléchargement a échoué.");
+                    }
+                    // On retourne la réponse JSON
+                    return new JsonResponse(['resultat' => $resultat]);
+                } else {
+                    // On retourne le tableau des erreurs de validation
+                    $erreurs = $erreursServices->getErrorMessages($csvForm);
+                }
+            }
+        }
+        // On retourne la réponse JSON
+        return new JsonResponse(['resultat' => $resultat, 'erreur' => $erreurs]);
     }
 }

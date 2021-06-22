@@ -1,10 +1,10 @@
 <?php
 
-
 namespace App\Model;
 
-use Symfony\Component\HttpFoundation\File\UploadedFile;
+use Symfony\Component\Validator\Constraints\NotBlank;
 use Symfony\Component\Validator\Constraints as Assert;
+use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\Validator\Context\ExecutionContextInterface;
 
 class CsvForm
@@ -12,43 +12,43 @@ class CsvForm
 
     /**
      * @Assert\File(
-     *     maxSize = "1024k",
-     *     maxSizeMessage="Votre fichier .csv ne doit pas excéder 1Mo",
-     *     )
+     *      maxSize = "2048k",
+     *      maxSizeMessage="Votre fichier .csv ne doit pas excéder 2 Mo",
+     *              )
      */
     private $referentielCsv;
 
     /**
      * @Assert\File(
-     *     maxSize = "1024k",
-     *     maxSizeMessage="Votre fichier .csv ne doit pas excéder 1Mo",
-     *     )
+     *      maxSize = "2048k",
+     *      maxSizeMessage="Votre fichier .csv ne doit pas excéder 2 Mo",
+     *              )
      */
     private $chapitreCsv;
 
-        /**
+    /**
      * @Assert\File(
-     *     maxSize = "1024k",
-     *     maxSizeMessage="Votre fichier .csv ne doit pas excéder 1Mo",
-     *     )
+     *      maxSize = "2048k",
+     *      maxSizeMessage="Votre fichier .csv ne doit pas excéder 2 Mo",
+     *              )
      */
     private $recommandationCsv;
 
-        /**
+    /**
      * @Assert\File(
-     *     maxSize = "1024k",
-     *     maxSizeMessage="Votre fichier .csv ne doit pas excéder 1Mo",
-     *     )
-     */
-    private $typePreuveCsv;
-
-        /**
-     * @Assert\File(
-     *     maxSize = "1024k",
-     *     maxSizeMessage="Votre fichier .csv ne doit pas excéder 1Mo",
-     *     )
+     *      maxSize = "2048k",
+     *      maxSizeMessage="Votre fichier .csv ne doit pas excéder 2 Mo",
+     *              )
      */
     private $pointControleCsv;
+
+    /**
+     * @Assert\File(
+     *      maxSize = "2048k",
+     *      maxSizeMessage="Votre fichier .csv ne doit pas excéder 2 Mo",
+     *              )
+     */
+    private $remediationCsv;
 
     public function getReferentielCsv()
     {
@@ -62,19 +62,11 @@ class CsvForm
         return $this;
     }
 
-    /**
-     * Get maxSize = "1024k",
-     */ 
     public function getChapitreCsv()
     {
         return $this->chapitreCsv;
     }
 
-    /**
-     * Set maxSize = "1024k",
-     *
-     * @return  self
-     */ 
     public function setChapitreCsv($chapitreCsv)
     {
         $this->chapitreCsv = $chapitreCsv;
@@ -82,19 +74,11 @@ class CsvForm
         return $this;
     }
 
-    /**
-     * Get maxSize = "1024k",
-     */ 
     public function getRecommandationCsv()
     {
         return $this->recommandationCsv;
     }
 
-    /**
-     * Set maxSize = "1024k",
-     *
-     * @return  self
-     */ 
     public function setRecommandationCsv($recommandationCsv)
     {
         $this->recommandationCsv = $recommandationCsv;
@@ -102,42 +86,26 @@ class CsvForm
         return $this;
     }
 
-    /**
-     * Get maxSize = "1024k",
-     */ 
-    public function getTypePreuveCsv()
-    {
-        return $this->typePreuveCsv;
-    }
-
-    /**
-     * Set maxSize = "1024k",
-     *
-     * @return  self
-     */ 
-    public function setTypePreuveCsv($typePreuveCsv)
-    {
-        $this->typePreuveCsv = $typePreuveCsv;
-
-        return $this;
-    }
-
-    /**
-     * Get maxSize = "1024k",
-     */ 
     public function getPointControleCsv()
     {
         return $this->pointControleCsv;
     }
 
-    /**
-     * Set maxSize = "1024k",
-     *
-     * @return  self
-     */ 
     public function setPointControleCsv($pointControleCsv)
     {
         $this->pointControleCsv = $pointControleCsv;
+
+        return $this;
+    }
+
+    public function getRemediationCsv()
+    {
+        return $this->remediationCsv;
+    }
+
+    public function setRemediationCsv($remediationCsv)
+    {
+        $this->remediationCsv = $remediationCsv;
 
         return $this;
     }
@@ -147,33 +115,33 @@ class CsvForm
      */
     public function validateExtensionFile(ExecutionContextInterface $context)
     {
-        if ($this->referentielCsv->getClientOriginalExtension() != "csv") {
+        if ($this->referentielCsv == "" || $this->referentielCsv->getClientOriginalExtension() != "csv") {
             $context->buildViolation('Veuillez télécharger un fichier .csv')
                 ->atPath('referentielCsv')
                 ->addViolation();
         }
         
-        if ($this->chapitreCsv->getClientOriginalExtension() != "csv") {
+        if ($this->chapitreCsv == "" || $this->chapitreCsv->getClientOriginalExtension() != "csv") {
             $context->buildViolation('Veuillez télécharger un fichier .csv')
                 ->atPath('chapitreCsv')
                 ->addViolation();
         }
 
-        if ($this->recommandationCsv->getClientOriginalExtension() != "csv") {
+        if ($this->recommandationCsv == "" || $this->recommandationCsv->getClientOriginalExtension() != "csv") {
             $context->buildViolation('Veuillez télécharger un fichier .csv')
                 ->atPath('recommandationCsv')
                 ->addViolation();
         }
 
-        if ($this->typePreuveCsv->getClientOriginalExtension() != "csv") {
+        if ($this->pointControleCsv == "" || $this->pointControleCsv->getClientOriginalExtension() != "csv") {
             $context->buildViolation('Veuillez télécharger un fichier .csv')
-                ->atPath('typePreuveCsv')
+                ->atPath('pointControleCsv')
                 ->addViolation();
         }
 
-        if ($this->pointControleCsv->getClientOriginalExtension() != "csv") {
+        if ($this->remediationCsv == "" || $this->remediationCsv->getClientOriginalExtension() != "csv") {
             $context->buildViolation('Veuillez télécharger un fichier .csv')
-                ->atPath('pointControleCsv')
+                ->atPath('remediationCsv')
                 ->addViolation();
         }
     }

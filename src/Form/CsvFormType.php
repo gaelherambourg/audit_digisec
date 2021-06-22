@@ -22,11 +22,11 @@ class CsvFormType extends AbstractType
             ->add('recommandationCsv', FileType::class, [
                 'label' => 'Recommandations : ',
             ])
-            ->add('typePreuveCsv', FileType::class, [
-                'label' => 'Preuves : ',
-            ])
             ->add('pointControleCsv', FileType::class, [
                 'label' => 'Points de contrôle : ',
+            ])
+            ->add('remediationCsv', FileType::class, [
+                'label' => 'Remédiations : ',
             ])
         ;
     }
@@ -35,6 +35,9 @@ class CsvFormType extends AbstractType
     {
         $resolver->setDefaults([
             'data_class' => CsvForm::class,
+            'attr' => [
+                'novalidate' => 'novalidate', // Désactive la validation HTML5
+            ]
         ]);
     }
 }
