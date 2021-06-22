@@ -49,7 +49,7 @@ class SecurityController extends AbstractController
     }
 
     /**
-    * @Route("/oubli-pass", name="app_forgotten_password")
+    * @Route("/login/oubli-pass", name="app_forgotten_password")
     */
     public function oubliPass(Request $request,
                               UtilisateurRepository $utilisateur,
@@ -121,7 +121,7 @@ class SecurityController extends AbstractController
         }
 
         /**
-         * @Route("/reset_pass/{token}", name="app_reset_password")
+         * @Route("login/reset_pass/{token}", name="app_reset_password")
          */
         public function resetPassword(Request $request, string $token, UserPasswordEncoderInterface $passwordEncoder)
         {

@@ -64,15 +64,24 @@ class AuditControleController extends AbstractController
         //Recherche d'un éventuel ancien audit
         $ancienAudit = null;
         $listeAuditParSociete = $auditRepository->findAuditBySociete($audit->getSociete()->getId());
-
+        dump($listeAuditParSociete);
         $sommeMaturite_N1 = null;
-        if(count($listeAuditParSociete) > 1 && $listeAuditParSociete[1]->getId() != $id){
-            $ancienAudit = $listeAuditParSociete[1];
-            foreach($ancienAudit->getAuditsControle() as $auditControle){                
-                if($auditControle->getRecommandation()->getId() == $id_recommandation){
-                    $sommeMaturite_N1 += $auditControle->getNote();
+        if(count($listeAuditParSociete) > 1){
+            for($i=0; $i<count($listeAuditParSociete); $i++){
+                dump($listeAuditParSociete[$i]->getId());
+                if($listeAuditParSociete[$i]->getId() == $id && $i != (count($listeAuditParSociete) - 1)){
+                    $ancienAudit = $listeAuditParSociete[$i+1];
                 }
-            }           
+            }
+            //$ancienAudit = $listeAuditParSociete[1];
+            if($ancienAudit != null){
+                foreach($ancienAudit->getAuditsControle() as $auditControle){                
+                    if($auditControle->getRecommandation()->getId() == $id_recommandation){
+                        $sommeMaturite_N1 += $auditControle->getNote();
+                    }
+                } 
+            }
+                      
         }
         
         $sommeMaturite = 0;
@@ -106,12 +115,12 @@ class AuditControleController extends AbstractController
 
             //On vérifie que tous les points de controles de la recommandation en cours aient au moins une preuve
             //Si ce n'est pas le cas on recharge la page en affichant un message d'erreur
-            foreach($listeAuditControle as $auditControle){
+            /* foreach($listeAuditControle as $auditControle){
                 if($auditControle->getPreuves()->count() < 1){
                     $this->addFlash("danger", "Tous les points de contrôle doivent avoir au moins une preuve");
                     return $this->redirectToRoute('audit_controle', ['id' => $id, 'id_recommandation' => $id_recommandation]);
                 }
-            }
+            } */
 
             // TODO : A AMELIORER  : on supprime les remediations lié à l'audit de controle et on boucle sur les résultats de la $requete
             // pour connaitre les remediations cochées
@@ -119,7 +128,10 @@ class AuditControleController extends AbstractController
                 foreach($auditControle->getRemediations() as $remediation){
                     $auditControle->removeRemediation($remediation);
                 }
-                $auditControle->setEstValide(true);
+                if($auditControle->getPreuves()->count() > 0 && $auditControle->getNote() != null && $auditControle->getRemarque() != null){
+                    $auditControle->setEstValide(true);
+                }
+                
             }
 
             foreach($audit_form_controle->getData("[audit_controle]") as $audit_controle){
