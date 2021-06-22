@@ -19,6 +19,19 @@ class PointControleRepository extends ServiceEntityRepository
         parent::__construct($registry, PointControle::class);
     }
 
+    public function findByExampleField($id)
+    {
+        return $this->createQueryBuilder('pc')
+            ->join('pc.recommandation', 'r')->addSelect('r')
+            ->join('r.chapitre','c')->addSelect('c')
+            ->join('c.referentiel','ref')->addSelect('ref')
+            ->andWhere('c.referentiel = :val')
+            ->setParameter('val', $id)
+            ->getQuery()
+            ->getResult()
+        ;
+    }
+
     // /**
     //  * @return PointControle[] Returns an array of PointControle objects
     //  */

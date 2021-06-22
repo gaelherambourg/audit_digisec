@@ -1,54 +1,69 @@
 <?php
 
-
 namespace App\Model;
 
-use Symfony\Component\HttpFoundation\File\UploadedFile;
+use Symfony\Component\Validator\Constraints\NotBlank;
 use Symfony\Component\Validator\Constraints as Assert;
+use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\Validator\Context\ExecutionContextInterface;
 
 class CsvForm
 {
 
     /**
+     * @Assert\NotBlank(message="Merci de sélectionner un fichier .csv")
      * @Assert\File(
-     *     maxSize = "1024k",
-     *     maxSizeMessage="Votre fichier .csv ne doit pas excéder 1Mo",
-     *     )
+     *      maxSize = "2048k",
+     *      maxSizeMessage="Votre fichier .csv ne doit pas excéder 2 Mo",
+     *      mimeTypes = {"text/csv"},
+     *      mimeTypesMessage = "Merci d'uploader un fichier de type .csv"
+     *              )
      */
     private $referentielCsv;
 
     /**
+     * @Assert\NotBlank(message="Merci de sélectionner un fichier .csv")
      * @Assert\File(
-     *     maxSize = "1024k",
-     *     maxSizeMessage="Votre fichier .csv ne doit pas excéder 1Mo",
-     *     )
+     *      maxSize = "2048k",
+     *      maxSizeMessage="Votre fichier .csv ne doit pas excéder 2 Mo",
+     *      mimeTypes = {"text/csv"},
+     *      mimeTypesMessage = "Merci d'uploader un fichier de type .csv"
+     *              )
      */
     private $chapitreCsv;
 
-        /**
+    /**
+     * @Assert\NotBlank(message="Merci de sélectionner un fichier .csv")
      * @Assert\File(
-     *     maxSize = "1024k",
-     *     maxSizeMessage="Votre fichier .csv ne doit pas excéder 1Mo",
-     *     )
+     *      maxSize = "2048k",
+     *      maxSizeMessage="Votre fichier .csv ne doit pas excéder 2 Mo",
+     *      mimeTypes = {"text/csv"},
+     *      mimeTypesMessage = "Merci d'uploader un fichier de type .csv"
+     *              )
      */
     private $recommandationCsv;
 
-        /**
+    /**
+     * @Assert\NotBlank(message="Merci de sélectionner un fichier .csv")
      * @Assert\File(
-     *     maxSize = "1024k",
-     *     maxSizeMessage="Votre fichier .csv ne doit pas excéder 1Mo",
-     *     )
-     */
-    private $typePreuveCsv;
-
-        /**
-     * @Assert\File(
-     *     maxSize = "1024k",
-     *     maxSizeMessage="Votre fichier .csv ne doit pas excéder 1Mo",
-     *     )
+     *      maxSize = "2048k",
+     *      maxSizeMessage="Votre fichier .csv ne doit pas excéder 2 Mo",
+     *      mimeTypes = {"text/csv"},
+     *      mimeTypesMessage = "Merci d'uploader un fichier de type .csv"
+     *              )
      */
     private $pointControleCsv;
+
+    /**
+     * @Assert\NotBlank(message="Merci de sélectionner un fichier .csv")
+     * @Assert\File(
+     *      maxSize = "2048k",
+     *      maxSizeMessage="Votre fichier .csv ne doit pas excéder 2 Mo",
+     *      mimeTypes = {"text/csv"},
+     *      mimeTypesMessage = "Merci d'uploader un fichier de type .csv"
+     *              )
+     */
+    private $remediationCsv;
 
     public function getReferentielCsv()
     {
@@ -62,19 +77,11 @@ class CsvForm
         return $this;
     }
 
-    /**
-     * Get maxSize = "1024k",
-     */ 
     public function getChapitreCsv()
     {
         return $this->chapitreCsv;
     }
 
-    /**
-     * Set maxSize = "1024k",
-     *
-     * @return  self
-     */ 
     public function setChapitreCsv($chapitreCsv)
     {
         $this->chapitreCsv = $chapitreCsv;
@@ -82,19 +89,11 @@ class CsvForm
         return $this;
     }
 
-    /**
-     * Get maxSize = "1024k",
-     */ 
     public function getRecommandationCsv()
     {
         return $this->recommandationCsv;
     }
 
-    /**
-     * Set maxSize = "1024k",
-     *
-     * @return  self
-     */ 
     public function setRecommandationCsv($recommandationCsv)
     {
         $this->recommandationCsv = $recommandationCsv;
@@ -102,39 +101,11 @@ class CsvForm
         return $this;
     }
 
-    /**
-     * Get maxSize = "1024k",
-     */ 
-    public function getTypePreuveCsv()
-    {
-        return $this->typePreuveCsv;
-    }
-
-    /**
-     * Set maxSize = "1024k",
-     *
-     * @return  self
-     */ 
-    public function setTypePreuveCsv($typePreuveCsv)
-    {
-        $this->typePreuveCsv = $typePreuveCsv;
-
-        return $this;
-    }
-
-    /**
-     * Get maxSize = "1024k",
-     */ 
     public function getPointControleCsv()
     {
         return $this->pointControleCsv;
     }
 
-    /**
-     * Set maxSize = "1024k",
-     *
-     * @return  self
-     */ 
     public function setPointControleCsv($pointControleCsv)
     {
         $this->pointControleCsv = $pointControleCsv;
@@ -142,10 +113,22 @@ class CsvForm
         return $this;
     }
 
+    public function getRemediationCsv()
+    {
+        return $this->remediationCsv;
+    }
+
+    public function setRemediationCsv($remediationCsv)
+    {
+        $this->remediationCsv = $remediationCsv;
+
+        return $this;
+    }
+
     /**
      * @Assert\Callback
      */
-    public function validateExtensionFile(ExecutionContextInterface $context)
+    /*public function validateExtensionFile(ExecutionContextInterface $context)
     {
         if ($this->referentielCsv->getClientOriginalExtension() != "csv") {
             $context->buildViolation('Veuillez télécharger un fichier .csv')
@@ -165,16 +148,16 @@ class CsvForm
                 ->addViolation();
         }
 
-        if ($this->typePreuveCsv->getClientOriginalExtension() != "csv") {
-            $context->buildViolation('Veuillez télécharger un fichier .csv')
-                ->atPath('typePreuveCsv')
-                ->addViolation();
-        }
-
         if ($this->pointControleCsv->getClientOriginalExtension() != "csv") {
             $context->buildViolation('Veuillez télécharger un fichier .csv')
                 ->atPath('pointControleCsv')
                 ->addViolation();
         }
-    }
+
+        if ($this->remediationCsv->getClientOriginalExtension() != "csv") {
+            $context->buildViolation('Veuillez télécharger un fichier .csv')
+                ->atPath('remediationCsv')
+                ->addViolation();
+        }
+    }*/
 }

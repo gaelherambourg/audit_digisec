@@ -145,12 +145,13 @@
 					<button class="button is-medium is-link is-light is-3">Modifier</button>
 				</a>
 			</div>
+			{% if is_granted("ROLE_ADMIN") %}
 			<div class="column">
 				<a href="{{path('app_register')}}">
 					<button class="button is-medium is-link is-light is-3">Inscrire nouvel utilisateur</button>
 				</a>
 			</div>
-
+			{% endif %}
 				<div class="column"></div>
 			</div>
 		</div>

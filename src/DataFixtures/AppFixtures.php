@@ -8,6 +8,7 @@ use App\Entity\Contact;
 use App\Entity\EchelleNotation;
 use App\Entity\Societe;
 use App\Entity\Statut;
+use App\Entity\TypePreuve;
 use App\Entity\Utilisateur;
 use Doctrine\Persistence\ObjectManager;
 use Doctrine\Bundle\FixturesBundle\Fixture;
@@ -145,6 +146,15 @@ class AppFixtures extends Fixture
         $manager->persist($statut);
         $manager->persist($statutTermine);
         $manager->persist($statutRemis);
+        $manager->flush();
+
+        $typePreuve = new TypePreuve();
+        $typePreuve
+            ->setTypePreuve1("Photo")
+            ->setTypePreuve2("Texte")
+            ->setTypePreuve3("Fichier")
+            ->setTypePreuve4("Capture Ecran");
+        $manager->persist($typePreuve);
         $manager->flush();
     }
 }

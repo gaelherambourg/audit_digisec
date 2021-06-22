@@ -2,19 +2,22 @@
 
 namespace App\Services;
 
-use App\Entity\Chapitre;
-use App\Entity\PointControle;
 use App\Entity\Preuve;
-use App\Entity\Recommandation;
-use App\Entity\Referentiel;
+use App\Entity\Chapitre;
 use App\Entity\TypePreuve;
+use App\Entity\Referentiel;
+use App\Entity\PointControle;
+use Doctrine\DBAL\Types\Type;
+use App\Entity\Recommandation;
+use App\Entity\Remediation;
+use Doctrine\ORM\EntityManager;
 use App\Repository\AuditRepository;
 use App\Repository\ChapitreRepository;
-use App\Repository\RecommandationRepository;
-use App\Repository\ReferentielRepository;
+use App\Repository\PointControleRepository;
 use App\Repository\TypePreuveRepository;
-use Doctrine\DBAL\Types\Type;
 use Doctrine\ORM\EntityManagerInterface;
+use App\Repository\ReferentielRepository;
+use App\Repository\RecommandationRepository;
 
 class ImportCsvServices
 {
@@ -23,12 +26,14 @@ class ImportCsvServices
     private const RECOMMANDATION = 'recommandation.csv';
     private const TYPE_PREUVE = 'type_preuve.csv';
     private const POINT_CONTROLE = 'point_controle.csv';
+    private const REMEDIATION = 'remediation.csv';
 
     private $uploadCsvDir;
     private $referentielRepository;
     private $chapitreRepository;
     private $recommandationRepository;
     private $typePreuveRepository;
+    private $pointControleRepository;
     private $entityManager;
 
     public function __construct(
@@ -37,7 +42,8 @@ class ImportCsvServices
         ReferentielRepository $referentielRepository,
         ChapitreRepository $chapitreRepository,
         RecommandationRepository $recommandationRepository,
-        TypePreuveRepository $typePreuveRepository
+        TypePreuveRepository $typePreuveRepository,
+        PointControleRepository $pointControleRepository
     ) {
         $this->uploadCsvDir = $uploadCsvDir;
         $this->entityManager = $entityManager;
@@ -45,6 +51,7 @@ class ImportCsvServices
         $this->chapitreRepository = $chapitreRepository;
         $this->recommandationRepository = $recommandationRepository;
         $this->typePreuveRepository = $typePreuveRepository;
+        $this->pointControleRepository = $pointControleRepository;
     }
 
 
@@ -63,23 +70,23 @@ class ImportCsvServices
         $uploadedFileReferentiel = $csvRegisterForm->get('referentielCsv')->getData();
         $uploadedFileChapitre = $csvRegisterForm->get('chapitreCsv')->getData();
         $uploadedFileRecommandation = $csvRegisterForm->get('recommandationCsv')->getData();
-        $uploadedFilePreuve = $csvRegisterForm->get('typePreuveCsv')->getData();
         $uploadedFileControle = $csvRegisterForm->get('pointControleCsv')->getData();
+        $uploadedFileRemediation = $csvRegisterForm->get('remediationCsv')->getData();
 
         // On donne un nom générique
         $newFileNameReferentiel = self::REFERENTIEL;
         $newFileNameChapitre = self::CHAPITRE;
         $newFileNameRecommandation = self::RECOMMANDATION;
-        $newFileNamePreuve = self::TYPE_PREUVE;
         $newFileNameControle = self::POINT_CONTROLE;
+        $newFileNameRemediation = self::REMEDIATION;
 
         // on déplace le fichier dans le répertoire public avant sa destruction
         try {
             $uploadedFileReferentiel->move($this->getUploadCsvDir(), $newFileNameReferentiel);
             $uploadedFileChapitre->move($this->getUploadCsvDir(), $newFileNameChapitre);
             $uploadedFileRecommandation->move($this->getUploadCsvDir(), $newFileNameRecommandation);
-            $uploadedFilePreuve->move($this->getUploadCsvDir(), $newFileNamePreuve);
             $uploadedFileControle->move($this->getUploadCsvDir(), $newFileNameControle);
+            $uploadedFileRemediation->move($this->getUploadCsvDir(), $newFileNameRemediation);
         } catch (\Exception $e) {
             $isItUploaded = false;
         }
@@ -110,7 +117,10 @@ class ImportCsvServices
         $referentielSuccess = true;
         $chapitreSuccess = true;
         $recommandationSuccess = true;
-        $typePreuveSuccess = true;
+        $pointControleSuccess = true;
+
+        // On suspend l'auto-commit
+        $this->entityManager->getConnection()->beginTransaction();
 
         // On ajoute le référentiel
         $fileStr = $this->getUploadCsvDir() . self::REFERENTIEL;
@@ -118,12 +128,12 @@ class ImportCsvServices
         $i = 0;
         $errorInsert = "";
         while (($data = fgetcsv($handle, 1000, ";")) !== FALSE) {
-            $i++;
-            $referentiel = new Referentiel();
-            $referentiel
-                ->setLibelle((string) $data[1])
-                ->setTypeReferentiel((string) $data[2]);
             try {
+                $i++;
+                $referentiel = new Referentiel();
+                $referentiel
+                    ->setLibelle((string) $data[1])
+                    ->setTypeReferentiel((string) $data[2]);
                 $this->entityManager->persist($referentiel);
                 $this->entityManager->flush();
                 $id = $referentiel->getId();
@@ -134,28 +144,33 @@ class ImportCsvServices
         }
 
         // On ajoute les chapitres
-        if ($referentielSuccess != false) {
+        if ($referentielSuccess) {
             $fileStr = $this->getUploadCsvDir() . self::CHAPITRE;
             $handle = fopen($fileStr, 'r');
             $i = 0;
             $referentielId = $this->referentielRepository->find($id);
             while (($data = fgetcsv($handle, 1000, ";")) !== FALSE) {
-                $i++;
-                $chapitre = new Chapitre();
-                $chapitre
-                    ->setReferentiel($referentielId)
-                    ->setLibelle((string) $data[2]);
                 try {
+                    $i++;
+                    $chapitre = new Chapitre();
+                    $chapitre
+                        ->setReferentiel($referentielId)
+                        ->setLibelle((string) $data[2]);
                     $this->entityManager->persist($chapitre);
                 } catch (\Exception $e) {
                     $errorInsert = "L'import des chapitres a échoué lors de la ligne n° " . $i;
                     $chapitreSuccess = false;
                 }
             }
-            $this->entityManager->flush();
-            
+            try {
+                $this->entityManager->flush();
+            } catch (\Exception $e) {
+                $errorInsert = "L'import des chapitres a échoué lors du flush()";
+                $chapitreSuccess = false;
+            }
+
             // On ajoute les recommandations
-            if ($chapitreSuccess != false) {
+            if ($chapitreSuccess) {
                 $fileStr = $this->getUploadCsvDir() . self::RECOMMANDATION;
                 $handle = fopen($fileStr, 'r');
                 $i = 0;
@@ -179,44 +194,27 @@ class ImportCsvServices
                     } catch (\Exception $e) {
                         $errorInsert = "L'import des recommandations a échoué lors de la ligne n° " . $i;
                         $recommandationSuccess = false;
-                        break;
                     }
                     $oldValue = (int)$data[1];
                 }
-                $this->entityManager->flush();
-                
-                // On ajoute les types preuves
-                if ($recommandationSuccess != false) {
-                    $fileStr = $this->getUploadCsvDir() . self::TYPE_PREUVE;
+                try {
+                    $this->entityManager->flush();
+                } catch (\Exception $e) {
+                    $errorInsert = "L'import des recommandations a échoué lors du flush()";
+                    $recommandationSuccess = false;
+                }
+
+                // On ajoute les points de contrôles
+                if ($recommandationSuccess) {
+                    $fileStr = $this->getUploadCsvDir() . self::POINT_CONTROLE;
                     $handle = fopen($fileStr, 'r');
                     $i = 0;
+                    $y = 0;
+                    $oldValue = 1;
+                    $recommandationsId = $this->recommandationRepository->findByExampleField($id);
+                    $typePreuveId = $this->typePreuveRepository->findAll();
                     while (($data = fgetcsv($handle, 1000, ";")) !== FALSE) {
-                        $i++;
-                        $typePreuve = new TypePreuve();
-                        $typePreuve->setTypePreuve1($data[1]);
-                        $typePreuve->setTypePreuve2($data[2]);
-                        $typePreuve->setTypePreuve3($data[3]);
-                        $typePreuve->setTypePreuve4($data[4]);
                         try {
-                            $this->entityManager->persist($typePreuve);
-                        } catch (\Exception $e) {
-                            $errorInsert = "L'import du type de preuve a échoué lors de la ligne n° " . $i;
-                            $typePreuveSuccess = false;
-                        }
-                    }
-                    $this->entityManager->flush();
-                    $idPreuve = $typePreuve->getId();
-                    
-                    // On ajoute les points de contrôles
-                    if ($typePreuveSuccess != false) {
-                        $fileStr = $this->getUploadCsvDir() . self::POINT_CONTROLE;
-                        $handle = fopen($fileStr, 'r');
-                        $i = 0;
-                        $y = 0;
-                        $oldValue = 1;
-                        $recommandationsId = $this->recommandationRepository->findByExampleField($id);
-                        $typePreuveId = $this->typePreuveRepository->find($idPreuve);
-                        while (($data = fgetcsv($handle, 1000, ";")) !== FALSE) {
                             $i++;
                             $pointControle = new PointControle();
                             if ($data[1] == $oldValue) {
@@ -225,22 +223,64 @@ class ImportCsvServices
                                 $y++;
                                 $pointControle->setRecommandation($recommandationsId[$y]);
                             }
-                            $pointControle->setTypePreuve($typePreuveId);
+                            $pointControle->setTypePreuve($typePreuveId[0]);
                             $pointControle->setLibelle((string) $data[3]);
                             $pointControle->setTypeCritere((string) $data[4]);
-                            try {
-                                $this->entityManager->persist($pointControle);
-                            } catch (\Exception $e) {
-                                $errorInsert = "L'import des points de contrôles a échoué lors de la ligne n° " . $i;
-                            }
-                            $oldValue = $data[1];
+                            $this->entityManager->persist($pointControle);
+                        } catch (\Exception $e) {
+                            $errorInsert = "L'import des points de contrôles a échoué lors de la ligne n° " . $i;
                         }
+                        $oldValue = $data[1];
+                    }
+                    try {
                         $this->entityManager->flush();
+                    } catch (\Exception $e) {
+                        $errorInsert = "L'import des points de contrôles a échoué lors du flush()";
+                        $pointControleSuccess = false;
+                    }
+
+                    // On ajoute les remediations
+                    if ($pointControleSuccess) {
+                        $fileStr = $this->getUploadCsvDir() . self::REMEDIATION;
+                        $handle = fopen($fileStr, 'r');
+                        $i = 0;
+                        $y = 0;
+                        $oldValue = 1;
+                        $pointControleId = $this->pointControleRepository->findByExampleField($id);
+                        while (($data = fgetcsv($handle, 1000, ";")) !== FALSE) {
+                            try {
+                                $i++;
+                                $remediation = new Remediation();
+                                if ($data[0] == $oldValue) {
+                                    $remediation->setPointControle($pointControleId[$y]);
+                                } else {
+                                    $y++;
+                                    $remediation->setPointControle($pointControleId[$y]);
+                                }
+                                $remediation->setLibelle((string) $data[1]);
+                                $this->entityManager->persist($remediation);
+                            } catch (\Exception $e) {
+                                $errorInsert = "L'import des remédiations a échoué lors de la ligne n° " . $i;
+                            }
+                            $oldValue = $data[0];
+                        }
+                        try {
+                            $this->entityManager->flush();
+                        } catch (\Exception $e) {
+                            $errorInsert = "L'import des remédiations a échoué lors du flush()";
+                        }
                     }
                 }
             }
         }
-        return ['errorInsert' => $errorInsert];
+        // On vérifie qu'il n'y a pas eu d'erreurs
+        if ($referentielSuccess && $chapitreSuccess && $recommandationSuccess && $pointControleSuccess) {
+            $this->entityManager->getConnection()->commit();
+            return ['errorInsert' => $errorInsert];
+        } else {
+            $this->entityManager->getConnection()->rollBack();
+            return ['errorInsert' => $errorInsert];
+        }
     }
 
     /**
@@ -251,7 +291,7 @@ class ImportCsvServices
         unlink($this->getUploadCsvDir() . self::REFERENTIEL);
         unlink($this->getUploadCsvDir() . self::CHAPITRE);
         unlink($this->getUploadCsvDir() . self::RECOMMANDATION);
-        unlink($this->getUploadCsvDir() . self::TYPE_PREUVE);
         unlink($this->getUploadCsvDir() . self::POINT_CONTROLE);
+        unlink($this->getUploadCsvDir() . self::REMEDIATION);
     }
 }
