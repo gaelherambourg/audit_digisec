@@ -83,7 +83,7 @@ class AuditControleController extends AbstractController
             }
                       
         }
-        
+        dump($ancienAudit);
         $sommeMaturite = 0;
         $nbPointControle = 0;
         $nbPointControleValide = 0;

@@ -157,14 +157,16 @@ class AuditController extends AbstractController
         $audit = $auditRepository->find($request->get('id'));
 
         //On désactive la limite de la memory du php.ini pour passer le pdf
-        ini_set('memory_limit','-1');
+        //ini_set('memory_limit','-1');
 
         //On définit des options du pdf
         $options = new Options();
         $options->set( 'isRemoteEnabled', TRUE );
+        $options->set( 'isPhpEnabled', TRUE );
 
         // On instancie la classe DomPdf
         $dompdf = new Dompdf($options);
+
         //On définit le context du pdf
         $contxt = stream_context_create([
             'http' => [
@@ -193,12 +195,17 @@ class AuditController extends AbstractController
 
         $dompdf->render();
 
+        
+
         //On range les données du PDF
         $output = $dompdf->output();
 
+        //$dompdf->stream("dompdf_out.pdf", array("Attachment" => false));
+        $dateAudit = $audit->getDateCreation()->format('d-m-Y');
+
         //On veut écrire le fichier pdf dans le directory public
         $publicDirectory = $kernel->getProjectDir() . '/public/pdf/audits';
-        $pdfFilePath = $publicDirectory . '/' . $audit->getId() . '.pdf';
+        $pdfFilePath = $publicDirectory . '/' . $audit->getSociete()->getNom() . '_' . $dateAudit . '.pdf';
 
         //On écrit dans le chemin désiré
         file_put_contents($pdfFilePath, $output);
@@ -207,10 +214,10 @@ class AuditController extends AbstractController
         $dompdf->render();
 
         //On redéfinit la memory_limit du php.ini
-        ini_set('memory_limit','20G');
+        //ini_set('memory_limit','20G');
 
         //On redirige après le chargement du pdf
-        return $this->redirectToRoute('audit_validation', ['id' => 8]);
+        return $this->redirectToRoute('audit_validation', ['id' => 2]);
     }
 
     //FONCTION POUR VERIFIER LE RENDU DU PDF QUE L'ON VEUT EXPORTER (A SUPPRIMER QUAND L'EXPORT PDF EST FINI)
