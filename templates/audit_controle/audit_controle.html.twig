@@ -13,15 +13,23 @@
         {{form_start(form_audit_controle)}}
         <fieldset class="box">
 			<legend class="label">Informations</legend>
-            <div><!-- Id du chapitre et son libellé -->
-            {{recommandation.chapitre.id}} - {{recommandation.chapitre.libelle}}
+            <div class="columns is-vcentered">
+                <div class="column is-offset-5 is-5 has-text-left"><!-- Id du chapitre et son libellé -->
+                    {{recommandation.chapitre.id}} - {{recommandation.chapitre.libelle}}
+                </div>
+                <!--  A rajouter quand on ramenera la progression d'un chapitre en fonction du nombre de recommandation valide du chapitre
+                <div class="columns is-2 has-text-left">
+                    <progress class="progress is-small" value="10" max="100">100%</progress>
+                </div>
+                -->
             </div>
+            
             <div class="mt-5 columns is-vcentered" id="idReco" data-id="{{recommandation.id}}"> <!-- Index référentiel de la recommandation et libellé de la recommandation -->
-                <div class="column is-8 has-text-right mr-5">
+                <div class="column is-offset-5 is-5 has-text-left">
                     {{recommandation.indexReferentiel}} - {{recommandation.libelle}} 
                 </div>
-                <div class="columns is-4 has-text-left">
-                    <progress class="progress is-info is-small" value="{{pourcentageValide}}" max="100">100%</progress>
+                <div class="columns is-2 has-text-left">
+                    <progress class="progress is-small" id="progressBar" value="{{pourcentageValide}}" max="100">100%</progress>
                 </div> 
             </div>
             <div class="mt-5 mr-1 has-text-justified"><!-- Description de la recommandation -->
@@ -32,7 +40,7 @@
                     <label class="label has-text-link">Maturité</label>
                 </div>
                 <div class="column is-2">
-                    <div class="control input is-link has-text-centered">
+                    <div class="control input has-text-centered is-link" disabled>
                     {% if maturiteReco == 0 %}
                         <p class="maturiteN1">0<p>
                     {% else %}                        
@@ -44,7 +52,7 @@
                     <label class="label has-text-link">Maturité N-1</label>
                 </div>
                 <div class="column is-2">
-                    <div class="control input is-link has-text-centered">
+                    <div class="control input is-link" disabled>
                     {% if maturiteRecoN1 is not null %}
                         <p class="maturiteN1">{{maturiteRecoN1|number_format(2)}}<p>
                     {% else %}
@@ -69,7 +77,7 @@
                             <label class="label has-text-link">Remarque N-1</label>
                         </div>
                         <div class="column is-6">
-                            <div class="control textarea has-text-justified is-link">{{remarque.remarque}}</div>
+                            <div class="control textarea has-text-justified is-link " disabled>{{remarque.remarque}}</div>
                         </div>
                     </div>
                     {% endif %}
@@ -115,8 +123,8 @@
                     {% if ancienAudit is not null %}
                         {% for auditControle in ancienAudit.auditsControle %}
                             {% if auditControle.pointControle.id == idPointControle %}
-                            <div class="column is-2">
-                                <div class="control input is-link has-text-centered">
+                            <div class="column is-2 is-vcentered">
+                                <div class="control input has-text-centered is-link" disabled>
                                     <p class="maturiteN1">{{auditControle.note}}<p>
                                 </div>
                             </div>

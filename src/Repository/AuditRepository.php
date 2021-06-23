@@ -35,10 +35,7 @@ class AuditRepository extends ServiceEntityRepository
     public function findAllAuditAllInformation()
     {
         return $this->createQueryBuilder('a')
-            ->leftJoin('a.referentiel', 'ref')->addSelect('ref')
-            ->join('ref.chapitres', 'chap')->addSelect('chap')
-            ->join('chap.recommandations', 'rec')->addSelect('rec')
-            ->join('a.audits_controle', 'ac')->addSelect('ac')
+            ->leftjoin('a.audits_controle', 'ac')->addSelect('ac')
             ->getQuery()
             ->getResult()
         ;
@@ -54,6 +51,7 @@ class AuditRepository extends ServiceEntityRepository
         ;
     }
 
+    
     // /**
     //  * @return Audit[] Returns an array of Audit objects
     //  */

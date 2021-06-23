@@ -6,6 +6,7 @@ window.onload = function () {
     showTypePreuve();
     ajoutPreuve();
     couleurRecomandationSelectionnee();
+    progressBar();
 }
 
 //Fonction permettant d'ouvrir la modal d'ajout de preuve au click sur le bouton ajouter preuve
@@ -193,3 +194,15 @@ function couleurRecomandationSelectionnee() {
     }
 }
 
+function progressBar(){
+    let progressBar = document.getElementById('progressBar');
+    if (progressBar.value <= 49) {
+        progressBar.className = "progress is-danger is-small";
+    }
+    if (progressBar.value > 49 && progressBar.value <= 99) {
+        progressBar.className = "progress is-warning is-small";
+    }
+    if (progressBar.value == 100) {
+        progressBar.className = "progress is-success is-small";
+    }
+}

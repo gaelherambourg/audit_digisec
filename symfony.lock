@@ -115,6 +115,9 @@
     "laminas/laminas-code": {
         "version": "3.4.1"
     },
+    "laminas/laminas-escaper": {
+        "version": "2.7.0"
+    },
     "liip/imagine-bundle": {
         "version": "1.8",
         "recipe": {
@@ -148,6 +151,9 @@
     },
     "phpdocumentor/type-resolver": {
         "version": "1.4.0"
+    },
+    "phpoffice/phpword": {
+        "version": "0.18.2"
     },
     "psr/cache": {
         "version": "1.0.1"
