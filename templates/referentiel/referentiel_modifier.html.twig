@@ -1,0 +1,30 @@
+{% extends "base.html.twig" %}
+
+{% block title %}Référentiels | Modifier
+{% endblock %}
+
+{% block body %}
+	<div class="columns">
+		<div class="column has-text-centered">
+			{{form_start(referentielForm)}}
+			{{ form_widget(referentielForm._token) }}
+			<h1 class="column is-three-fifths is-offset-one-fifth has-text-centered title">{{ form_widget(referentielForm.referentiel.type_referentiel) }}</h1>
+			<h1 class="column is-three-fifths is-offset-one-fifth has-text-centered title">{{ form_widget(referentielForm.referentiel.libelle) }}</h1>
+			<div class="column is-three-fifths is-offset-one-fifth has-text-centered">
+				{% for chapitre in referentielForm.chapitre %}
+					{{ form_widget(chapitre.libelle) }}
+				{% endfor %}
+				{% for recommandation in referentielForm.recommandation %}
+					{{ form_widget(recommandation.index_referentiel) }}
+					{{ form_widget(recommandation.libelle) }}
+					{{ form_widget(recommandation.description) }}
+				{% endfor %}
+				{{ form_end(referentielForm, {'render_rest': false}) }}
+			</div>
+		</div>
+	</div>
+{% endblock %}
+
+{% block javascripts %}
+	{{ parent() }}
+{% endblock %}

@@ -2,13 +2,19 @@
 
 namespace App\Controller;
 
+use App\Entity\Recommandation;
+use App\Entity\Referentiel;
 use App\Model\CsvForm;
 use App\Form\CsvFormType;
+use App\Form\ModifierReferentielFormType;
+use App\Form\ModifierSocieteFormType;
 use App\Form\RechercheSimpleType;
+use App\Form\ReferentielFormType;
 use App\Services\ErreursServices;
 use App\Services\ImportCsvServices;
 use Doctrine\ORM\EntityManagerInterface;
 use App\Repository\ReferentielRepository;
+use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -145,5 +151,42 @@ class ReferentielController extends AbstractController
         }
         // On retourne la réponse JSON
         return new JsonResponse(['resultat' => $resultat, 'erreur' => $erreurs]);
+    }
+
+    /**
+     * Modifie les informations d'une societe
+     * @Route("/referentiel/modifier/{id}", name="referentiel_modifier", requirements={"id"="\d+"})
+     */
+    public function referentielModifier(
+        $id,
+        Request $request,
+        ReferentielRepository $referentielRepository,
+        EntityManagerInterface $entityManager
+    ): Response {
+        
+        //On récupère l'id du référentiel
+        $id = $request->get('id');
+
+        $infoReferentiel = $referentielRepository->allInformation($id);
+        
+        $chapitres = $infoReferentiel->getChapitres();
+
+        $recommandations = new ArrayCollection();
+        foreach($chapitres as $chapitre){
+            foreach($chapitre->getRecommandations() as $reco){
+                $recommandations->add($reco);
+            }
+        }
+
+        $referentielForm = $this->createForm(ModifierReferentielFormType::class, ['referentiel' => $infoReferentiel,
+         'chapitre' => $chapitres, 'recommandation' => $recommandations
+        ]);
+
+        $referentielForm->handleRequest($request);
+
+        // On affiche le Twig avec les différents formulaires
+        return $this->render('referentiel/referentiel_modifier.html.twig', [
+            'referentielForm' => $referentielForm->createView()
+        ]);
     }
 }
