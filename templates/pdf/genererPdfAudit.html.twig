@@ -1,73 +1,169 @@
 <head>
-    <link rel="stylesheet" href="{{ app.request.schemeAndHttpHost }}/audit_digisec/public/css/pdf.css">
+    <link rel="stylesheet" href="{{ app.request.schemeAndHttpHost }}/audit_digisec/public/css/pdf.css"></link>
 </head>
 
-
 {% block body %}
+
+<table class="entete">
+        <tr>
+            <th class="thLogo">
+                Date : {{audit.dateCreation|date("m/d/Y")}}
+            </th>
+            <th class="thNomSociete">{{audit.societe.nom}}</th>
+            <th class="thRapport">Rapport d'audit</th>
+        </tr>
+    </table>
     <div class="logo">
-        <img src="{{ app.request.schemeAndHttpHost }}/audit_digisec/public/img/LOGO-DIGISEC-FULL-DETOURE.png">
+        <img src="{{ app.request.schemeAndHttpHost }}/audit_digisec/public/img/LOGO-DIGISEC-FULL-DETOURE.png" width="30%">
+        <h1>DIGISEC</h1>
     </div>
-    <h1 class="h1">{{audit.nom}}</h1>
 
-    <h4>Description de l'audit</h4>
-    <div>{{audit.description}}</div>
+    <h2>Rapport d'audit</h2>
+    <div class="conf">Confidentiel client</div>
 
-    <h4>Objectif et périmetre</h4>
-    <div>{{audit.objectifPerimetre}}</div>
 
-    <h4>Rôles et responsabilités</h4>
-    <div>{{audit.roleResponsabilite}}</div>
+    <div class="auteur">Auteur : Digisec</div>
 
-    <h4>Contraintes</h4>
-    <div>{{audit.contraintes}}</div>
+    <h3 class="DescriptionAudit">1. Introduction</h3>
+    
+    <h4>1.1 Description de l'audit</h4>
+    <hr>
+    <div class="ml justifTexte">{{audit.description}}</div>
 
-    {% for auditControle in audit.auditsControle %}
+    <h4>1.2 Objectif et périmetre</h4>
+    <hr>
+    <div class="ml justifTexte">{{audit.objectifPerimetre}}</div>
+
+    <h4>1.3 Rôles et responsabilités</h4>
+    <hr>
+    <div class="ml justifTexte">{{audit.roleResponsabilite}}</div>
+
+    <h4>1.4 Contraintes</h4>
+    <hr>
+    <div class="ml justifTexte contraintes">{{audit.contraintes}}</div>
+
+    {% set numChapitre = 1 %}
+    {% set numRecommandation = 1 %}
+    {% set numPC = 1 %}
+    {% for chapitre in audit.referentiel.chapitres %}
         
-        <h3 class="libellePC">{{auditControle.PointControle.libelle}}</h3>
-        <div>Maturité : {{auditControle.note}}</div>
-        <h4>Remarque</h4>
-        <div>{{auditControle.remarque}}</div>
 
-        <h4>Preuves</h4>
-        {% for preuve in auditControle.preuves %}
+        <h3 class="titreChapitre">{{numChapitre}}.    {{chapitre.libelle}}</h3>
+        
 
-            {% if preuve.texte is not empty %}
-                <div>{{preuve.texte}}</div>
-            {% elseif preuve.fichier is not empty %}
-                {% set fichier = 'preuves/fichiers/' ~ preuve.fichier %}
-                <div>
-                    <a href="{{ absolute_url(asset('' ~ fichier)) }}">{{preuve.fichier}}</a>
-                </div>
-            {% else %}
-                {% set img = 'media/cache/miniature/preuves/images/' ~ preuve.image %}
-               <!-- <img src="{{ asset('' ~ img| imagine_filter('miniature')) }}"> -->
-               <div class="imgPreuve">
-                    <img src="{{ absolute_url(asset('' ~ img)) }}">
-               </div>
-            {% endif %}
+        {% for recommandation in chapitre.recommandations %}
             
+            <h3 class="ml">{{numChapitre}}.{{numRecommandation}}.  {{recommandation.libelle}}</h3>
+
+            {% for remarque in audit.remarques %}
+                {% if remarque.recommandation.id == recommandation.id %}
+                
+                <div class="ml justifTexte">{{remarque.remarque}}</div>
+
+                {% endif %}
+            {% endfor %}
+
+            {% for auditControle in audit.auditsControle %}
+        
+                {% if auditControle.recommandation.id == recommandation.id %}
+
+                    <h3 class="mlPlus">{{numChapitre}}.{{numRecommandation}}.{{numPC}}.  {{auditControle.PointControle.libelle}}</h3>
+                    <hr class="mlPlus">
+                    
+                    
+                    <div class="mlPlusSpec maturite height"><span class="bold mat">Maturité</span>   : {{auditControle.note}}</div>
+                    <div class="trStrip mlPlusSpec height justifTexte"><span class="bold">Remarque </span>: {{auditControle.remarque}}</div>
+                    <div class="titreRemediation">Remédiations</div>
+                    {% set numRemed = 1 %}
+                    {% for remediation in auditControle.remediations %}
+                        {% if numRemed is divisible by(2) %}
+                            <div class="mlPlusSpec height">{{remediation.libelle}}</div>
+                        {% else %}
+                            <div class="trStrip mlPlusSpec height">{{remediation.libelle}}</div>
+                        {% endif %}
+                        {% set numRemed = numRemed + 1 %}
+                    {% endfor %}
+
+                    <h4 class="mlPlus">Preuves</h4>
+
+                    {% for preuve in auditControle.preuves %}
+
+                        {% if preuve.texte is not empty %}
+                            <div class="mlPlusSpec justifTexte">{{preuve.texte}}</div>
+                        {% endif %}
+                    
+                    {% endfor %}
+
+                    {% for preuve in auditControle.preuves %}
+
+                        {% if preuve.image is not empty %}
+                            {% set img = 'media/cache/miniature/preuves/images/' ~ preuve.image %}
+                            <div class="imgPreuve mlPlus">
+                                    <a href="{{ absolute_url(asset('' ~ img)) }}"><img src="{{ absolute_url(asset('' ~ img)) }}"></a>
+                            </div>
+                        {% endif %}
+                    
+                    {% endfor %}
+
+                    {% for preuve in auditControle.preuves %}
+
+                        {% if preuve.fichier is not empty %}
+                            {% set fichier = 'preuves/fichiers/' ~ preuve.fichier %}
+                            <div class="mlPlus">
+                                <a href="{{ absolute_url(asset('' ~ fichier)) }}">{{preuve.fichier}}</a>
+                            </div>
+                        {% endif %}
+                    
+                    {% endfor %}
+
+                        
+                    
+                    <div class="finAC"></div>
+                {% set numPC = numPC + 1 %}
+                {% endif %}
+
+                
+
+            {% endfor %}
+            {% set numRecommandation = numRecommandation + 1 %}
         {% endfor %}
-
-        <h4>Remédiations</h4>
-        {% for remediation in auditControle.remediations %}
-            <div>{{remediation.libelle}}</div>
-        {% endfor %}
-
-
+        {% set numChapitre = numChapitre + 1 %}
 
     {% endfor %}
 
-    <h4>Ecarts et constatations</h4>
-    <div>{{audit.ecartConstatation}}</div>
+
+    <h3>{{numChapitre}}. Bilan</h3>
+
+    <h4>{{numChapitre}}.1. Ecarts et constatations</h4>
+    <hr>
+    <div class="ml justifTexte">{{audit.ecartConstatation}}</div>
     
-    <h4>Recommandations</h4>
-    <div>{{audit.recommandations}}</div>
+    <h4>{{numChapitre}}.2. Recommandations</h4>
+    <hr>
+    <div class="ml justifTexte">{{audit.recommandations}}</div>
     
-    <h4>Commentaire du client</h4>
-    <div>{{audit.commentaireClient}}</div>
+    <h4>{{numChapitre}}.3. Commentaire du client</h4>
+    <hr>
+    <div class="ml justifTexte">{{audit.commentaireClient}}</div>
     
-    <h4>Remarque générale</h4>
-    <div>{{audit.remarqueGenerale}}</div>
+    <h4>{{numChapitre}}.4. Remarque générale</h4>
+    <hr>
+    <div class="ml justifTexte">{{audit.remarqueGenerale}}</div>
 
 {% endblock %}
+
+<script type="text/php">
+if ( isset($pdf) ) { 
+    $pdf->page_script('
+        if ($PAGE_COUNT > 1) {
+            $font = $fontMetrics->get_font("Arial, Helvetica, sans-serif", "normal");
+            $size = 12;
+            $pageText = "Page " . $PAGE_NUM . "/" . $PAGE_COUNT;
+            $y = 805;
+            $x = 520;
+            $pdf->text($x, $y, $pageText, $font, $size);
+        } 
+    ');
+}
+</script>
 

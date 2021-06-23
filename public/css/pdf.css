@@ -1,22 +1,128 @@
+body{
+    margin-top: 100px;
+}
 .logo{
     text-align: center;
+    margin-bottom: 200px;
+    margin-top: 100px;
 }
 
 .h1{
-    color: red;
+    color: rgb(109, 109, 109);
     text-align: center;
     margin-top: 20px;
 }
+h3{
+    color: rgb(39, 39, 163);
+    font-weight: bold;
+}
 h4{
     margin-top: 30px;
+    color: rgb(39, 39, 163);
+    font-weight: bold;
 }
-.libellePC{
-    margin-top: 30px;
-    page-break-before: always;
+.finAC{
+    page-break-after: always;
 }
 img{
-    margin: 10px;
+    margin: 25px 150px 25px 150px;
 }
 .imgPreuve{
+    margin-top: 20px;
     text-align: center;
+    height: 450px;
+    background-color: rgb(228, 226, 226);
+    
+}
+.DescriptionAudit{
+    page-break-before: always; 
+}
+.conf{
+    width: 80%;
+    margin: auto;
+    text-align: center;
+    vertical-align: middle;
+    border: 1px solid black;
+    border-radius: 5px;
+    background-color: red;
+    margin-top: 50px;
+    height: 30px;
+    vertical-align: middle;
+    line-height: 30px;
+    font-weight: bold;
+}
+h2{
+    width: 80%;
+    margin: auto;
+    text-align: center;
+    border: 1px solid black;
+    margin-bottom: 50px;
+}
+table{
+    width: 90%;
+    height: 50px;
+    margin: auto;
+}
+.thNomSociete{
+    width: 50%;
+    text-align: center;
+    border: 0.5px solid rgb(100, 100, 100);
+}
+.thLogo{
+    width: 25%;
+    border: 0.5px solid rgb(100, 100, 100);
+}
+.thRapport{
+    width: 25%;
+    border: 0.5px solid rgb(100, 100, 100);
+}
+.entete{
+    position: fixed;
+    top: 0cm;
+    left: 0cm;
+    margin-bottom: 100px;
+}
+.auteur{
+    position: fixed;
+    bottom: 0cm;
+    left: 0cm;
+}
+hr{
+    color: rgb(39, 39, 163);
+}
+.ml, h4, hr{
+    margin-left: 20px;
+}
+.mlPlus{
+    color: rgb(39, 39, 163);
+    margin-left: 40px;
+}
+.contraintes{
+    page-break-after: always;
+}
+.trStrip{
+    background-color: rgb(231, 231, 231);
+}
+.bold{
+    font-weight: bold;
+}
+.titreRemediation{
+    text-align: center;
+    font-weight: bold;
+    margin-top: 10px;
+}
+.maturite{
+    margin-top: 20px;
+}
+.height{
+    height: 20px;
+}
+.mlPlusSpec{
+    margin-left: 40px;
+}
+.mat{
+    margin-right: 2px;
+}
+.justifTexte{
+    text-align: justify;
 }

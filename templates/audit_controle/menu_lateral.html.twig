@@ -8,13 +8,64 @@
 			{% for chapitre in audit.referentiel.chapitres %}
 				<!-- On boucle sur les chapitres qui composent le référentiel sur lequel l'audit est effectué-->
 				<li>
-					<a class="is-size-7">{{chapitre.libelle}}</a>
+					<a class="is-size-7 has-text-weight-bold">{{chapitre.libelle}}</a>
 					<ul>
 						{% for recommandation in chapitre.recommandations %}
 							<!-- On boucle sur les recommandations du chapitre -->
+
+							<!-- LOGIQUE DE VERIFICATION NORMALEMENT DANS LE CONTROLLER : PAR MANQUE DE TEMPS RESTE ICI POUR LE MOMENT -->
+							{% set remarqueRecoValide = false %}
+							{% for remarque in audit.remarques %}
+								{% if remarque.recommandation.id == recommandation.id %}
+									{% if remarque.remarque is not empty %}
+										{% set remarqueRecoValide = true %}
+									{% endif %}
+								{% endif %}
+							{% endfor %}
+
+							{% set recoValide = 0 %}
+							{% set nbPC_reco = 0 %}
+							{% set recoNonValide = 0 %}
+
+							{% for auditControle in audit.auditsControle %}
+								
+								{% if auditControle.recommandation.id == recommandation.id %}
+									{% if auditControle.estValide %}
+										{% set recoValide = recoValide + 1  %}
+									{% else %}
+										{% set recoNonValide = recoNonValide + 1 %}	
+									{% endif %}
+									{% set nbPC_reco = nbPC_reco + 1  %}
+								{% endif %}
+							{% endfor %}
+
+							<!-- FIN DE LA LOGIQUE A TRANSFERER DANS CONTROLLER OU SERVICE -->
+							<!-- A RETRAVAILLER (SWITCH) !!!! -->
+							{% if recoValide == nbPC_reco and remarqueRecoValide == true %} <!-- Si tous les points de contrôles sont valide, la recommandation est en vert -->
 							<li>
-								<a href="{{ path('audit_controle', {id:audit.id, id_recommandation:recommandation.id})}}" class="aSelected" id="{{recommandation.id}}">{{recommandation.libelle}}</a>
+								<a href="{{ path('audit_controle', {id:audit.id, id_recommandation:recommandation.id})}}" class="aSelected has-text-success" id="{{recommandation.id}}">{{recommandation.libelle}}</a>
+							</li>							
+							{% endif %}
+							{% if recoValide == nbPC_reco and remarqueRecoValide == false %} <!-- Si tous les points de contrôles sont valide mais la remarque recommandation ne l'est pas, la recommandation est en orange -->
+							<li>
+								<a href="{{ path('audit_controle', {id:audit.id, id_recommandation:recommandation.id})}}" class="aSelected has-text-weight-bold has-text-warning" id="{{recommandation.id}}">{{recommandation.libelle}}</a>
+							</li>							
+							{% endif %}
+							{% if recoNonValide == nbPC_reco and remarqueRecoValide == false %} <!-- Si tous les points de contrôles ne sont pas valide, la recommandation est en rouge -->
+							<li>
+								<a href="{{ path('audit_controle', {id:audit.id, id_recommandation:recommandation.id})}}" class="aSelected has-text-danger" id="{{recommandation.id}}">{{recommandation.libelle}}</a>
 							</li>
+							{% endif %}
+							{% if recoNonValide == nbPC_reco and remarqueRecoValide == true %} <!-- Si tous les points de contrôles ne sont pas valide mais la remarque reco est valide, la recommandation est en orange -->
+							<li>
+								<a href="{{ path('audit_controle', {id:audit.id, id_recommandation:recommandation.id})}}" class="aSelected has-text-weight-bold has-text-warning" id="{{recommandation.id}}">{{recommandation.libelle}}</a>
+							</li>
+							{% endif %}
+							{% if recoValide != nbPC_reco and recoNonValide != nbPC_reco  %} <!-- Si au moins un point de contrôle n'est pas valide, la recommandation est en orange -->
+							<li>
+								<a href="{{ path('audit_controle', {id:audit.id, id_recommandation:recommandation.id})}}" class="aSelected has-text-weight-bold has-text-warning" id="{{recommandation.id}}">{{recommandation.libelle}}</a>
+							</li>
+							{% endif %}
 						{% endfor %}
 					</ul>
 				</li>

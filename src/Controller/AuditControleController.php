@@ -18,6 +18,7 @@ use App\Repository\AuditRepository;
 use App\Repository\PreuveRepository;
 use App\Repository\RecommandationRepository;
 use App\Repository\RemarqueRepository;
+use App\Repository\StatutRepository;
 use App\Services\FichierPreuveServices;
 use App\Services\ImagePreuveServices;
 use App\Services\LogoServices;
@@ -40,7 +41,8 @@ class AuditControleController extends AbstractController
                                    AuditRepository $auditRepository,
                                    PreuveRepository $preuveRepository,
                                    RemarqueRepository $remarqueRepository,
-                                   RecommandationRepository $recommandationRepository)
+                                   RecommandationRepository $recommandationRepository,
+                                   StatutRepository $statutRepository)
     {
 
         //On récupère l'id de l'audit
@@ -64,16 +66,13 @@ class AuditControleController extends AbstractController
         //Recherche d'un éventuel ancien audit
         $ancienAudit = null;
         $listeAuditParSociete = $auditRepository->findAuditBySociete($audit->getSociete()->getId());
-        dump($listeAuditParSociete);
         $sommeMaturite_N1 = null;
         if(count($listeAuditParSociete) > 1){
             for($i=0; $i<count($listeAuditParSociete); $i++){
-                dump($listeAuditParSociete[$i]->getId());
                 if($listeAuditParSociete[$i]->getId() == $id && $i != (count($listeAuditParSociete) - 1)){
                     $ancienAudit = $listeAuditParSociete[$i+1];
                 }
             }
-            //$ancienAudit = $listeAuditParSociete[1];
             if($ancienAudit != null){
                 foreach($ancienAudit->getAuditsControle() as $auditControle){                
                     if($auditControle->getRecommandation()->getId() == $id_recommandation){
@@ -83,7 +82,6 @@ class AuditControleController extends AbstractController
             }
                       
         }
-        
         $sommeMaturite = 0;
         $nbPointControle = 0;
         $nbPointControleValide = 0;
@@ -150,6 +148,15 @@ class AuditControleController extends AbstractController
             $entityManager->persist($audit);
             $entityManager->flush();
 
+            //On vérifie s'il y a des recommandations où la remarque n'est pas rempli
+            $id_recommandation_NonValide = null;
+            foreach($audit->getRemarques() as $remarque){
+                if(empty($remarque->getRemarque())){
+                    $id_recommandation_NonValide = $remarque->getRecommandation()->getId();
+                    break;
+                }
+            }
+
             //A l'enregistrement de la recommandation, on vérifie si celle-ci est la dernière du référentiel, si oui, on passe à la validation de l'audit
             //sinon, on passe à la recommandation suivante
             if($id_recommandation < $nbReco){
@@ -161,10 +168,28 @@ class AuditControleController extends AbstractController
                 $listeAuditControles = $auditControleRepository->findAllPointControleByAudit($id);
                 foreach($listeAuditControles as $auditControle){
                     if($auditControle->getEstValide() == false){
-                        return $this->redirectToRoute('audit_controle', ['id' => $id, 'id_recommandation' => $auditControle->getRecommandation()->getId()]);
-                    }  
+                        if($id_recommandation_NonValide != null && $id_recommandation_NonValide < $auditControle->getRecommandation()->getId() ){
+                            // On ajoute un message flash
+                            $this->addFlash("danger", "Tous les points de contrôles doivent être remplis"); 
+                            return $this->redirectToRoute('audit_controle', ['id' => $id, 'id_recommandation' => $id_recommandation_NonValide]);
+                        }else{
+                            // On ajoute un message flash
+                            $this->addFlash("danger", "Tous les points de contrôles doivent être remplis");
+                            return $this->redirectToRoute('audit_controle', ['id' => $id, 'id_recommandation' => $auditControle->getRecommandation()->getId()]);
+                        }
+                    }else{
+                        if($id_recommandation_NonValide != null){
+                            // On ajoute un message flash
+                            $this->addFlash("danger", "Tous les points de contrôles doivent être remplis"); 
+                            return $this->redirectToRoute('audit_controle', ['id' => $id, 'id_recommandation' => $id_recommandation_NonValide]);
+                        }
+                    } 
                 }
-                //On redirige vers la liste d'audit si c'est la derniere recommandation de l'audit
+                //On redirige vers la liste d'audit si c'est la derniere recommandation de l'audit et que toutes les reco sont valides
+                //On passe le statut de l'audit à terminé
+                $audit->setStatut($statutRepository->findStatutByLibelle("Termine"));
+                $entityManager->persist($audit);
+                $entityManager->flush();
                 return $this->redirectToRoute('audit_validation', ['id' => $id]);
             }
         }

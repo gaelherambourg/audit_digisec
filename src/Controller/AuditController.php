@@ -13,7 +13,9 @@ use App\Form\ValidationAuditFormType;
 use App\Kernel;
 use App\Repository\AuditRepository;
 use App\Repository\SocieteRepository;
+use App\Repository\StatutRepository;
 use Doctrine\ORM\EntityManagerInterface;
+use DOMDocument;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -35,7 +37,6 @@ class AuditController extends AbstractController
 
         //On récupère la liste de tous les audits en bdd
         $tous_les_audits = $auditRepository->findAllAuditAllInformation();
-        dump($tous_les_audits);
         return $this->render('audit/audit_liste.html.twig', [
             'tous_les_audits' => $tous_les_audits
         ]);
@@ -46,7 +47,8 @@ class AuditController extends AbstractController
      */
     public function creationAudit(Request $request,
                                   EntityManagerInterface $entityManager,
-                                  AuditRepository $auditRepository)
+                                  AuditRepository $auditRepository,
+                                  StatutRepository $statutRepository)
     {
         //On récupère l'id de la société sur laquelle on veut créer l'audit
         $id_societe = $request->get('id');
@@ -70,7 +72,7 @@ class AuditController extends AbstractController
             // On modifie les données vide de l'audit
             $audit->setDateCreation(new \DateTime());
             $audit->setNom($societe_audit->getNom()." - ".$audit->getReferentiel()->getLibelle()." - ".$audit->getDateCreation()->format('d/m/Y'));
-            $audit->setStatut($entityManager->find(Statut::class, 1));
+            $audit->setStatut($statutRepository->findStatutByLibelle("En cours"));
             
             foreach($audit->getReferentiel()->getChapitres() as $chapitre){
 
@@ -156,15 +158,21 @@ class AuditController extends AbstractController
 
         $audit = $auditRepository->find($request->get('id'));
 
+/* 
+        $phpWord = new \PhpOffice\PhpWord\PhpWord();
+        $section = $phpWord->addSection();
+ */
         //On désactive la limite de la memory du php.ini pour passer le pdf
-        ini_set('memory_limit','-1');
+        //ini_set('memory_limit','-1');
 
         //On définit des options du pdf
         $options = new Options();
         $options->set( 'isRemoteEnabled', TRUE );
+        $options->set( 'isPhpEnabled', TRUE );
 
         // On instancie la classe DomPdf
         $dompdf = new Dompdf($options);
+
         //On définit le context du pdf
         $contxt = stream_context_create([
             'http' => [
@@ -192,25 +200,41 @@ class AuditController extends AbstractController
         $dompdf->setPaper('A4', 'portrait');
 
         $dompdf->render();
-
+/* 
+        $doc = new DOMDocument();
+        @$doc->loadHTML($html);
+        $doc->saveHTML();
+        \PhpOffice\PhpWord\Shared\Html::addHtml($section, $doc->saveHtml(),true);
+ */
+        $dateAudit = $audit->getDateCreation()->format('d-m-Y');
+/* 
+        $objWriter = \PhpOffice\PhpWord\IOFactory::createWriter($phpWord, 'Word2013');
+	    $objWriter->save(($audit->getSociete()->getNom() . '_' . $dateAudit . '.pdf'), 'Word2013', true);
+        
+ */
         //On range les données du PDF
         $output = $dompdf->output();
 
+        //$dompdf->stream("dompdf_out.pdf", array("Attachment" => false));
+        
+
         //On veut écrire le fichier pdf dans le directory public
         $publicDirectory = $kernel->getProjectDir() . '/public/pdf/audits';
-        $pdfFilePath = $publicDirectory . '/' . $audit->getId() . '.pdf';
+        $pdfFilePath = $publicDirectory . '/' . $audit->getSociete()->getNom() . '_' . $dateAudit . '.pdf';
 
         //On écrit dans le chemin désiré
         file_put_contents($pdfFilePath, $output);
+
+
 
         // On rend le html en pdf
         $dompdf->render();
 
         //On redéfinit la memory_limit du php.ini
-        ini_set('memory_limit','20G');
+        //ini_set('memory_limit','20G');
 
         //On redirige après le chargement du pdf
-        return $this->redirectToRoute('audit_validation', ['id' => 8]);
+        return $this->redirectToRoute('audit_validation', ['id' => 2]);
     }
 
     //FONCTION POUR VERIFIER LE RENDU DU PDF QUE L'ON VEUT EXPORTER (A SUPPRIMER QUAND L'EXPORT PDF EST FINI)

@@ -19,6 +19,15 @@ class StatutRepository extends ServiceEntityRepository
         parent::__construct($registry, Statut::class);
     }
 
+    public function findStatutByLibelle($statut){
+        return $this->createQueryBuilder('s')
+            ->andWhere('s.libelle = :val')
+            ->setParameter('val', $statut)
+            ->getQuery()
+            ->getSingleResult()
+        ;
+    }
+
     // /**
     //  * @return Statut[] Returns an array of Statut objects
     //  */
