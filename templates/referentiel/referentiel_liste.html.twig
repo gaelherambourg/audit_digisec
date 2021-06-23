@@ -56,8 +56,8 @@
 					<!-- Si la recherche de l'utilisateur a donné des résultats -->
 					{% for referentiel in referentiel_recherches %}
 						<!-- on affiche les résultats -->
-						<tr>
-							<td id="{{referentiel.id}}">{{ referentiel.libelle }}</td>
+						<tr id="{{referentiel.id}}">
+							<td>{{ referentiel.libelle }}</td>
 							<td>{{ referentiel.typeReferentiel }}</td>
 						</tr>
 					{% endfor %}
@@ -69,8 +69,8 @@
 					{% else %}
 						<!-- On affiche tous les référentielss dans la liste si aucune recherche n'a été effectué -->
 						{% for referentiel in tous_les_referentiels %}
-							<tr>
-								<td id="{{referentiel.id}}">{{ referentiel.libelle }}</td>
+							<tr id="{{referentiel.id}}">
+								<td>{{ referentiel.libelle }}</td>
 								<td>{{ referentiel.typeReferentiel }}</td>
 							</tr>
 						{% endfor %}
@@ -83,7 +83,7 @@
 		<div class="columns has-text-right">
 
 			<div class="column is-offset-two-fifths" id="divModifier">
-				<a id="lienModifier">
+				<a id="lienModifierReferentiel">
 					<button class="button is-info is-fullwidth" id="btnModifier" disabled="true">Modifier le referentiel</button>
 				</a>
 			</div>
@@ -124,5 +124,5 @@
 
 {% block javascripts %}
 	{{ parent() }}
-	<script type="text/javascript" src="{{asset('js/audit_liste.js')}}"></script>
+	<script type="text/javascript" src="{{asset('js/referentiel_liste.js')}}"></script>
 {% endblock %}
