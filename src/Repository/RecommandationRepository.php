@@ -19,15 +19,15 @@ class RecommandationRepository extends ServiceEntityRepository
         parent::__construct($registry, Recommandation::class);
     }
     //Compte le nombre de recommandation par référentiel
-    public function nbRecommandationByReferentieo($id_referentiel){
+    public function RecommandationByReferentiel($id_referentiel){
         $queryBuilder = $this->createQueryBuilder('r');
         return $queryBuilder
             ->join('r.chapitre','c')->addSelect('c')
             ->andWhere('c.referentiel = :id')
             ->setParameter('id',$id_referentiel)
-            ->select('COUNT(r.id) AS cnt')
+            ->orderBy('r.id', 'DESC')
             ->getQuery()
-            ->getSingleScalarResult();
+            ->getResult();
     }
 
     public function findByExampleField($id)

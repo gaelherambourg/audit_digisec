@@ -52,7 +52,9 @@ class AuditControleController extends AbstractController
         //On requête en bdd pour récupérer la recommandation grâce à l'id
         $recommandation = $entityManager->find(Recommandation::class, $id_recommandation);
         //On vérifie combien de recommandations existent pour ce référentiel
-        $nbReco = $recommandationRepository->nbRecommandationByReferentieo($audit->getReferentiel()->getId());
+        $recoParReferentiel = $recommandationRepository->RecommandationByReferentiel($audit->getReferentiel()->getId());
+        $derniereRecommandationId = $recoParReferentiel[0]->getId();
+        dump($derniereRecommandationId);
         //On instancie une nouvelle liste d'audit_controle
         $listeAuditControle = new ArrayCollection();
         //On instancie une nouvelle preuve
@@ -61,8 +63,7 @@ class AuditControleController extends AbstractController
         $remarque = $remarqueRepository->findByAuditAndRecommandation($id, $id_recommandation);
         //On remplit la liste d'audit_controles avec les points de controles équivalents au référentiel de l'audit en cours
         $listeAuditControle = $auditControleRepository->findAllPointControleByAuditAndRecommandation($id, $id_recommandation);
-        
-
+                
         //Recherche d'un éventuel ancien audit
         $ancienAudit = null;
         $listeAuditParSociete = $auditRepository->findAuditBySociete($audit->getSociete()->getId());
@@ -98,6 +99,13 @@ class AuditControleController extends AbstractController
             $maturiteRecoN1 = $sommeMaturite_N1/(count($listeAuditControle));
         }
         $pourcentageValide = ($nbPointControleValide/$nbPointControle)*100;
+
+        if(substr($audit->getEchelleNotation()->getEchelle(), -1) == "5" ){
+            $maxNote = 5;
+        }
+        if(substr($audit->getEchelleNotation()->getEchelle(), -1) == "3" ){
+            $maxNote = 3;
+        }
 
          //Création du formulaire
         $audit_form_controle = $this->createForm(AuditPointControleType::class, ['audit_controle' => $listeAuditControle, 'remarque' => $remarque]);
@@ -159,7 +167,7 @@ class AuditControleController extends AbstractController
 
             //A l'enregistrement de la recommandation, on vérifie si celle-ci est la dernière du référentiel, si oui, on passe à la validation de l'audit
             //sinon, on passe à la recommandation suivante
-            if($id_recommandation < $nbReco){
+            if($id_recommandation < $derniereRecommandationId){
                 $id_suivant_recommandation = $id_recommandation + 1;
                 // On redirige vers la recommandation suivante
                 return $this->redirectToRoute('audit_controle', ['id' => $id, 'id_recommandation' => $id_suivant_recommandation]);
@@ -168,19 +176,15 @@ class AuditControleController extends AbstractController
                 $listeAuditControles = $auditControleRepository->findAllPointControleByAudit($id);
                 foreach($listeAuditControles as $auditControle){
                     if($auditControle->getEstValide() == false){
-                        if($id_recommandation_NonValide != null && $id_recommandation_NonValide < $auditControle->getRecommandation()->getId() ){
-                            // On ajoute un message flash
-                            $this->addFlash("danger", "Tous les points de contrôles doivent être remplis"); 
-                            return $this->redirectToRoute('audit_controle', ['id' => $id, 'id_recommandation' => $id_recommandation_NonValide]);
-                        }else{
-                            // On ajoute un message flash
-                            $this->addFlash("danger", "Tous les points de contrôles doivent être remplis");
-                            return $this->redirectToRoute('audit_controle', ['id' => $id, 'id_recommandation' => $auditControle->getRecommandation()->getId()]);
-                        }
+                        
+                        // On ajoute un message flash
+                        $this->addFlash("danger", "Tous les points de contrôles doivent être remplis B");
+                        return $this->redirectToRoute('audit_controle', ['id' => $id, 'id_recommandation' => $auditControle->getRecommandation()->getId()]);
+                    
                     }else{
-                        if($id_recommandation_NonValide != null){
+                        if($id_recommandation_NonValide != null && $id_recommandation_NonValide <= $auditControle->getRecommandation()->getId()){
                             // On ajoute un message flash
-                            $this->addFlash("danger", "Tous les points de contrôles doivent être remplis"); 
+                            $this->addFlash("danger", "Tous les points de contrôles doivent être remplis C"); 
                             return $this->redirectToRoute('audit_controle', ['id' => $id, 'id_recommandation' => $id_recommandation_NonValide]);
                         }
                     } 
@@ -204,7 +208,8 @@ class AuditControleController extends AbstractController
             'pourcentageValide' => $pourcentageValide,
             'ancienAudit' => $ancienAudit,
             'maturiteReco' => $maturiteReco,
-            'maturiteRecoN1' => $maturiteRecoN1
+            'maturiteRecoN1' => $maturiteRecoN1,
+            'maxNote' => $maxNote
         ]);
     }
 }
