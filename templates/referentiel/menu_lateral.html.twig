@@ -8,7 +8,7 @@
 			<!-- On boucle sur les chapitres qui composent le référentiel sur lequel l'audit est effectué-->
 			<li>
 				<a id="chapitre_recommandation{{loop.index}}" class="is-size-7">{{chapitre.libelle}}</a>
-				<span id="recommandation{{loop.index}}">
+				<span id="recommandation{{loop.index}}" style="display: none;">
 					<ul>
 						{% for recommandation in chapitre.recommandations %}
 							<!-- On boucle sur les recommandations du chapitre -->

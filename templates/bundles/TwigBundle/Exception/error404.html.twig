@@ -7,12 +7,15 @@
 {% extends 'base.html.twig' %}
 
 {% block body %}
-    <h1>Page not found</h1>
-
-<h1>404</h1>
-<h1>{{ status_text }}</h1>
-        <h2>✋ >Oups !! La page n'a pas été trouvée :-( ✋<br><br></h2>
-            <h2>La page demandée n'a pas pu être localisée.<br><br>
-                Vérifiez toute faute d'orthographe de l'URL ou <br><a href="{{ path('audit_liste') }}"> revenez à la page d'accueil</a>. </h2>
-    
+	<div class="notification is-danger is-light column has-text-centered"> 
+        <div>Page non trouvée</div>
+		<strong>Erreur 404</strong>
+		<div>
+			Oups !! La page demandée n'a pas pu être localisée.
+		</div>
+		<div>
+			<a href="{{ path('audit_liste') }}">
+				revenez à la page d'accueil</a>.
+		</div>
+	</div>
 {% endblock %}

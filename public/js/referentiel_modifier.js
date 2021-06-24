@@ -32,7 +32,11 @@ function getElementsByRegexId(regexpParam, tagParam) {
 function cacherElement(parametre, nomAction) {
     var nombreSpanAvecParametre = getElementsByRegexId(parametre, "span");
     for (var i = 1; i <= nombreSpanAvecParametre.length; i++) {
-        document.getElementById(nomAction + i).style.display = "none";
+        if (sessionStorage.getItem(i) != "block") {
+            document.getElementById(nomAction + i).style.display = "none";
+        } else {
+            document.getElementById(nomAction + i).style.display = "block";
+        }
         ajouterListener(i, nomAction);
     }
 };
@@ -47,8 +51,10 @@ function ajouterListener(i, nomAction) {
         e.preventDefault();
         if (document.getElementById(nomAction + i).style.display == "none") {
             document.getElementById(nomAction + i).style.display = "block";
+            sessionStorage.setItem(i, document.getElementById(nomAction + i).style.display);
         } else {
             document.getElementById(nomAction + i).style.display = "none";
+            sessionStorage.setItem(i, document.getElementById(nomAction + i).style.display);
         }
     })
 };
