@@ -2,10 +2,13 @@
 
 namespace App\Entity;
 
-use App\Repository\PointControleRepository;
-use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use App\Repository\PointControleRepository;
+use Doctrine\Common\Collections\Collection;
+use Doctrine\Common\Collections\ArrayCollection;
+use Symfony\Component\Validator\Constraints\Length;
+use Symfony\Component\Validator\Constraints\NotBlank;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ORM\Entity(repositoryClass=PointControleRepository::class)
@@ -21,11 +24,16 @@ class PointControle
 
     /**
      * @ORM\Column(type="string", length=255)
+     * @Assert\NotBlank(message="Ce champ ne doit pas être vide.")
+     * @Assert\Length(max=255, maxMessage="Ce champ a un maximum de 255 caractères")
      */
     private $libelle;
 
     /**
      * @ORM\Column(type="string", length=30)
+     * @Assert\NotBlank(message="Ce champ ne doit pas être vide.")
+     * @Assert\Length(max=30, maxMessage="Ce champ a un maximum de 30 caractères")
+     * 
      */
     private $type_critere;
     

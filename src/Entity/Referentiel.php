@@ -2,10 +2,13 @@
 
 namespace App\Entity;
 
-use App\Repository\ReferentielRepository;
-use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\Common\Collections\Collection;
+use Symfony\Component\Validator\Constraints as Assert;
 use Doctrine\ORM\Mapping as ORM;
+use App\Repository\ReferentielRepository;
+use Doctrine\Common\Collections\Collection;
+use Doctrine\Common\Collections\ArrayCollection;
+use Symfony\Component\Validator\Constraints\Length;
+use Symfony\Component\Validator\Constraints\NotBlank;
 
 /**
  * @ORM\Entity(repositoryClass=ReferentielRepository::class)
@@ -21,6 +24,8 @@ class Referentiel
 
     /**
      * @ORM\Column(type="string", length=255)
+     * @Assert\NotBlank(message="Ce champ ne doit pas être vide.")
+     * @Assert\Length(max=255, maxMessage="Ce champ a un maximum de 255 caractères")
      */
     private $libelle;
 
@@ -31,6 +36,8 @@ class Referentiel
 
     /**
      * @ORM\Column(type="string", length=100)
+     * @Assert\NotBlank(message="Ce champ ne doit pas être vide.")
+     * @Assert\Length(max=100, maxMessage="Ce champ a un maximum de 100 caractères")
      */
     private $type_referentiel;
 
@@ -55,7 +62,7 @@ class Referentiel
         return $this->libelle;
     }
 
-    public function setLibelle(string $libelle): self
+    public function setLibelle($libelle): self
     {
         $this->libelle = $libelle;
 
@@ -97,7 +104,7 @@ class Referentiel
         return $this->type_referentiel;
     }
 
-    public function setTypeReferentiel(string $type_referentiel): self
+    public function setTypeReferentiel($type_referentiel): self
     {
         $this->type_referentiel = $type_referentiel;
 
