@@ -23,8 +23,8 @@ class ReferentielRepository extends ServiceEntityRepository
     {
         //Recherche de la saisie formulaire societe en BDD
         $queryBuilder = $this->createQueryBuilder('r')
-                        ->andWhere('r.libelle LIKE :ru')
-                        ->setParameter(':ru', '%'.$recherche_utilisateur.'%');
+            ->andWhere('r.libelle LIKE :ru')
+            ->setParameter(':ru', '%' . $recherche_utilisateur . '%');
         return $queryBuilder->getQuery()->getResult();
     }
 
@@ -40,7 +40,16 @@ class ReferentielRepository extends ServiceEntityRepository
             ->andWhere('r.id = :id')->setParameter('id', $id);
         $query = $queryBuilder->getQuery();
         return $query->getSingleResult();
+    }
 
+    public function allAuditInformation()
+    {
+        //Recherche de la saisie formulaire societe en BDD
+        $queryBuilder = $this->createQueryBuilder('r')
+            ->join('r.chapitres', 'c')->addSelect('c')
+            ->join('c.recommandations', 'rec')->addSelect('rec');
+        $query = $queryBuilder->getQuery();
+        return $queryBuilder->getQuery()->getResult();
     }
     // /**
     //  * @return Referentiel[] Returns an array of Referentiel objects

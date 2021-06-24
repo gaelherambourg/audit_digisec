@@ -32,6 +32,17 @@ class PointControleRepository extends ServiceEntityRepository
         ;
     }
 
+    public function pointControleParRecommandation($id)
+    {
+        return $this->createQueryBuilder('pc')
+            ->join('pc.recommandation', 'r')->addSelect('r')
+            ->andWhere('pc.recommandation = :val')
+            ->setParameter('val', $id)
+            ->getQuery()
+            ->getResult()
+        ;
+    }
+
     // /**
     //  * @return PointControle[] Returns an array of PointControle objects
     //  */

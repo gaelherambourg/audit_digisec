@@ -5,26 +5,57 @@
 
 {% block body %}
 	<div class="columns">
+		<div class="column is-one-fifth">
+			{% include 'referentiel/menu_lateral.html.twig' %}
+			<!-- On importe le menu latéral avec le nom des chapitres et recommandations -->
+		</div>
 		<div class="column has-text-centered">
-			{{form_start(referentielForm)}}
-			{{ form_widget(referentielForm._token) }}
-			<h1 class="column is-three-fifths is-offset-one-fifth has-text-centered title">{{ form_widget(referentielForm.referentiel.type_referentiel) }}</h1>
-			<h1 class="column is-three-fifths is-offset-one-fifth has-text-centered title">{{ form_widget(referentielForm.referentiel.libelle) }}</h1>
-			<div class="column is-three-fifths is-offset-one-fifth has-text-centered">
-				{% for chapitre in referentielForm.chapitre %}
-					{{ form_widget(chapitre.libelle) }}
-				{% endfor %}
-				{% for recommandation in referentielForm.recommandation %}
-					{{ form_widget(recommandation.index_referentiel) }}
-					{{ form_widget(recommandation.libelle) }}
-					{{ form_widget(recommandation.description) }}
-				{% endfor %}
-				{{ form_end(referentielForm, {'render_rest': false}) }}
+			<div class="column has-text-centered">
+				<div class="column is-10 is-offset-1 has-text-centered">
+					{{form_start(referentielForm)}}
+					<fieldset class="box">
+						<legend class="label">Référentiel</legend>
+						{{ form_label(referentielForm.referentiel.type_referentiel, null, {'attr': {'class': 'has-text-link'} }) }}
+						{{ form_widget(referentielForm.referentiel.type_referentiel, {'attr': {'class': 'input is-link'}}) }}
+						{{ form_label(referentielForm.referentiel.libelle, null, {'attr': {'class': 'has-text-link'} }) }}
+						{{ form_widget(referentielForm.referentiel.libelle) }}
+					</fieldset>
+					<fieldset class="box">
+						<legend class="label">Chapitre</legend>
+						{{ form_label(referentielForm.chapitre.libelle, null, {'attr': {'class': 'has-text-link'} }) }}
+						{{ form_widget(referentielForm.chapitre.libelle) }}
+					</fieldset>
+					<fieldset class="box">
+						<legend class="label">Recommandation</legend>
+						{{ form_label(referentielForm.recommandation.index_referentiel, null, {'attr': {'class': 'has-text-link'} }) }}
+						{{ form_widget(referentielForm.recommandation.index_referentiel) }}
+						{{ form_label(referentielForm.recommandation.libelle, null, {'attr': {'class': 'has-text-link'} }) }}
+						{{ form_widget(referentielForm.recommandation.libelle) }}
+						{{ form_label(referentielForm.recommandation.description, null, {'attr': {'class': 'has-text-link'} }) }}
+						{{ form_widget(referentielForm.recommandation.description) }}
+					</fieldset>
+					<fieldset class="box">
+						<legend class="label">Point de contrôle</legend>
+						{% for pointControle in referentielForm.pointControle %}
+							{{ form_label(pointControle.type_critere, null, {'attr': {'class': 'has-text-link'} }) }}
+							{{ form_widget(pointControle.type_critere) }}
+							{{ form_widget(pointControle.libelle) }}
+						{% endfor %}
+					</fieldset>
+
+					<div class="section columns">
+						<div class="column"></div>
+						<a class="button is-medium is-link is-light is-3 is-fullwidth" href="{{path('referentiel_liste')}}">Annuler</a>
+						<div class="column"></div>
+						<button type="submit" class="button is-medium is-link is-light is-3 is-fullwidth">Modifier</button>
+					</div>
+
+					{{form_end(referentielForm) }}
+				</div>
 			</div>
 		</div>
-	</div>
-{% endblock %}
+	{% endblock %}
 
-{% block javascripts %}
-	{{ parent() }}
-{% endblock %}
+	{% block javascripts %}
+		{{ parent() }}
+	{% endblock %}

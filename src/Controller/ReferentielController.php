@@ -10,11 +10,14 @@ use App\Form\ModifierReferentielFormType;
 use App\Form\ModifierSocieteFormType;
 use App\Form\RechercheSimpleType;
 use App\Form\ReferentielFormType;
+use App\Repository\PointControleRepository;
+use App\Repository\RecommandationRepository;
 use App\Services\ErreursServices;
 use App\Services\ImportCsvServices;
 use Doctrine\ORM\EntityManagerInterface;
 use App\Repository\ReferentielRepository;
 use Doctrine\Common\Collections\ArrayCollection;
+use PhpParser\Node\Expr\Cast\Object_;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -45,7 +48,9 @@ class ReferentielController extends AbstractController
         $csvRegisterForm->handleRequest($request);
 
         //On récupère tous les référentiels en bdd
-        $tous_les_referentiels = $referentielRepository->findAll();
+        $tous_les_referentiels = $referentielRepository->allAuditInformation();
+
+        //dd($tous_les_referentiels);
 
         if ($form->isSubmitted() && $form->isValid()) {
             $recherche_utilisateur = $form->get('recherche')->getData();
@@ -155,38 +160,55 @@ class ReferentielController extends AbstractController
 
     /**
      * Modifie les informations d'une societe
-     * @Route("/referentiel/modifier/{id}", name="referentiel_modifier", requirements={"id"="\d+"})
+     * @Route("/referentiel/modifier/{id}/{id_recommandation}", name="referentiel_modifier", requirements={"id"="\d+"})
      */
     public function referentielModifier(
-        $id,
+        $id_recommandation,
         Request $request,
         ReferentielRepository $referentielRepository,
+        RecommandationRepository $recommandationRepository,
+        PointControleRepository $pointControleRepository,
         EntityManagerInterface $entityManager
     ): Response {
-        
+        $recommandation = new Recommandation();
         //On récupère l'id du référentiel
         $id = $request->get('id');
 
         $infoReferentiel = $referentielRepository->allInformation($id);
+        //On requête en bdd pour récupérer la recommandation grâce à l'id
+        $recommandation = $recommandationRepository->find($id_recommandation);
         
-        $chapitres = $infoReferentiel->getChapitres();
+        $chapitre = $recommandation->getChapitre();
+        
+        //On vérifie combien de recommandations existent pour ce référentiel
+        //$nbReco = $recommandationRepository->nbRecommandationByReferentieo($infoReferentiel->getId());
+        //On instancie une nouvelle liste de point de controle
+        $listePointControle = new ArrayCollection();
+        //On remplit la liste d'audit_controles avec les points de controles équivalents au référentiel de l'audit en cours
+        $listePointControle = $pointControleRepository->pointControleParRecommandation($id_recommandation);
 
-        $recommandations = new ArrayCollection();
-        foreach($chapitres as $chapitre){
-            foreach($chapitre->getRecommandations() as $reco){
-                $recommandations->add($reco);
-            }
-        }
+        //dd($listePointControle);
 
-        $referentielForm = $this->createForm(ModifierReferentielFormType::class, ['referentiel' => $infoReferentiel,
-         'chapitre' => $chapitres, 'recommandation' => $recommandations
+        $referentielForm = $this->createForm(ModifierReferentielFormType::class, [
+            'referentiel' => $infoReferentiel,
+            'chapitre' => $chapitre, 'recommandation' => $recommandation,
+            'pointControle' => $listePointControle
         ]);
 
         $referentielForm->handleRequest($request);
 
+        if ($referentielForm->isSubmitted() && $referentielForm->isValid()) {
+            dump('on est dans la validation');
+                        // Sauvegarde en Bdd
+                        $entityManager->persist($infoReferentiel);
+                        $entityManager->flush();
+        }
+
         // On affiche le Twig avec les différents formulaires
         return $this->render('referentiel/referentiel_modifier.html.twig', [
-            'referentielForm' => $referentielForm->createView()
+            'referentielForm' => $referentielForm->createView(),
+            'infoReferentiel' => $infoReferentiel,
+            
         ]);
     }
 }

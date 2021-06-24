@@ -4,6 +4,7 @@ namespace App\Form;
 
 use App\Form\ChapitreFormType;
 use App\Form\ReferentielFormType;
+use App\Form\PointControleFormType;
 use App\Form\RecommandationFormType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -16,11 +17,10 @@ class ModifierReferentielFormType extends AbstractType
     {
         $builder
         ->add('referentiel', ReferentielFormType::class)
-        ->add('chapitre', CollectionType::class, [
-            'entry_type' => ChapitreFormType::class,
-        ])
-        ->add('recommandation', CollectionType::class, [
-            'entry_type' => RecommandationFormType::class,
+        ->add('chapitre', ChapitreFormType::class)
+        ->add('recommandation',RecommandationFormType::class)
+        ->add('pointControle', CollectionType::class, [
+            'entry_type' => PointControleFormType::class,
         ])
         ;
     }
@@ -28,7 +28,8 @@ class ModifierReferentielFormType extends AbstractType
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults([
-            // Configure your form options here
-        ]);
+            'attr' => [
+                'novalidate' => 'novalidate', // Désactive la validation HTML5
+        ]]);
     }
 }

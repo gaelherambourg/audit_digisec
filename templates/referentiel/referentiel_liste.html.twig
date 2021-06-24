@@ -56,7 +56,7 @@
 					<!-- Si la recherche de l'utilisateur a donné des résultats -->
 					{% for referentiel in referentiel_recherches %}
 						<!-- on affiche les résultats -->
-						<tr id="{{referentiel.id}}">
+						<tr id="{{referentiel.id}}" id="{{referentiel.chapitre[loop.index0].recommandation[loop.index0]}}">
 							<td>{{ referentiel.libelle }}</td>
 							<td>{{ referentiel.typeReferentiel }}</td>
 						</tr>
@@ -69,7 +69,7 @@
 					{% else %}
 						<!-- On affiche tous les référentielss dans la liste si aucune recherche n'a été effectué -->
 						{% for referentiel in tous_les_referentiels %}
-							<tr id="{{referentiel.id}}">
+							<tr id="{{referentiel.id}}/{{referentiel.chapitres[loop.index0].recommandations[loop.index0].id}}">
 								<td>{{ referentiel.libelle }}</td>
 								<td>{{ referentiel.typeReferentiel }}</td>
 							</tr>
