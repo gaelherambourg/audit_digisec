@@ -113,8 +113,9 @@
                         <div class="column is-4">
                             {{ form_label(audit_controle.note, null, {'attr': {'class': 'has-text-link'} }) }}
                         </div>
-                        <div class="column is-2">
-                            {{ form_widget(audit_controle.note, {'attr': {'class': 'input is-link', 'placeholder': 'Note'}}) }}
+
+                        <div class="column is-2 has-text-centered">
+                            {{ form_widget(audit_controle.note, {'attr': {'class': 'input is-link  has-text-centered', 'placeholder': 'Note sur '~maxNote}}) }}
                         </div>
                         <div class="column is-2 has-text-centered">
                             <label class="label has-text-link">Maturité N-1</label>

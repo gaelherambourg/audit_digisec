@@ -33,6 +33,7 @@ class AuditControle
 
     /**
      * @ORM\Column(type="integer", nullable=true)
+     * @Assert\Type("integer", message="La valeur doit être un nombre")
      */
     private $note;
 
@@ -272,16 +273,16 @@ class AuditControle
     public function isNoteValid(ExecutionContextInterface $context, $note)
     {
         $note = $this->getNote();
-        $echelleNotation = $this->getAudit()->getEchelleNotation()->getId();
-        if($echelleNotation == 1){
-            if($note < 0 || $note > 5){
+        $echelleNotation = $this->getAudit()->getEchelleNotation()->getEchelle();
+        if(substr($echelleNotation, -1) == "5"){
+            if($note < 0 || $note > 5 || \is_string($note)){
                 $context->buildViolation('La note doit être comprise entre 0 et 5')
                     ->atPath('note')
                     ->addViolation();
             }
         }
-        if($echelleNotation == 2){
-            if($note < 0 || $note > 3){
+        if(substr($echelleNotation, -1) == "3"){
+            if($note < 0 || $note > 3 || \is_string($note)){
                 $context->buildViolation('La note doit être comprise entre 0 et 3')
                     ->atPath('note')
                     ->addViolation();

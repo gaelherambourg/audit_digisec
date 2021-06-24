@@ -234,7 +234,7 @@ class AuditController extends AbstractController
         //ini_set('memory_limit','20G');
 
         //On redirige après le chargement du pdf
-        return $this->redirectToRoute('audit_validation', ['id' => 2]);
+        return $this->redirectToRoute('audit_liste');
     }
 
     //FONCTION POUR VERIFIER LE RENDU DU PDF QUE L'ON VEUT EXPORTER (A SUPPRIMER QUAND L'EXPORT PDF EST FINI)
