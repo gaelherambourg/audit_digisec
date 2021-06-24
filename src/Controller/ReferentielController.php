@@ -177,11 +177,9 @@ class ReferentielController extends AbstractController
         $infoReferentiel = $referentielRepository->allInformation($id);
         //On requête en bdd pour récupérer la recommandation grâce à l'id
         $recommandation = $recommandationRepository->find($id_recommandation);
-        
+
         $chapitre = $recommandation->getChapitre();
-        
-        //On vérifie combien de recommandations existent pour ce référentiel
-        //$nbReco = $recommandationRepository->nbRecommandationByReferentieo($infoReferentiel->getId());
+
         //On instancie une nouvelle liste de point de controle
         $listePointControle = new ArrayCollection();
         //On remplit la liste d'audit_controles avec les points de controles équivalents au référentiel de l'audit en cours
@@ -198,17 +196,16 @@ class ReferentielController extends AbstractController
         $referentielForm->handleRequest($request);
 
         if ($referentielForm->isSubmitted() && $referentielForm->isValid()) {
-            dump('on est dans la validation');
-                        // Sauvegarde en Bdd
-                        $entityManager->persist($infoReferentiel);
-                        $entityManager->flush();
+            // Sauvegarde en Bdd
+            $entityManager->persist($infoReferentiel);
+            $entityManager->flush();
         }
 
         // On affiche le Twig avec les différents formulaires
         return $this->render('referentiel/referentiel_modifier.html.twig', [
             'referentielForm' => $referentielForm->createView(),
             'infoReferentiel' => $infoReferentiel,
-            
+
         ]);
     }
 }

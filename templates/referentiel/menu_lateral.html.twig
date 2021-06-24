@@ -1,14 +1,14 @@
-
-	<aside class="menu is-size-7 pl-2">
-		<p class="menu-label is-size-6">
-			{{infoReferentiel.libelle}}
-			<!-- On affiche le nom du référentiel sur lequel l'audit est effectué-->
-		</p>
-		<ul class="menu-list is-size-7">
-			{% for chapitre in infoReferentiel.chapitres %}
-				<!-- On boucle sur les chapitres qui composent le référentiel sur lequel l'audit est effectué-->
-				<li>
-					<a class="is-size-7">{{chapitre.libelle}}</a>
+<aside class="menu is-size-7 pl-2">
+	<p class="menu-label is-size-6">
+		{{infoReferentiel.libelle}}
+		<!-- On affiche le nom du référentiel sur lequel l'audit est effectué-->
+	</p>
+	<ul class="menu-list is-size-7">
+		{% for chapitre in infoReferentiel.chapitres %}
+			<!-- On boucle sur les chapitres qui composent le référentiel sur lequel l'audit est effectué-->
+			<li>
+				<a id="chapitre_recommandation{{loop.index}}" class="is-size-7">{{chapitre.libelle}}</a>
+				<span id="recommandation{{loop.index}}">
 					<ul>
 						{% for recommandation in chapitre.recommandations %}
 							<!-- On boucle sur les recommandations du chapitre -->
@@ -17,9 +17,9 @@
 							</li>
 						{% endfor %}
 					</ul>
-				</li>
-			{% endfor %}
+				</span>
+			</li>
+		{% endfor %}
 
-		</ul>
-	</aside>
-
+	</ul>
+</aside>
