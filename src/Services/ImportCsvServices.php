@@ -139,6 +139,7 @@ class ImportCsvServices
             } catch (\Exception $e) {
                 $errorInsert = "L'import du référentiel a échoué lors de la ligne n° " . $i . " - Aucun import enregistré en base de données";
                 $referentielSuccess = false;
+                break;
             }
         }
 
@@ -160,6 +161,7 @@ class ImportCsvServices
                 } catch (\Exception $e) {
                     $errorInsert = "L'import des chapitres a échoué lors de la ligne n° " . $i . " - Aucun import enregistré en base de données";
                     $chapitreSuccess = false;
+                    break;
                 }
             }
             try {
@@ -194,6 +196,7 @@ class ImportCsvServices
                     } catch (\Exception $e) {
                         $errorInsert = "L'import des recommandations a échoué lors de la ligne n° " . $i . " - Aucun import enregistré en base de données";
                         $recommandationSuccess = false;
+                        break;
                     }
                     $oldValue = (int)$data[1];
                 }
@@ -229,6 +232,8 @@ class ImportCsvServices
                             $this->entityManager->persist($pointControle);
                         } catch (\Exception $e) {
                             $errorInsert = "L'import des points de contrôles a échoué lors de la ligne n° " . $i . " - Aucun import enregistré en base de données";
+                            $pointControleSuccess = false;
+                            break;
                         }
                         $oldValue = $data[1];
                     }
@@ -261,6 +266,7 @@ class ImportCsvServices
                                 $this->entityManager->persist($remediation);
                             } catch (\Exception $e) {
                                 $errorInsert = "L'import des remédiations a échoué lors de la ligne n° " . $i . " - Aucun import enregistré en base de données";
+                                break;
                             }
                             $oldValue = $data[0];
                         }
