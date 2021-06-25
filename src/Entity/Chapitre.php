@@ -55,7 +55,7 @@ class Chapitre
         return $this->libelle;
     }
 
-    public function setLibelle(string $libelle): self
+    public function setLibelle($libelle): self
     {
         $this->libelle = $libelle;
 

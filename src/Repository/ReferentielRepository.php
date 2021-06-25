@@ -51,6 +51,19 @@ class ReferentielRepository extends ServiceEntityRepository
         $query = $queryBuilder->getQuery();
         return $queryBuilder->getQuery()->getResult();
     }
+
+    public function referentielAudit($id)
+    {
+        //Recherche de la saisie formulaire societe en BDD
+        $queryBuilder = $this->createQueryBuilder('r')
+            ->join('r.audits', 'a')->addSelect('a')
+            ->join('r.chapitres', 'c')->addSelect('c');
+        $queryBuilder
+            ->andWhere('r.id = :id')->setParameter('id', $id);
+        $query = $queryBuilder->getQuery();
+        return $query->getSingleResult();
+    }
+
     // /**
     //  * @return Referentiel[] Returns an array of Referentiel objects
     //  */

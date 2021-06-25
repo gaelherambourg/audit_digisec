@@ -42,15 +42,13 @@ class ReferentielController extends AbstractController
         $referentiel_recherches = "";
         $recherche_utilisateur = "";
 
-        // Gestion Formulaire d'import de plusieurs participants :
+        // Import CSV pour un référentiel
         $csvForm =  new CsvForm();
         $csvRegisterForm = $this->createForm(CsvFormType::class, $csvForm);
         $csvRegisterForm->handleRequest($request);
 
         //On récupère tous les référentiels en bdd
         $tous_les_referentiels = $referentielRepository->allAuditInformation();
-
-        //dd($tous_les_referentiels);
 
         if ($form->isSubmitted() && $form->isValid()) {
             $recherche_utilisateur = $form->get('recherche')->getData();
@@ -63,27 +61,6 @@ class ReferentielController extends AbstractController
                 'recherche_utilisateur' => $recherche_utilisateur,
                 'form_recherche_referentiel' => $form->createView()
             ]);
-        }
-
-        // Soumission du formulaire de création d'un référentiel
-        if ($csvRegisterForm->isSubmitted() && $csvRegisterForm->isValid()) {
-            // On charge le fichier csv dans notre répertoire
-            $isItUploaded = $importCsvServices->uploadCsvFile($csvRegisterForm);
-            // on lit le fichier s'il est uploadé
-            if ($isItUploaded) {
-                // on insert toutes les données en base
-                $data = $importCsvServices->insertCsvFile();
-                // on efface le fichier
-                $importCsvServices->deleteCsvFile();
-                if ($data['errorInsert'] != "") {
-                    $this->addFlash("warning", $data['errorInsert']);
-                } else {
-                    // On ajoute un message flash
-                    $this->addFlash("info", "L'insertion a fonctionnée");
-                }
-            } else {
-                $this->addFlash("danger", "Le téléchargement a échoué.");
-            }
         }
 
         return $this->render('referentiel/referentiel_liste.html.twig', [
@@ -122,7 +99,7 @@ class ReferentielController extends AbstractController
             $remediation = $request->files->get('remediationCsv');
             $token = $request->get('token');
 
-            // On prend les données du formulaire soumis, et les injecte dans $societe
+            // On prend les données du formulaire soumis, et on les injecte
             $csvForm->submit(array_merge(['referentielCsv' => $referentiel, 'chapitreCsv' => $chapitre, 'recommandationCsv' => $recommandation, 'pointControleCsv' => $pointControle, 'remediationCsv' => $remediation, '_token' => $token]), false);
 
             if ($csvForm->isSubmitted()) {
@@ -141,7 +118,7 @@ class ReferentielController extends AbstractController
                             $this->addFlash("warning", $data['errorInsert']);
                         } else {
                             // On ajoute un message flash
-                            $this->addFlash("info", "L'insertion a fonctionnée");
+                            $this->addFlash("info", "Le référentiel a été ajouté");
                         }
                     } else {
                         $this->addFlash("danger", "Le téléchargement a échoué.");
@@ -159,7 +136,7 @@ class ReferentielController extends AbstractController
     }
 
     /**
-     * Modifie les informations d'une societe
+     * Modifie un référentiel
      * @Route("/referentiel/modifier/{id}/{id_recommandation}", name="referentiel_modifier", requirements={"id"="\d+"})
      */
     public function referentielModifier(
@@ -185,8 +162,6 @@ class ReferentielController extends AbstractController
         //On remplit la liste d'audit_controles avec les points de controles équivalents au référentiel de l'audit en cours
         $listePointControle = $pointControleRepository->pointControleParRecommandation($id_recommandation);
 
-        //dd($listePointControle);
-
         $referentielForm = $this->createForm(ModifierReferentielFormType::class, [
             'referentiel' => $infoReferentiel,
             'chapitre' => $chapitre, 'recommandation' => $recommandation,
@@ -196,9 +171,22 @@ class ReferentielController extends AbstractController
         $referentielForm->handleRequest($request);
 
         if ($referentielForm->isSubmitted() && $referentielForm->isValid()) {
+            try {
+                $ref = $referentielRepository->referentielAudit($id);
+                $ref = true;
+            } catch(\Exception $e) {
+                $ref = false;
+            }
+            
+            if (!$ref) {
             // Sauvegarde en Bdd
             $entityManager->persist($infoReferentiel);
             $entityManager->flush();
+            $this->addFlash("link", "Modification(s) enregistrée(s).");
+            } else {
+                $this->addFlash("danger", "Modification impossible, le référentiel est en cours d'utilisation.");
+            }
+
         }
 
         // On affiche le Twig avec les différents formulaires
