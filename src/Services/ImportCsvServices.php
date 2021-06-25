@@ -152,9 +152,10 @@ class ImportCsvServices
                 try {
                     $i++;
                     $chapitre = new Chapitre();
-                    $chapitre
-                        ->setReferentiel($referentielId)
-                        ->setLibelle((string) $data[2]);
+                    $chapitre->setReferentiel($referentielId);
+                    if (!empty($data[2])) {
+                        $chapitre->setLibelle($data[2]);
+                    }
                     $this->entityManager->persist($chapitre);
                 } catch (\Exception $e) {
                     $errorInsert = "L'import des chapitres a échoué lors de la ligne n° " . $i . " - Aucun import enregistré en base de données";
