@@ -114,7 +114,7 @@ function modal() {
                     clearInput();
                 } else {
                     //Si le formulaire n'est pas valide, on supprime les éventuels messages d'erreurs restant
-                    removeAllSpan();
+                    removeAllSpan(formCsv);
 
                     // Traitement si le formulaire retourne une erreur
                     const referentielParent = document.getElementById('csv_form_referentielCsv').parentNode;
@@ -196,13 +196,17 @@ function modal() {
         });
     };*/
 
-    //Fonction permettant de supprimer les éventuels messages d'erreurs situés dans des spans
-    function removeAllSpan() {
-        var childs = document.getElementById('nouveau_csv').getElementsByClassName('spanMessageCsv');
-        for (var child of childs) {
-            child.remove();
-        }
-    };
+    /**
+    * Méthode permettant de supprimer les balises span afin d'éviter que le message d'erreur
+    * ne s'affiche plusieurs fois
+    * @param nomFormulaire - C'est le nom du formulaire où les balises span doivent être supprimées
+    */
+         function removeAllSpan(nomFormulaire) {
+            var childs = nomFormulaire.querySelectorAll('span');
+            for (var child of childs) {
+                child.remove();
+            }
+        };
 
     //Fonction permettant un clear des values dans les champs de l'ajout de preuve
     function clearInput() {
