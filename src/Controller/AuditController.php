@@ -153,7 +153,7 @@ class AuditController extends AbstractController
      */
     public function genererPdfAudit(Request $request,
                                   AuditRepository $auditRepository,
-                                  KernelInterface $kernel)
+                                  KernelInterface $kernel) :Response
     {
 
         $audit = $auditRepository->find($request->get('id'));
@@ -164,21 +164,31 @@ class AuditController extends AbstractController
  */
         //On désactive la limite de la memory du php.ini pour passer le pdf
         //ini_set('memory_limit','-1');
+        if(isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on') 
+            $url = "https"; 
+        else
+            $url = "http"; 
+            
+        // Ajoutez // à l'URL.
+        $url .= "://"; 
+            
+        // Ajoutez l'hôte (nom de domaine, ip) à l'URL.
+        $url .= $_SERVER['HTTP_HOST']; 
+
 
         //On définit des options du pdf
         $options = new Options();
         $options->set( 'isRemoteEnabled', TRUE );
         $options->set( 'isPhpEnabled', TRUE );
-
+        
+        
         // On instancie la classe DomPdf
         $dompdf = new Dompdf($options);
-
         //On définit le context du pdf
         $contxt = stream_context_create([
             'http' => [
                 'header'  => "Content-type: application/x-www-form-urlencoded\r\n",
                 'method'  => 'GET',
-                'user_agent' => 'Mozilla/4.0 (compatible; MSIE 6.0; Windows NT 5.1)',
             ],
             'ssl' => [ 
                 'verify_peer' => FALSE, 
@@ -190,9 +200,10 @@ class AuditController extends AbstractController
 
         //On génére la vue Twig qui sera utiisée pour l'export vers le fichier pdf
         $html = $this->renderView('pdf/genererPdfAudit.html.twig', [
-            'audit' => $audit
+            'audit' => $audit,
+            'url' => $url
         ]);
-
+        $html .= '<link type="text/css" href="'. $url .'/css/pdf.css" rel="stylesheet" />';
         // On charge le html dans domPdf
         $dompdf->loadHtml($html);
 
@@ -200,24 +211,14 @@ class AuditController extends AbstractController
         $dompdf->setPaper('A4', 'portrait');
 
         $dompdf->render();
-/* 
-        $doc = new DOMDocument();
-        @$doc->loadHTML($html);
-        $doc->saveHTML();
-        \PhpOffice\PhpWord\Shared\Html::addHtml($section, $doc->saveHtml(),true);
- */
+
         $dateAudit = $audit->getDateCreation()->format('d-m-Y');
-/* 
-        $objWriter = \PhpOffice\PhpWord\IOFactory::createWriter($phpWord, 'Word2013');
-	    $objWriter->save(($audit->getSociete()->getNom() . '_' . $dateAudit . '.pdf'), 'Word2013', true);
-        
- */
+        $nomAudit = $audit->getSociete()->getNom() . '_' . $dateAudit . '.pdf';
         //On range les données du PDF
         $output = $dompdf->output();
 
-        //$dompdf->stream("dompdf_out.pdf", array("Attachment" => false));
+        $dompdf->stream($nomAudit, array("Attachment" => true));
         
-
         //On veut écrire le fichier pdf dans le directory public
         $publicDirectory = $kernel->getProjectDir() . '/public/pdf/audits';
         $pdfFilePath = $publicDirectory . '/' . $audit->getSociete()->getNom() . '_' . $dateAudit . '.pdf';
@@ -225,13 +226,8 @@ class AuditController extends AbstractController
         //On écrit dans le chemin désiré
         file_put_contents($pdfFilePath, $output);
 
-
-
         // On rend le html en pdf
         $dompdf->render();
-
-        //On redéfinit la memory_limit du php.ini
-        //ini_set('memory_limit','20G');
 
         //On redirige après le chargement du pdf
         return $this->redirectToRoute('audit_liste');

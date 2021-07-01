@@ -21,7 +21,7 @@ use Symfony\Component\Routing\Annotation\Route;
 class PreuveController extends AbstractController
 {
     /**
-     * @Route("/preuve/", name="preuve")
+     * @Route("/audit/preuve/", name="preuve")
      */
     public function ajoutPreuve(Request $request,
                                 AuditControleRepository $auditControleRepository,
@@ -48,7 +48,7 @@ class PreuveController extends AbstractController
             $token = $request->get('token');
             
             $preuveForm->submit(array_merge(['texte' => $texte, 'fichier' => $fichier, 'image' => $image, '_token' => $token]), false);
-
+            
             if ($preuveForm->isSubmitted()) {
 
                 if ($preuveForm->isValid()) {
@@ -74,7 +74,7 @@ class PreuveController extends AbstractController
                     if ($uploadedImage) {
                         $pictureFileName = $imagePreuveServices->upload($uploadedImage);
                         $preuve->setImage($pictureFileName);
-                        $filterService->getUrlOfFilteredImage('preuves/images/'.$pictureFileName, 'miniature');
+                        $filterService->getUrlOfFilteredImage('/preuves/images/'.$pictureFileName, 'miniature');
                     }
 
                     //On persiste l'entité
