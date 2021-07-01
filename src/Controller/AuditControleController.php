@@ -54,7 +54,6 @@ class AuditControleController extends AbstractController
         //On vérifie combien de recommandations existent pour ce référentiel
         $recoParReferentiel = $recommandationRepository->RecommandationByReferentiel($audit->getReferentiel()->getId());
         $derniereRecommandationId = $recoParReferentiel[0]->getId();
-        dump($derniereRecommandationId);
         //On instancie une nouvelle liste d'audit_controle
         $listeAuditControle = new ArrayCollection();
         //On instancie une nouvelle preuve

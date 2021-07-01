@@ -86,7 +86,6 @@ class ReferentielController extends AbstractController
 
         // On créer une instance de csvForm
         $csv = new CsvForm();
-
         // On créer une instance de la classe de formulaire que l'on associe à notre formulaire
         $csvForm = $this->createForm(CsvFormType::class, $csv);
 

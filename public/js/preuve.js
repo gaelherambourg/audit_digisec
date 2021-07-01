@@ -83,14 +83,14 @@ function ajoutPreuve() {
 
         //On créé l'url à passer au fetch
         let ancienneUrl = window.location.pathname;
-        let url = window.location.toString().replace(ancienneUrl, ("/audit_digisec/public/preuve/"));
+        let url = window.location.toString().replace(ancienneUrl, ("/audit/preuve/"));
 
         fetch(url, {
             method: 'POST',
             body: data
         })
             .then(function (response) {
-                return response.json();
+                return response.json();                
             }).then(function (data) {
                 //Si le formulaire a été soumis et valider, on ferme la modal et on recharge la page en faisant un clear des inputs de la preuve
                 if (data.resultat == 'success') {

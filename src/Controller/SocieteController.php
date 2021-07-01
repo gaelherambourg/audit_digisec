@@ -427,7 +427,6 @@ class SocieteController extends AbstractController
     {
         // On récupère la société digisec
         $societe = $societeRepository->findAllInformationsDigisec();
-        dump($societe);
 
         //On récupère le logo de DIGISEC
         $logo = $societe->getLogo();

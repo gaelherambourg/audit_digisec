@@ -1,5 +1,6 @@
+
 <head>
-    <link rel="stylesheet" href="{{ app.request.schemeAndHttpHost }}/audit_digisec/public/css/pdf.css"></link>
+    <link rel="stylesheet" type="text/css" href="{{ asset('css/pdf.css') }}">
 </head>
 
 {% block body %}
@@ -7,14 +8,14 @@
 <table class="entete">
         <tr>
             <th class="thLogo">
-                Date : {{audit.dateCreation|date("m/d/Y")}}
+                Date : {{audit.dateCreation|date("d/m/Y")}}
             </th>
             <th class="thNomSociete">{{audit.societe.nom}}</th>
             <th class="thRapport">Rapport d'audit</th>
         </tr>
     </table>
     <div class="logo">
-        <img src="{{ app.request.schemeAndHttpHost }}/audit_digisec/public/img/LOGO-DIGISEC-FULL-DETOURE.png" width="30%">
+        <img src="{{url}}/img/LOGO-DIGISEC-FULL-DETOURE.png" width="30%">
         <h1>DIGISEC</h1>
     </div>
 
