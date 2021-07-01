@@ -111,4 +111,16 @@ progress{
     {
         display: none;
     }
+
+    .login_tablette{
+        display: none;
+    }
+}
+
+/* Nouvelles règles si la fenêtre fait au plus 1024px de large */
+@media all and (min-width: 769px)
+{
+    .login_pc{
+        display: none;
+    }
 }

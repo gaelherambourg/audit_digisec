@@ -175,7 +175,6 @@ class SocieteController extends AbstractController
                     $pictureFileName = $logoServices->upload($uploadedFile);
                     $societe->setLogo($pictureFileName);
                 }
-                dump($uploadedFile);
                 // On ajoute la date de modification 
                 $societe->setDateModification(new \DateTime());
 
