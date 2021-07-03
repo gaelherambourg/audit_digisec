@@ -28,7 +28,7 @@ class ValidationAuditFormType extends AbstractType
             ])
             ->add('valider', SubmitType::class, [
                 "attr"=>["value"=>"Valider Audit",
-                "class"=>"is-info is-medium"
+                "class"=>"is-info is-medium is-4"
                 ]
             ])
         ;

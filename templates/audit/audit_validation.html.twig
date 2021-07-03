@@ -40,12 +40,15 @@
             {{ form_widget(form_validation_audit.remarque_generale, {'attr': {'class': 'input is-link', 'placeholder': 'Remarque générale'}}) }}
         </div>
     </div>
-    <div class="has-text-right">
-        {{ form_widget(form_validation_audit.valider) }}
+    <div class="columns is-mobile has-text-right">
+        <div class="column is-offset-9">
+            {{ form_widget(form_validation_audit.valider) }}
+        </div>
+        <div class="column">
+            <a class="button is-medium is-info is-4"  href="{{path('audit_liste')}}">Accueil</a>
+        </div>
     </div>
     
-
-
 {{ form_end(form_validation_audit) }}
 </div>
 {% endblock %}
